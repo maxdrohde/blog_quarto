@@ -1,0 +1,138 @@
+---
+title: Linear Algebra / Matrix Operations in R
+description: Informal notes about common linear algebra / matrix operations in R
+author: Max Rohde
+date: 04/29/2022
+image: preview.png
+code-fold: show
+freeze: false
+cache: true
+---
+
+## Prerequisites
+The following material should be understandable to anyone with a basic knowledge of R and linear algebra, and it looking to implement basic linear algebra with R.
+
+## Creating vectors
+
+Vectors can be created with the `c()` function.
+
+```{r}
+c(1,3,7)
+```
+
+For vectors that are a continuous sequence of numbers, you can use the `:` operator.
+
+```{r}
+1:8
+```
+
+For vectors of repeated numbers, such as a zero vector, use the `rep()` function.
+
+```{r}
+# Create a zero vector of length 10
+rep(0, times=10)
+
+# Or to be more concise
+# rep(0, 10)
+```
+
+More complicated sequences can be created with the `seq()` function.
+
+```{r}
+# Create a sequence from 1 to 3 with a step size of 0.5
+seq(1,3, by = 0.5)
+```
+```{r}
+# Create 10 equal spaced numbers between 1 and 3
+seq(1,3, length.out = 10)
+```
+
+## Creating matrices
+
+There are two common ways to create matrices in R.
+
+The first method is using the `matrix()` function. You pass the elements of the matrix into `matrix()` and specify the number of rows and columns. Note that R fills in the numbers going down each column. This can be unintuitive.
+
+```{r}
+# Put the numbers 1 to 12 in 3 rows and 4 columns
+matrix(1:12, nrow=3, ncol=4)
+```
+```{r}
+# Put the numbers 1 to 12 in 2 rows and 6 columns
+matrix(1:12, nrow=2, ncol=6)
+```
+
+The second method is using `rbind()` and `cbind()`. Use `rbind()` to combine vectors into a matrix by row, and `cbind()` to combine vectors into a matrix by column.
+
+```{r}
+x1 <- c(1,2,3,4)
+x2 <- c(5,6,7,8)
+x3 <- c(9,10,11,12) 
+```
+
+```{r}
+rbind(x1, x2, x3)
+```
+
+```{r}
+cbind(x1, x2, x3)
+```
+
+To create a $n \times n$ identity matrix, use the `diag(n)` function.
+
+```{r}
+diag(5)
+```
+
+Once a matrix is created, the `dim()` can be used to obtain the dimensions.
+
+```{r}
+m <- cbind(x1, x2, x3)
+
+# See that m has 4 rows and 3 columns
+dim(m)
+```
+
+If you are only interested in the number of rows and columns, use `nrow()` and `ncol()` respectively.
+
+```{r}
+nrow(m)
+ncol(m)
+```
+
+
+## Matrix indexing
+
+Once you have a matrix in R, how do you subset parts of the matrix? Let's use this matrix, `m` as an example.
+
+```{r}
+m <- matrix(1:12, nrow=3, ncol=4)
+
+print(m)
+```
+
+The syntax `m[i]` selects the ith element. Recall that R counts going down columns.
+
+```{r}
+m[2]
+```
+
+The syntax `m[i, ]` selects the ith row
+
+```{r}
+m[2,]
+```
+
+The syntax `m[,i]` selects the ith column.
+
+```{r}
+m[,2]
+```
+
+The syntax `m[i,j]` selects the element in the ith row and jth column.
+
+```{r}
+m[2,2]
+```
+
+

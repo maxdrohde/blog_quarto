@@ -1,0 +1,151 @@
+---
+title: Using the tmerge() function to structure time-dependent covariates for survival analysis
+description:  The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.
+author: Max Rohde
+date: 03/31/2022
+image: preview.png
+code-fold: show
+freeze: false
+cache: true
+---
+
+## Load packages
+
+```{r}
+library(tidyverse)
+library(survival)
+library(kableExtra)
+```
+
+## Why do we need `tmerge`?
+
+In survival analysis, we differentiate between **time-independent covariates** and **time-dependent covariates**. Time-independent covariates are constant over time, while time-dependent covariates can vary over time.
+
+As an example, assume we are modeling time-to-death in years, with exposure to a chemical as our time-dependent covariate of interest. Assume that we can quantify the exposure as 0, 1, or 2. We will use this exposure and the sex of the subject as covariates in our model.
+
+To represent time-dependent covariates, we need to have multiple rows for each subject, where each row represents a different value of the time dependent covariates.
+
+Take for example a subject who started with `exposure = 1`. Then at 4 years, their exposure status changed to `exposure = 0`. Then at 7 years, their exposure status changed to `exposure = 2`. Then the subject died at 10 years (i.e., `status = 1`). We would need three rows to represent this subject, since there are 3 distinct time periods: `0-4`, `4-7`, and `7-10`. The `survival` package uses the names `tstart` and `tstop` to denote the beginning and end of each time period. So when structuring data from time-dependent variables, the rows for this subject would look like this:
+
+```{r}
+#| echo: false
+
+df <-
+  tibble(id = c(1,1,1),
+         tstart = c(0,4,7),
+         tstop = c(4,7,10),
+         exposure = c(1,0,2),
+         status = c(0,0,1))
+
+df %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+## Using `tmerge`
+
+### Creating example data
+
+First, we need our data in two data frames, one for the time-independent covariates and one for the time-dependent covariates.
+
+Here's some example data for the time-independent covariates. We have 3 subjects, and each row contains their id, sex, survival time, and whether or not they experience the event of interest (in this case, death). We use `event = 1` to indicate death, and `event = 0` to indicate censoring.
+
+```{r}
+df_time_ind <-
+  tibble(id = c(1,2,3),
+         sex = c("M","F","F"),
+         surv_time = c(5,10,15),
+         event = c(1,1,0))
+```
+
+```{r}
+#| echo: false
+
+df_time_ind %>%
+  kbl() %>%
+  kable_styling()
+```
+
+And here's some example time-dependent data. Each subject has a record for their `exposure` status at `time = 0`, and another record whenever their exposure status changes. For example, in the data below, subject 1 has
+
+- exposure status 0 from time 0 to 2
+- exposure status 1 from time 2 to 4
+- exposure status 2 from time 4 onwards
+
+```{r}
+df_time_dep <-
+  tibble(id = c(1,1,1,2,2,3),
+         time = c(0,2,4,0,7,0),
+         exposure = c(0,1,2,0,1,0))
+```
+
+```{r}
+#| echo: false
+
+df_time_dep %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+We will use the `tmerge` function to turn these data frames in a single data frame to use in a time-dependent survival analysis. The `tmerge` function is used multiple times in the process of formatting data for time-dependent covariates.
+
+First, we use `tmerge` with the independent variables. Note that we call `tmerge` with `df_time_ind` as both the `data1` and `data2` argument. We must also specify the `id` variable and the `event` variable using the syntax `event(survival_time_variable, event_indicator_variable)`. Using the name `event` on the left of the expression is optional.
+
+```{r}
+df_time_ind <-
+  tmerge(data1=df_time_ind,
+         data2=df_time_ind,
+         id=id,
+         event=event(surv_time, event))
+```
+
+Now the `df_time_ind` data frame looks like this:
+
+```{r}
+#| echo: false
+
+df_time_ind %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Notice that the `tstart`, `tstart`, and `event` variables have been added.
+
+Now to add the time-dependent variables, we call `tmerge` again, now with `df_time_ind` as the `data1` argument and `df_time_dep` as the `data2` argument. To specify the time-dependent exposure variable, we use the `tdc` function with the syntax `time_dependent_variable = tdc(time, time_dependent_variable)`.
+
+```{r}
+df_final <-
+tmerge(data1=df_time_ind,
+       data2=df_time_dep,
+       id=id,
+       exposure=tdc(time, exposure))
+```
+
+Below we have our completed dataset with properly structured time-dependent variables.
+
+```{r}
+#| echo: false
+
+df_final %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Finally, fitting a model with the `survival` package uses the general syntax `Surv(tstart, tstop, event_indicator_variable)` as shown below, where we fit a Cox proportional hazard model.
+
+```{r}
+#| eval: false
+
+coxph(Surv(tstart, tstop, event) ~ exposure, data=df_final)
+```
+
+## References
+
+For more details, see this [presentation](https://ww2.amstat.org/meetings/sdss/2018/onlineprogram/ViewPresentation.cfm?file=304494.pdf) and this [report](https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf) on further features of `tmerge`.
+
+
+
+
+

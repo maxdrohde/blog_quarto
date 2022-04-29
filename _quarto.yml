@@ -1,0 +1,44 @@
+project:
+  type: website
+
+website:
+  title: "Max Rohde"
+  search: true
+  repo-url: https://github.com/maxdrohde/blog_quarto
+  repo-actions: [edit, issue]
+  favicon: images/favicon.png
+  twitter-card:
+    creator: "@max_d_rohde"
+  opengraph: true
+  navbar:
+    background: "#5b7eb0"
+    #logo: images/logo.png
+    right:
+      - href: index.qmd
+        text: Blog
+      - href: about.qmd
+        text: About
+      - href: resume.pdf
+        text: "Resume"
+      - href: anim.qmd
+        text: Animations
+
+format:
+  html:
+    toc: true
+    toc-location: left
+    theme:
+      - journal
+      - custom.scss
+    mainfont: Source Sans Pro
+    monofont: Fira Mono
+    fontsize: 16px
+    css: styles.css
+    code-block-bg: "#f1f3f5"
+    code-block-border-left: "#31BAE9"
+    fig-format: retina
+    fig-width: 8
+    fig-height: 6
+
+
+

@@ -1,0 +1,55 @@
+---
+title: "Repeated testing inflates type I error"
+description: Type I error is increased when you test your hypothesis multiple times during the data collection process. Simulations can provide a clear picture of this process.
+author: Max Rohde
+date: 12/23/2020
+image: preview.jpg
+code-fold: show
+freeze: false
+cache: true
+---
+
+## What's the problem with repeated testing?
+Does your astrological sign affect your height? Imagine that 20 scientists want to test this hypothesis. Each scientist, independently of the others, brings in 1,000 pairs of twins -- one Taurus and one Leo -- and measures the difference in their heights. Assume that in reality, the null hypothesis is true: there is no difference in their heights. Of course, there is random variation that will make each twin's height different, but the null hypothesis is that the mean of this variation is zero.
+
+<aside>
+Especially for height, it's safe to assume that the variation in heights is normally distributed.
+</aside>
+
+Each scientists measures their 1,000 pairs of twins, conducts a t-test, and reports whether or not their statistical test has rejected the null hypothesis of no difference. If the null hypothesis is true (which we assume it is in this scenario), and the p-value threshold for significance is set at 0.05 = 1/20, we would expect that on average, 1 out of the 20 scientists would wrongly reject the null hypothesis when it is in fact true. This is the definition of type I error rate. But what if the scientists took multiple looks at the data?
+
+It may have began as a way to save money -- participants can be expensive! Starting with the 10th pair of twins, each scientist tests their hypothesis with a statistical test after every data point comes in. Measure the 11th pair. Run the test on the 11 data points. Measure the 12th pair. Run the test on the 12 data points. And so on. If any of these tests are significant, can the scientist claim that their result is statistically significant at the 0.05 level? Is the type I error rate of their testing procedure controlled at 0.05?
+
+The answer is wholeheartedly, no. Repeated testing of the data will greatly inflate the type I error rate. Instead of the nominal 1/20 probability to wrongly reject the null hypothesis when it is true, the type I error rate of this sequential testing procedure will be much higher. If sampling continues indefinitely, sequential testing is guaranteed to reach a significant result. Edwards, Lindman, and Savage (1963) phrase this succinctly: "And indeed if an experimenter uses this procedure, then with probability 1 he will eventually reject any sharp null hypothesis, even though it be true." 
+
+<aside>
+Edwards, W., Lindman, H., & Savage, L. J. (1963). Bayesian statistical inference for psychological research. Psychological review, 70(3), 193.
+</aside>
+
+## Simulation using R
+Using R, let's simulate the scenario described above and see for ourselves what happens to the type I error rate. To recap, we have 20 independent scientists conducting their own experiment. After every data point comes in, they conduct a statistical testing using the data they have collected so far. As we can see by the wiggling lines, given that the null hypothesis is true, the p-value fluctuate wildly with each new test. If a scientist obtains a p-value < 0.05 in the course of the experiment, the line past that observation is colored red so that we can identify when significance has been declared by each scientist.
+
+<aside>
+The animations were created using the [gganimate](https://gganimate.com/articles/gganimate.html) package.
+</aside>
+
+![](pval_anim.mp4){fig-width=100%}
+
+On the right panel, the <span style="color:#ed6663">cumulative type I error rate</span> and the <span style="color:#43658b">type I error rate at each observation</span> is shown. We can see that by the time all 1000 data points are recorded, close to half of the scientists have declared significance at some point in the process! This error rate is clearly higher than 1/20 as would be expected without sequential testing. At any given time point however, the type I error rate is preserved: only about 1 scientist will have wrongly declared significance.
+
+To verify our conclusions, let's run this simulation for 2,000 scientists instead of 20 and observe the type I error rate.
+
+![](pval_2000.mp4){fig-width=100%}
+
+As seen before, the <span style="color:#ed6663">cumulative type I error rate</span> increases the more looks the scientists take at the data, reaching almost 50% by 1,000 observations. Contrast this to <span style="color:#43658b">type I error rate at any given observation</span>, which remains controlled at the nominal value of 0.05.
+
+## So how can we control type I error?
+How can we fix this problem? One approach is creating rules limiting the number of interim tests that can be conducted. For example, a topic of recent relevance, there was much debate over how many interim looks at the data there should be for the [COVID-19 vaccine trials](https://www.fda.gov/media/137926/download).
+
+Another approach is applying corrections to the p-value threshold to ensure that the overall type I error rate is still 5%. The field of [sequential analysis](https://en.wikipedia.org/wiki/Sequential_analysis) is concerned with these types of problems, and the solutions can be mathematically complex.
+
+
+
+
+
+

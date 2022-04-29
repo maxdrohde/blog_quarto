@@ -1,0 +1,53 @@
+---
+title: "Max Rohde"
+about:
+  id: hero-heading
+  template: trestles
+  image: images/me.png
+  links:
+    - href: resume.pdf
+      text: Resume
+    - href: mailto:maxdrohde@gmail.com
+      text: Email   
+    - href: https://scholar.google.com/citations?user=nAFvhkEAAAAJ&hl=en
+      text: Google Scholar
+    - text: Github
+      href: https://github.com/maxdrohde
+    - text: Twitter
+      href: https://twitter.com/max_d_rohde
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/maximilian-rohde-694172121/
+---
+
+:::{#hero-heading}
+
+## About me
+Hello, I’m Max. I'm currently a PhD student at Vanderbilt University in the [Department of Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics). Currently I'm conducting research on Bayesian clinical trials designs for COVID-19 with [Dr. Frank Harrell](https://www.fharrell.com), and I'm a statistician on the [ACTIV-6 trial](https://activ6study.org).
+
+## Education
+
+**Vanderbilt University** | Nashville, TN
+
+PhD in Biostatistics | 2020 - Present
+
+**Carleton College** | Northfield, MN
+
+BA in Physics | 2013 - 2017
+BA in Geology | 2013 - 2017
+
+:::
+
+## Research / Work Experience
+
+- ORISE Fellow at FDA Division of Antivirals: Natural-language processing tools for product label data and meta-analyses of clinical trials for [hepatitis C](https://doi.org/10.1016/j.cgh.2020.08.042) and [HIV](https://www.croiconference.org/abstract/investigation-of-a-potential-composite-endpoint-for-immunologic-nonresponder-trials/) treatments.
+
+- Science policy at the [MIT Washington Office](https://dc.mit.edu) in Washington, DC.
+  
+- Albuquerque Seismological Laboratory: Effects of [atmospheric noise on seismometers](https://doi.org/10.1785/0220160193)
+  
+- LIGO collaboration: [Magnetic transients](https://doi.org/10.1088/1361-6382/aa60eb) and implications for gravitational wave astronomy
+
+- [Academic tutoring](https://prep1on1.com/our-team/): teaching physics, chemistry, and mathematics to high-school and undergraduate students
+
+## Personal
+In my free time I enjoy cooking (and collecting cookbooks), playing funk guitar, and swimming.
