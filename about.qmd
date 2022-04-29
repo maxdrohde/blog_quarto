@@ -33,6 +33,7 @@ PhD in Biostatistics | 2020 - Present
 **Carleton College** | Northfield, MN
 
 BA in Physics | 2013 - 2017
+
 BA in Geology | 2013 - 2017
 
 :::
@@ -43,11 +44,11 @@ BA in Geology | 2013 - 2017
 
 - Science policy at the [MIT Washington Office](https://dc.mit.edu) in Washington, DC.
   
-- Albuquerque Seismological Laboratory: Effects of [atmospheric noise on seismometers](https://doi.org/10.1785/0220160193)
+- [Albuquerque Seismological Laboratory](https://www.usgs.gov/centers/geologic-hazards-science-center/albuquerque-seismological-laboratory): [Effects of atmospheric noise on seismometers](https://doi.org/10.1785/0220160193).
   
-- LIGO collaboration: [Magnetic transients](https://doi.org/10.1088/1361-6382/aa60eb) and implications for gravitational wave astronomy
+- [LIGO](https://www.ligo.org/) collaboration: [Magnetic transients and implications for gravitational wave astronomy](https://doi.org/10.1088/1361-6382/aa60eb).
 
-- [Academic tutoring](https://prep1on1.com/our-team/): teaching physics, chemistry, and mathematics to high-school and undergraduate students
+- [Academic tutoring](https://prep1on1.com/our-team/): teaching physics, chemistry, and mathematics to high-school and undergraduate students.
 
 ## Personal
 In my free time I enjoy cooking (and collecting cookbooks), playing funk guitar, and swimming.

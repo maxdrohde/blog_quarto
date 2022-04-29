@@ -1,5 +1,5 @@
 ---
-title: "Max Rohde"
+title: "Blog"
 listing:
   contents: posts
   sort: "date desc"
