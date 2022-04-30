@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.276">
+<meta name="generator" content="quarto-0.9.328">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Max Rohde">
 <meta name="dcterms.date" content="2022-03-31">
@@ -103,7 +103,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit"
   }
-}</script><script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+}</script><style>
+    .quarto-title-banner {
+      color: black;
+background: #f1f3f5;
+    }
+    </style>
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 <link rel="stylesheet" href="../../styles.css">
 <meta name="twitter:title" content="Max Rohde - Using the tmerge() function to structure time-dependent covariates for survival analysis">
 <meta name="twitter:description" content="The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.">
@@ -166,7 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">03/31/2022</p>
+        <p class="date">March 31, 2022</p>
       </div>
     </div>
       
@@ -505,7 +511,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.blur();
     // flash "checked"
     button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
     setTimeout(function() {
+      button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
     // clear code selection

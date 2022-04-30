@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.276">
+<meta name="generator" content="quarto-0.9.328">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -271,11 +271,9 @@ ul.task-list{list-style: none;}
 <h4 class="anchored" data-anchor-id="the-german-tank-problem">The German Tank Problem</h4>
 <p>The <a href="https://en.wikipedia.org/wiki/German_tank_problem">German Tank problem</a> is a famous problem in statistics. During World War 2, the Allied forces used the serial numbers on German tanks to estimate the number of tanks produced. The results of this statistical analysis estimated a production of 246 tanks per month, while intelligence from spies estimated a much higher rate of around 1.400 tanks per month. After the war, German records showed that the true rate was 245 per month! The statistical evidence that the numbers of tanks was lower than expected gave the Allies motivation to attack the Western Front, leading to the fall of Berlin and the end of the war in Europe.</p>
 <p>We can formulate this problem assuming the serial numbers start at 1 and are randomly sampled from the population of tanks. Let <span class="math inline">\(X_1, X_2, \ldots X_n\)</span> be a sample of <span class="math inline">\(n\)</span> serial numbers. The maximum likelihood estimate for the total number of serial numbers is <span class="math inline">\(X_{(n)}\)</span>, the maximum of the observed serial numbers. However, this is a biased estimator – it underestimates the true number of tanks.</p>
-<p>We can improve this estimator by adding a factor to our maximum likelihood estimator to make it unbiased – the number of known missing tank serial numbers divided by the sample size, which can be thought of as the average gap between the recorded serial numbers. Thus the new estimator is</p>
-<p><span class="math display">\[
+<p>We can improve this estimator by adding a factor to our maximum likelihood estimator to make it unbiased – the number of known missing tank serial numbers divided by the sample size, which can be thought of as the average gap between the recorded serial numbers. Thus the new estimator is <span class="math display">\[
 \hat{\theta}=x_{(n)}+\frac{x_{(n)}-n}{n} = \left(1+\frac{1}{n}\right) x_{(n)}-1
-\]</span></p>
-<p>which has the desired property of being unbiased. Simulating the performance of our estimators with a known population size of 2,000 tanks, we see that bias-corrected MLE has higher variance than the MLE but it achieves a lower mean squared error across the tested sample sizes due to being unbiased.</p>
+\]</span> which has the desired property of being unbiased. Simulating the performance of our estimators with a known population size of 2,000 tanks, we see that bias-corrected MLE has higher variance than the MLE but it achieves a lower mean squared error across the tested sample sizes due to being unbiased.</p>
 <aside>
 There are <span class="math inline">\(X_{(n)} - n\)</span> known missing tank serial numbers.
 </aside>
@@ -346,7 +344,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.blur();
     // flash "checked"
     button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
     setTimeout(function() {
+      button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
     // clear code selection
