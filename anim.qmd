@@ -3,6 +3,9 @@ title: "Animations"
 description: "Various animations I have created to learn / teach statistics"
 toc: true
 toc-depth: 4
+title-block-banner: true
+title-block-banner: "#f1f3f5"
+title-block-banner-color: black
 ---
 
 Below are some animations I created using [gganimate](https://gganimate.com/index.html) to help me understand concepts in statistics. The work of [3Blue1Brown](https://www.3blue1brown.com) and [Seeing Theory](https://seeing-theory.brown.edu) have been an inspiration for me.
