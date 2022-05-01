@@ -134,7 +134,7 @@ The syntax `m[i,j]` selects the element in the ith row and jth column.
 m[2,2]
 ```
 
-# Matrix Operations
+# Matrix operations
 
 Matrix multiplication uses the `%*%` operator.
 
