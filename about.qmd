@@ -42,7 +42,7 @@ BA in Geology | 2013 - 2017
 
 - ORISE Fellow at FDA Division of Antivirals: Natural-language processing tools for product label data and meta-analyses of clinical trials for [hepatitis C](https://doi.org/10.1016/j.cgh.2020.08.042) and [HIV](https://www.croiconference.org/abstract/investigation-of-a-potential-composite-endpoint-for-immunologic-nonresponder-trials/) treatments.
 
-- Science policy at the [MIT Washington Office](https://dc.mit.edu) in Washington, DC.
+- [MIT Washington Office](https://dc.mit.edu): Reporting on current events in science policy.
   
 - [Albuquerque Seismological Laboratory](https://www.usgs.gov/centers/geologic-hazards-science-center/albuquerque-seismological-laboratory): [Effects of atmospheric noise on seismometers](https://doi.org/10.1785/0220160193).
   

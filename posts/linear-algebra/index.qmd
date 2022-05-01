@@ -9,10 +9,9 @@ freeze: false
 cache: true
 ---
 
-## Prerequisites
-The following material should be understandable to anyone with a basic knowledge of R and linear algebra, and it looking to implement basic linear algebra with R.
+The following material should be understandable to anyone with a basic knowledge of R and linear algebra. I plan to update this page with more material in the future.
 
-## Creating vectors
+# Creating vectors
 
 Vectors can be created with the `c()` function.
 
@@ -47,7 +46,7 @@ seq(1,3, by = 0.5)
 seq(1,3, length.out = 10)
 ```
 
-## Creating matrices
+# Creating matrices
 
 There are two common ways to create matrices in R.
 
@@ -101,7 +100,7 @@ ncol(m)
 ```
 
 
-## Matrix indexing
+# Matrix indexing
 
 Once you have a matrix in R, how do you subset parts of the matrix? Let's use this matrix, `m` as an example.
 
@@ -135,4 +134,25 @@ The syntax `m[i,j]` selects the element in the ith row and jth column.
 m[2,2]
 ```
 
+# Matrix Operations
 
+Matrix multiplication uses the `%*%` operator.
+
+```{r}
+# Define matrices
+A <- matrix(1:9, nrow=3, ncol=3)
+B <- matrix(1:6, nrow=3, ncol=2)
+
+# Matrix multiplication
+A %*% B
+```
+
+Remember that the order of matrix multiplication is important!
+
+```{r}
+#| eval: false
+B %*% A
+```
+```
+Error in B %*% A : non-conformable arguments
+```
