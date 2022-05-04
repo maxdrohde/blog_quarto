@@ -7,12 +7,6 @@ date: "`r Sys.Date()`"
 
 ## General Notes
 
-### Map
-
-::: {.column-screen}
-![Map with AirBnB Location](map.jpg)
-:::
-
 ### Arrivals
 
 - Max and Gabi: 10:30am
@@ -26,6 +20,12 @@ AirBnB address: 215 West 6th Street, Los Angeles, CA 90013, United States
 Check-in: Thursday 4:00PM
 Checkout Sunday 11:00AM
 
+### Map
+
+::: {.column-page}
+![](map.png)
+:::
+
 
 ### Rental car
 
@@ -37,9 +37,9 @@ Rental car details:
 - **Pickup**: Saturday, May 7, 2022 @ 10:30 AM
 - **Return**: Monday, May 9, 2022 @ 10:00 AM
 
-## Places to go
-
 ## Schedule
+
+Rough schedule based on our Zoom calls.
 
 ### Thursday
 
@@ -48,7 +48,7 @@ Rental car details:
 
 ### Friday
 
-- Day (TBD)
+- Metro to Santa Monica beach?
 - Korean BBQ dinner
 - Hit up the bars
 
@@ -66,11 +66,11 @@ Rental car details:
 
 - Drive to Malibu
 - Hiking ideas
-  + https://www.alltrails.com/trail/us/california/solstice-canyon-loop-trail
-  + https://www.alltrails.com/trail/us/california/temescal-canyon-loop-trail
-  + https://www.alltrails.com/trail/us/california/los-leones-trail--2
-  + https://www.alltrails.com/trail/us/california/ocean-overlook-loop-trail
-  + https://www.alltrails.com/trail/us/california/tuna-canyon-trails
+  + [Solstice Canyon Trail](https://www.alltrails.com/trail/us/california/solstice-canyon-loop-trail)
+  + [Temescal Canyon Loop](https://www.alltrails.com/trail/us/california/temescal-canyon-loop-trail)
+  + [Los Leones Trail](https://www.alltrails.com/trail/us/california/los-leones-trail--2)
+  + [Ocean Overlook Trail](https://www.alltrails.com/trail/us/california/ocean-overlook-loop-trail)
+  + [Tuna Canyon Trail](https://www.alltrails.com/trail/us/california/tuna-canyon-trails)
   
 ### Monday
 
