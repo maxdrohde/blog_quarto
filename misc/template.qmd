@@ -9,7 +9,9 @@ date: "`r Sys.Date()`"
 
 ### Map
 
-![Map](map.jpg)
+::: {.column-screen}
+![Map with AirBnB Location](map.jpg)
+:::
 
 ### Arrivals
 
@@ -69,7 +71,6 @@ Rental car details:
   + https://www.alltrails.com/trail/us/california/los-leones-trail--2
   + https://www.alltrails.com/trail/us/california/ocean-overlook-loop-trail
   + https://www.alltrails.com/trail/us/california/tuna-canyon-trails
-  
   
 ### Monday
 
