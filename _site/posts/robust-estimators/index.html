@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.328">
+<meta name="generator" content="quarto-0.9.353">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Max Rohde">
 <meta name="dcterms.date" content="2021-01-13">
@@ -205,7 +205,8 @@ background: #f1f3f5;
 </div>
 <p>The sample mean and sample median are commonly used estimators for the center of distribution. There is no such thing as a “best estimator” in all circumstances. However, estimators can definitely outperform other estimators in terms of desirable properties (e.g., unbiasedness, low variance, consistency) given a particular circumstance. We can use simulation and mathematical theory to evaluate to performance of estimators given a set of assumptions. Here we focus on using simulation, with the help of tools from the <code>tidyverse</code>.</p>
 <section id="scenario-1" class="level2"><h2 class="anchored" data-anchor-id="scenario-1">Scenario 1</h2>
-<p>We begin with a simple example. The true data generating process is <span class="math display">\[ X_1, X_2, \ldots X_n \stackrel{iid}{\sim} N(3,1) \]</span></p>
+<p>We begin with a simple example. The true data generating process is</p>
+<p><span class="math display">\[ X_1, X_2, \ldots X_n \stackrel{iid}{\sim} N(3,1) \]</span></p>
 <p>How will the mean and median perform as estimators of center? Let’s use simulation to find out.</p>
 <p>We will use a <code>tibble</code> to store all of our simulation results. First, let’s decide what sample sizes to simulate, and how many trials to run. The more trials we run, the more accurate our simulation results will be – the only cost being increased time to run the simulations.</p>
 <div class="cell" data-hash="index_cache/html/unnamed-chunk-2_d80f6932638c5db28d2af52267addc86">
@@ -503,7 +504,7 @@ background: #f1f3f5;
 
 <!-- -->
 
-</section></main><!-- /main --><script type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const icon = "";
   const anchorJS = new window.AnchorJS();

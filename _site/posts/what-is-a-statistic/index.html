@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.328">
+<meta name="generator" content="quarto-0.9.353">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Max Rohde">
 <meta name="dcterms.date" content="2020-12-08">
@@ -203,9 +203,11 @@ background: #f1f3f5;
 </ul>
 <p>We can even create arbitrary statistics that appear to have little use, such as adding only the first and third elements of the data and dividing by 17.</p>
 </section><section id="simulating-statistics-of-dice-rolls" class="level2 page-columns page-full"><h2 class="anchored" data-anchor-id="simulating-statistics-of-dice-rolls">Simulating statistics of dice rolls</h2>
-<p>As a simple data-generating process, let’s consider rolling 5 dice. Each time we roll, we obtain 5 numbers, each from 1 to 6. We will call each one of these vectors of 5 numbers, <span class="math display">\[
+<p>As a simple data-generating process, let’s consider rolling 5 dice. Each time we roll, we obtain 5 numbers, each from 1 to 6. We will call each one of these vectors of 5 numbers,</p>
+<p><span class="math display">\[
 (x_1, x_2, x_3, x_4, x_5)
-\]</span> a sample. We then will compute statistics from these samples. The main question we seek to answer is: how are the statistics distributed? When I calculate the mean of 5 dice, what will the most likely result be? We can ask this question about any statistic.</p>
+\]</span></p>
+<p>a sample. We then will compute statistics from these samples. The main question we seek to answer is: how are the statistics distributed? When I calculate the mean of 5 dice, what will the most likely result be? We can ask this question about any statistic.</p>
 <p>We’ll write a function to roll <code>n</code> dice called <code>roll()</code>.</p>
 <div class="cell" data-hash="index_cache/html/unnamed-chunk-2_a3c5075983599bcde53ec9d55fdada3e">
 <details open=""><summary>Code</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="co"># A function to roll `n` dice</span>
@@ -319,7 +321,7 @@ background: #f1f3f5;
 
 <!-- -->
 
-</section></main><!-- /main --><script type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const icon = "";
   const anchorJS = new window.AnchorJS();

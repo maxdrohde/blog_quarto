@@ -1,0 +1,16 @@
+# options specified here will apply to all posts in this folder
+
+# Enable banner style title blocks
+title-block-banner: true
+title-block-banner: "#f1f3f5"
+title-block-banner-color: black
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 4
+    fig-cap-location: margin
+
+execute:
+  warning: false
+  message: false
