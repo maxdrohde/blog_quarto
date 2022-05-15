@@ -2,7 +2,7 @@
 comments: 
   utterances:
     repo: maxdrohde/blog_quarto
-    theme: photon-dark
+    theme: body-light
 
 # Enable banner style title blocks
 title-block-banner: true
