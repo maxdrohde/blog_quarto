@@ -2,6 +2,9 @@ project:
   type: website
 
 website:
+  comments: 
+    utterances:
+      repo: maxdrohde/blog_quarto
   title: "Max Rohde"
   search: true
   repo-url: https://github.com/maxdrohde/blog_quarto
