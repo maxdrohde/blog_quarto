@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.353">
+<meta name="generator" content="quarto-0.9.393">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -140,6 +140,7 @@ background: #f1f3f5;
   <li><a href="#k-nearest-neighbors-decision-boundary" id="toc-k-nearest-neighbors-decision-boundary" class="nav-link" data-scroll-target="#k-nearest-neighbors-decision-boundary">k-Nearest Neighbors Decision Boundary</a></li>
   <li><a href="#simple-mcmc-animation" id="toc-simple-mcmc-animation" class="nav-link" data-scroll-target="#simple-mcmc-animation">Simple MCMC Animation</a></li>
   <li><a href="#bayesian-linear-regression" id="toc-bayesian-linear-regression" class="nav-link" data-scroll-target="#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+  <li><a href="#visualizing-priors" id="toc-visualizing-priors" class="nav-link" data-scroll-target="#visualizing-priors">Visualizing priors</a></li>
   <li><a href="#calculating-π-with-monte-carlo-estimation" id="toc-calculating-π-with-monte-carlo-estimation" class="nav-link" data-scroll-target="#calculating-π-with-monte-carlo-estimation">Calculating π with Monte Carlo Estimation</a></li>
   <li><a href="#overfitting-in-polynomial-regression" id="toc-overfitting-in-polynomial-regression" class="nav-link" data-scroll-target="#overfitting-in-polynomial-regression">Overfitting in Polynomial Regression</a></li>
   <li><a href="#finding-the-mle-estimate-of-the-mean-for-a-normal-distribution" id="toc-finding-the-mle-estimate-of-the-mean-for-a-normal-distribution" class="nav-link" data-scroll-target="#finding-the-mle-estimate-of-the-mean-for-a-normal-distribution">Finding the MLE estimate of the mean for a Normal Distribution</a></li>
@@ -227,6 +228,15 @@ background: #f1f3f5;
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><video src="anim/bayes_lin_reg.mp4" class="img-fluid" controls=""><a href="anim/bayes_lin_reg.mp4">Video</a></video></p>
+</figure>
+</div>
+</section>
+<section id="visualizing-priors" class="level4">
+<h4 class="anchored" data-anchor-id="visualizing-priors">Visualizing priors</h4>
+<p>When doing Bayesian inference, it’s important to visualize what your priors are implying. For a linear regression with only an intercept and slope, a N(0,1) prior on the slope produces very different regression lines (before using data) compared to a N(0,10) prior.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><video src="anim/priors.mp4" class="img-fluid" controls=""><a href="anim/priors.mp4">Video</a></video></p>
 </figure>
 </div>
 </section>

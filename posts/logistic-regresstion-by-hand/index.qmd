@@ -1,0 +1,21 @@
+---
+title: Logistic regression (by hand)
+description:  ADD DESCRIPTION HERE
+author: Max Rohde
+date: 05/11/2022
+image: preview.png
+code-fold: show
+freeze: false
+cache: true
+draft: true
+---
+
+### Notes to self
+
+Different parts:
+- Show using the `glm` function
+- show using the likelihood by hand with optimize and nelder mead
+- show using the likelihood and gradient by hand with gradient descent
+- show using the likelihood and gradient by hand using newton raphson
+- show using autodiff with torch: https://rgiordan.github.io/code/2022/04/01/rtorch_example.html
+

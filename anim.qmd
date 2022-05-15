@@ -50,6 +50,11 @@ The model was fit using [Stan](https://mc-stan.org) to do the MCMC sampling and 
 
 ![](anim/bayes_lin_reg.mp4){fig-width=100%}
 
+#### Visualizing priors
+When doing Bayesian inference, it's important to visualize what your priors are implying. For a linear regression with only an intercept and slope, a N(0,1) prior on the slope produces very different regression lines (before using data) compared to a N(0,10) prior.
+
+![](anim/priors.mp4){fig-width=100%}
+
 #### Calculating π with Monte Carlo Estimation
 
 Monte Carlo estimation is a technique for solving deterministic problems by random sampling.

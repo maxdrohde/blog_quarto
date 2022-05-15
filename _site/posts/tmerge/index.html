@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.353">
+<meta name="generator" content="quarto-0.9.393">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Max Rohde">
 <meta name="dcterms.date" content="2022-03-31">
@@ -211,6 +211,7 @@ background: #f1f3f5;
 <p>Take for example a subject who started with <code>exposure = 1</code>. Then at 4 years, their exposure status changed to <code>exposure = 0</code>. Then at 7 years, their exposure status changed to <code>exposure = 2</code>. Then the subject died at 10 years (i.e., <code>status = 1</code>). We would need three rows to represent this subject, since there are 3 distinct time periods: <code>0-4</code>, <code>4-7</code>, and <code>7-10</code>. The <code>survival</code> package uses the names <code>tstart</code> and <code>tstop</code> to denote the beginning and end of each time period. So when structuring data from time-dependent variables, the rows for this subject would look like this:</p>
 <div class="cell" data-hash="index_cache/html/unnamed-chunk-2_0ad85dec9ebfa8d9782e156db721ddaf">
 <div class="cell-output-display">
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;"> id </th>
@@ -260,6 +261,7 @@ background: #f1f3f5;
 </div>
 <div class="cell" data-hash="index_cache/html/unnamed-chunk-4_53381f172e53330d8e46c51a3382d6f4">
 <div class="cell-output-display">
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;"> id </th>
@@ -305,6 +307,7 @@ background: #f1f3f5;
 </div>
 <div class="cell" data-hash="index_cache/html/unnamed-chunk-6_b4aa23f6110c66980a717107322ec115">
 <div class="cell-output-display">
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;"> id </th>
@@ -359,6 +362,7 @@ background: #f1f3f5;
 <p>Now the <code>df_time_ind</code> data frame looks like this:</p>
 <div class="cell" data-hash="index_cache/html/unnamed-chunk-8_a1f9d4c08e4b0980d25b75132e30a6a3">
 <div class="cell-output-display">
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;"> id </th>
@@ -410,6 +414,7 @@ background: #f1f3f5;
 <p>Below we have our completed dataset with properly structured time-dependent variables.</p>
 <div class="cell" data-hash="index_cache/html/unnamed-chunk-10_328c3d09c7f5722df7813f481d7fc3ea">
 <div class="cell-output-display">
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;"> id </th>
