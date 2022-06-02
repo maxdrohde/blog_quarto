@@ -4,6 +4,7 @@
 title-block-banner: true
 title-block-banner: "#f1f3f5"
 title-block-banner-color: black
+search: false
 format:
   html:
     toc: true
