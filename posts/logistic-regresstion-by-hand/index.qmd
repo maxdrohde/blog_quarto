@@ -6,8 +6,8 @@ date: 05/11/2022
 image: preview.png
 code-fold: show
 freeze: false
-cache: true
-draft: true
+cache: false
+draft: false
 ---
 
 ### Notes to self
@@ -18,4 +18,228 @@ Different parts:
 - show using the likelihood and gradient by hand with gradient descent
 - show using the likelihood and gradient by hand using newton raphson
 - show using autodiff with torch: https://rgiordan.github.io/code/2022/04/01/rtorch_example.html
+- compare timing
+
+```{r}
+library(tidyverse)
+library(gganimate)
+
+library(Hmisc)
+
+library(palmerpenguins)
+
+library(patchwork)
+library(kableExtra)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=12,
+                                 font_family = "Source Sans Pro"))
+```
+
+```{r}
+# Load and rename data
+data(penguins)
+df <- penguins
+```
+
+```{r}
+df <-
+df %>%
+  filter(species %in% c("Adelie", "Gentoo")) %>%
+  mutate(adelie = as.integer(species == "Adelie")) %>%
+  select(species, adelie, bill_length_mm:body_mass_g) %>%
+  drop_na()
+```
+
+# Data overview
+
+```{r}
+# View data
+head(df)
+```
+:::{.callout-note .column-page-right collapse="true"}
+## Expand to view detailed summary statistics for each variable
+
+```{r}
+html(describe(df))
+```
+
+:::
+
+```{r}
+#| column: page-right
+#| fig-width: 12
+df %>%
+  GGally::ggpairs(mapping = aes(color=species),
+                  columns = c("bill_length_mm",
+                              "bill_depth_mm",
+                              "flipper_length_mm",
+                              "body_mass_g"),
+                  title = "Can these features distinguish Adelie and Gentoo penguins?")
+
+```
+
+# Logistic regression overview
+
+
+# Logistic regression with `glm()`
+
+
+```{r}
+model_glm <- glm(adelie ~ bill_length_mm + body_mass_g,
+                 family=binomial(link = "logit"),
+                 data=df)
+```
+
+```{r}
+grid <-
+crossing(bill_length_mm = seq(min(df$bill_length_mm)-2, max(df$bill_length_mm)+2, 0.1),
+         body_mass_g = seq(min(df$body_mass_g)-100, max(df$body_mass_g)+100, 0.5))
+```
+
+```{r}
+grid$predicted <- predict(model_glm, grid, type = "response")
+```
+
+```{r}
+#| column: page-right
+#| fig-width: 12
+grid %>%
+  ggplot() +
+  aes(x=bill_length_mm,
+      y=body_mass_g) +
+  geom_raster(aes(fill=predicted)) +
+  geom_point(data=df, mapping = aes(color=species)) +
+  geom_point(data=df, color="black", shape=21) +
+  scale_fill_viridis_c(breaks = seq(0, 1, 0.25),
+                       limits=c(0,1)) +
+  scale_color_brewer(palette="Dark2") +
+  scale_x_continuous(breaks=seq(30, 60, 5)) +
+  scale_y_continuous(breaks=seq(3000, 6000, 500)) +
+  labs(fill = "Probability of Adelie\n",
+       color = "Species",
+       x = "Bill length (mm)",
+       y = "Body mass (g)",
+       title = "Visualizing the predictions of the logistic regression model") +
+  theme(legend.key.height = unit(1, "cm"))
+```
+
+
+# Logistic regression with `optim()`
+
+```{r}
+# This is a naive implementation that can overflow for large x
+# expit <- function(x) exp(x) / (1 + exp(x))
+
+# Better to use the built-in version
+expit <- plogis
+```
+
+
+```{r}
+objective_function <- function(parameters){
+  
+  # optim() expects the parameters as a single vector, so we set the coefficients
+  # as the elements of a vector called `parameters`
+  b0 <- parameters[1]
+  b1 <- parameters[2]
+  b2 <- parameters[3]
+  
+  linear_predictor <- (b0) + (b1*df$bill_length_mm) + (b2*df$body_mass_g)
+  
+  # Likelihood for each observation
+  # If the observation is Adelie, then the likelihood is the probability of Adelie
+  # If the observation is not Adelie (i.e., Gentoo), then the likelihood is the probability of not Adelie
+  # which is 1 - P(Adelie)
+  likelihood <- ifelse(df$adelie==1,
+                       expit(linear_predictor),
+                       1-expit(linear_predictor))
+  
+  # Log-likelihood for each observation
+  log_likelihood <- log(likelihood)
+  
+  # Joint log-likelihood for all the observations. Note the sum because
+  # multiplication is addition on the log-scale
+  total_log_likelihood <- sum(log_likelihood)
+  
+  # the optim() function only minimizes, so we return the negative log-likelihood
+  # and then maximize it
+  return(-total_log_likelihood)
+}
+```
+
+```{r}
+optim_results <-
+  optim(par=c(0,0,0),              # Initial values
+        fn = objective_function,   # Objective function to be minimized
+        method="Nelder-Mead")      # Optimization method
+```
+
+```{r}
+optim_results$par
+```
+```{r}
+coef(model_glm)
+```
+
+# Logistic regression with gradient descent
+
+You can find a nice derivation of the derivative of the negative log-likelihood for logistic regression [here](https://web.stanford.edu/~jurafsky/slp3/5.pdf).
+
+\begin{align*}
+(\hat{y}-y) \mathbf{x}_{j}
+\end{align*}
+
+```{r}
+df$bill_length_mm <- scale(df$bill_length_mm, center=FALSE) %>% as.vector()
+df$body_mass_g <- scale(df$body_mass_g, center=FALSE) %>% as.vector()
+```
+
+```{r}
+model_glm <- glm(adelie ~ bill_length_mm + body_mass_g,
+                 family=binomial(link = "logit"),
+                 data=df)
+```
+
+```{r}
+gradient <- function(parameters){
+  
+  b0 <- parameters[1]
+  b1 <- parameters[2]
+  b2 <- parameters[3]
+  
+  linear_predictor <- (b0) + (b1*df$bill_length_mm) + (b2*df$body_mass_g)
+  
+  y_hat <- expit(linear_predictor)
+  
+  gradient <- (t(cbind(rep(1, nrow(df)), df$bill_length_mm, df$body_mass_g)) %*% (y_hat - df$adelie)) / nrow(df)
+  
+  return(gradient)
+}
+```
+
+```{r}
+step_size <- 0.0001
+theta <- c(0,0,0)
+iter <- 1
+
+while (TRUE) {
+  iter <- iter + 1
+  current_gradient <- gradient(theta)
+  
+  theta_new <- theta - (step_size * current_gradient)
+  
+  if (norm(theta - theta_new, type="2") < 1e-4) {
+    break
+  } else{
+    theta <- theta_new
+    print(theta)
+  }
+}
+
+print(iter)
+print(theta)
+print(coef(model_glm))
+```
+
 
