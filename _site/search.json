@@ -1,5 +1,26 @@
 [
   {
+    "objectID": "misc/seth_june_2.html",
+    "href": "misc/seth_june_2.html",
+    "title": "Seth June 2nd",
+    "section": "",
+    "text": "Codelibrary(tidyverse)\n\n# Set default ggplot theme\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=12))"
+  },
+  {
+    "objectID": "misc/seth_june_2.html#question",
+    "href": "misc/seth_june_2.html#question",
+    "title": "Seth June 2nd",
+    "section": "Question",
+    "text": "Question\n\nThe data: df <- tibble(pay = c(0,0,0,2,1,3,3,3,4,5,6)) I want to make a histogram with the following features. Each bar has a $2 width , starting at 0. So the tick marks are 0-2, 2-4 , 4-6 , left-bound exclusive , right bound inclusive. I also want a bar that counts the number of “0” observations. Remember that the bounds above in 1. are left-bound exclusive."
+  },
+  {
+    "objectID": "misc/seth_june_2.html#solution",
+    "href": "misc/seth_june_2.html#solution",
+    "title": "Seth June 2nd",
+    "section": "Solution",
+    "text": "Solution\n\nCodedf <- tibble(pay = c(0,0,0,2,1,3,3,3,4,5,6))\n\n\nFirst we define a vector of cutpoints that define the bins for our plot. We include a small negative number, -0.1, as a hack in order to capture zero by itself as an interval. This won’t be a problem with this data, because all the values are positive, but you may need to adjust if you have negative values.\n\nCode# Define cutpoints\ncuts <- c(-0.1, seq(0, max(df$pay), by=2))\n\n\n\nCode# View the cutpoints\ncuts\n\n[1] -0.1  0.0  2.0  4.0  6.0\n\n\nThe cut function by default is open on the left and closed on the right.\n\nCode# Categorize the data by the cutpoints\ndf$pay_categorized <- cut(df$pay, breaks = cuts) \n\n\n\nCode# View the categorized data\ndf$pay_categorized\n\n [1] (-0.1,0] (-0.1,0] (-0.1,0] (0,2]    (0,2]    (2,4]    (2,4]    (2,4]   \n [9] (2,4]    (4,6]    (4,6]   \nLevels: (-0.1,0] (0,2] (2,4] (4,6]\n\n\nWe would like to rename the (-0.1,0] category to just be 0.\n\nCode# Rename the zero category\ndf$pay_categorized <-\n  df$pay_categorized %>%\n  fct_recode(`0` = \"(-0.1,0]\")\n\n\nNow we can use ggplot with geom_bar(). Note that geom_bar() automatically maps the y values to counts.\n\nCodedf %>%\n  ggplot() +\n  aes(x=pay_categorized) +\n  geom_bar() +\n  labs(x = \"Payment\",\n       y = \"Count\",\n       title = \"Distribution of payment\",\n       subtitles = \"Zero values are included as a seperate column\",\n       caption = \"xoxo, Max\")"
+  },
+  {
     "objectID": "posts/robust-estimators/index.html",
     "href": "posts/robust-estimators/index.html",
     "title": "Statistical simulation of robust estimators with tidyverse tools",
