@@ -2,7 +2,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/logistic-regresstion-by-hand/index.html",
       "/posts/linear-algebra/index.html",
       "/posts/tmerge/index.html",
       "/posts/odds-ratio-dichotomize/index.html",
