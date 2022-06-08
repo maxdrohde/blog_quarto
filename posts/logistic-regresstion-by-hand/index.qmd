@@ -35,11 +35,11 @@ theme_set(cowplot::theme_cowplot(font_size=14,
 
 Logistic regression is a method for estimating the probability that an observation is in one of two classes given a vector of covariates. For example, given various demographic characteristics (age, sex, etc...), we can estimate the probability that a person owns a home or not. Important predictors would likely be age and level of income. The probabilities returned by the model can then be used for classification based on a cutoff (e.g., 0.5 is a common choice) or used for decision making based on more complex decision rules^[This [article](https://www.fharrell.com/post/classification/) goes into more detail on the difference between prediction of probabilities and classification.]. 
 
-In this post, we will explore how logistic regression works by implementing it by hand. It can be bit of a black box when the built-in functions in R carry out the procedure, so even though it will never be practical, implementing algorithms by hand can help with understanding how they work.
+In this post, we'll explore how logistic regression works by implementing it by hand using a few different methods. It can be bit of a black box using the built-in functions in R, so implementing algorithms by hand can aid understandingm, even though it's not practical for data analysis projects.
 
 # Data
 
-As an example dataset, we will use the Palmer Penguins data. From the help file for the data, the data includes "measurements for penguin species, island in Palmer Archipelago, size (flipper length, body mass, bill dimensions), and sex".
+As an example dataset, we will use the Palmer Penguins data. The data includes measurements on three penguins species from an island in the Palmer Archipelago.
 
 We'll load the data and save it as a data frame `df`.
 
@@ -49,11 +49,11 @@ data(penguins)
 df <- penguins
 ```
 
-Then we can
+Then we will
 
 - filter to two of the penguin species: Adelie and Gentoo
 - create a binary variable, `adelie` corresponding to 1 for Adelie and 0 for Gentoo
-- select the columns that we want to keep
+- select a subset of columns to keep
 
 ```{r}
 df <-
@@ -70,7 +70,7 @@ You can explore the raw data below.
 
 ```{r}
 #| echo: false
-
+#| column: page-right
 # View data
 df %>%
   kbl() %>%
