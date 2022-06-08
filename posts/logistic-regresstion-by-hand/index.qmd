@@ -136,7 +136,7 @@ We have three parameters, $\beta_0$, $\beta_1$, and $\beta_2$. We can determine 
 However, this won't quite work if we want to predict a binary outcome like species. We could form a model like this:
 \begin{gather}
 p_i = \beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \\
-\text{[Species]} \sim \operatorname{Bernoulli}(p_i)
+[\text{Species}]_i \sim \operatorname{Bernoulli}(p_i)
 \end{gather}
 In words, each observation of a penguin is modeled as a Bernoulli random variable, where the probability of being Adelie is a linear function of bill length and body mass. The issue with this model is that if we let the parameters vary, the value of $p_i$ can exceed the range $[0,1]$, which doesn't make sense if we are trying to model a probability.
 
