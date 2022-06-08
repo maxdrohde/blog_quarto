@@ -364,7 +364,7 @@ which we can compare with the coefficients obtained from `glm()`, and we see tha
 coef(model_glm)
 ```
 
-The below animation demonstrates the path of the Nelder-Mead function. As stated above, for the purpose of the animation, we set the optimized value of $\beta_0 = 58.075$ and we can visualize how the negative log-likelihood is optimized with respect to $\beta_1$ and $beta_2$.
+The below animation demonstrates the path of the Nelder-Mead function. As stated above, for the purpose of the animation, we set the optimized value of $\beta_0 = 58.075$ and we can visualize how the negative log-likelihood is optimized with respect to $\beta_1$ and $\beta_2$.
 
 ```{r}
 #| echo: false
