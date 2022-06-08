@@ -4,7 +4,7 @@
     "href": "posts/logistic-regresstion-by-hand/index.html",
     "title": "Logistic regression (by hand)",
     "section": "",
-    "text": "Codelibrary(tidyverse)\nlibrary(gganimate)\n\nlibrary(Hmisc)\n\nlibrary(palmerpenguins)\n\nlibrary(patchwork)\nlibrary(kableExtra)\nlibrary(glue)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=14,\n                                 font_family = \"Source Sans Pro\"))"
+    "text": "Code# Load packages\nlibrary(tidyverse)\nlibrary(gganimate)\n\nlibrary(Hmisc)\n\nlibrary(palmerpenguins)\n\nlibrary(patchwork)\nlibrary(kableExtra)\nlibrary(glue)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=14,\n                                 font_family = \"Source Sans Pro\"))"
   },
   {
     "objectID": "posts/logistic-regresstion-by-hand/index.html#exploratory-data-analysis",
