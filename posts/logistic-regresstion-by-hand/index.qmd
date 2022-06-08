@@ -126,25 +126,25 @@ Logistic regression is a type of linear model. In statistics, a linear model mea
 For example, if we were predicting bill length, we could create a linear model where bill length is normally distributed, with a mean determined as a linear function of body mass and species.
 
 \begin{gather}
-\mu = \beta_0 + \beta_1 [\text{Body Mass}] + \beta_2 [\text{Species = Adelie}] \\
-\text{[Bill Length]} \sim N(\mu, \sigma^2)
+\mu_i = \beta_0 + \beta_1 [\text{Body Mass}]_i + \beta_2 [\text{Species = Adelie}]_i \\
+\text{[Bill Length]_i} \sim N(\mu_i, \sigma^2)
 \end{gather}
 
 We have three parameters, $\beta_0$, $\beta_1$, and $\beta_2$. We can determine the likelihood of the data given these parameters. Maximizing the likelihood is the [most common way](https://online.stat.psu.edu/stat415/lesson/1/1.2) to estimate the parameters from data. The idea is that we tune the parameters until we find the set of parameters that made the observed data most likely.
 
 However, this won't quite work if we want to predict a binary outcome like species. We could form a model like this:
 \begin{gather}
-p = \beta_0 + \beta_1 [\text{Bill Length}] + \beta_2 [\text{Body Mass}] \\
-\text{[Species]} \sim \operatorname{Bernoulli}(p)
+p_i = \beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \\
+\text{[Species]} \sim \operatorname{Bernoulli}(p_i)
 \end{gather}
-In words, each observation of a penguin is modeled as a Bernoulli random variable, where the probability of being Adelie is a linear function of bill length and body mass. The issue with this model is that if we let the parameters vary, the can exceed the range $[0,1]$, which doesn't make sense if we are trying to model a probability.
+In words, each observation of a penguin is modeled as a Bernoulli random variable, where the probability of being Adelie is a linear function of bill length and body mass. The issue with this model is that if we let the parameters vary, the value of $p_i$ can exceed the range $[0,1]$, which doesn't make sense if we are trying to model a probability.
 
-The solution is the expit function:
+The solution is using the expit function:
 $$
 \operatorname{expit} = \frac{e^{x}}{1+e^{x}}
 $$
 
-This function takes in a real valued input and transforms it to lie within $[0,1]$. This also called the logistic function, hence the name "logistic regression".
+This function takes in a real valued input and transforms it to lie within $[0,1]$. THe expit function is also called the logistic function, hence the name "logistic regression".
 
 Let's try it out in an example.
 
@@ -156,7 +156,7 @@ Let's try it out in an example.
 expit <- plogis
 ```
 
-We see that anything below -5 gets squashed to zero and anything above 5 gets squashed to 1.
+We see that (approximately) anything below -5 gets squashed to zero and anything above 5 gets squashed to 1.
 
 ```{r}
 # Plot the output of the expit() function for x values between -10 and 10
