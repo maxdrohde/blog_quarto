@@ -199,7 +199,7 @@ $$
 
 and now substituting in $p_i$ in terms of the parameters, we have
 \begin{align}
-\text{Log-Likelihood} &= \underbrace{\sum_{i=1}^{n} [[\text{[Adelie]}_i \times \log(\operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \right))]}_{\text{Contribution from Adelie observations}} \\ &+ \underbrace{[(1 - \text{[Adelie]}_i) \times \log(1-\operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \right))]}_{\text{Contribution from Gentoo observations}}]
+\text{Log-Likelihood} &= \sum_{i=1}^{n} [ \underbrace{[\text{[Adelie]}_i \times \log(\operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \right))]}_{\text{Contribution from Adelie observations}} \\ &+ \underbrace{[(1 - \text{[Adelie]}_i) \times \log(1-\operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \right))]}_{\text{Contribution from Gentoo observations}}]
 \end{align}
 
 We can then pick $\beta_0$, $\beta_1$, and $\beta_2$ to maximize this log-likelihood function, or as is often done in practice, minimize the negative log-likelihood function. We will need to do this with numerical methods, rather than obtaining an analytical solution with calculus, since no closed-form solution exists.
