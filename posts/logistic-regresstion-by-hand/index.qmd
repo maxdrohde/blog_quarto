@@ -172,7 +172,7 @@ We then modify our model to be
 p_i = \operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}] + \beta_2 [\text{Body Mass}] \right) \\
 \text{[Species]} \sim \operatorname{Bernoulli}(p_i)
 \end{gather}
-so now $p_i$ is constrained to lie within $[0,1]$. This type of model is known as a generalized linear model (GLM).
+so now $p_i$ is constrained to lie within $[0,1]$. This type of model, where we take a linear function of the parameters and then apply a non-linear function to it, is known as a generalized linear model (GLM).
 
 The likelihood contribution of a single observation is $p_i$ if it is Adelie and $1-p_i$ if it is Gentoo, which we can write as
 
