@@ -379,7 +379,7 @@ which we can compare with the coefficients obtained from `glm()`, and we see tha
 coef(model_glm)
 ```
 
-The below animation demonstrates the path of the Nelder-Mead function. As stated above, for the purpose of the animation, we set the optimized value of $\beta_0 = 58.075$ and we can visualize how the negative log-likelihood is optimized with respect to $\beta_1$ and $\beta_2$.
+The below animation demonstrates the path of the Nelder-Mead function^[The code for this animation is long, so it is not included here, but can be viewed in the source code of the Quarto document.]. As stated above, for the purpose of the animation, we set the optimized value of $\beta_0 = 58.075$ and we can visualize how the negative log-likelihood is optimized with respect to $\beta_1$ and $\beta_2$.
 
 ```{r}
 #| echo: false
@@ -601,6 +601,6 @@ Again, we see that the results are very close to the `glm()` results.
 
 # Conclusion
 
-Hopefully this post was helpful for understanding the inner working of logistic regression and how the principles can be extended to other types of models. For example, Poisson regression is another type of generalized linear model just like logistic regression, where in that case we use the `exp` function instead of the `expit` function to constrain parameter values to lie in the range $[0, \infty]$.
+Hopefully this post was helpful for understanding the inner workings of logistic regression and how the principles can be extended to other types of models. For example, Poisson regression is another type of generalized linear model just like logistic regression, where in that case we use the `exp` function instead of the `expit` function to constrain parameter values to lie in the range $[0, \infty]$.
 
 
