@@ -593,11 +593,22 @@ while (TRUE) {
     theta <- theta_new
   }
 }
+```
 
+```{r}
 print(glue("Number of iterations: {iter}"))
+```
+
+```{r}
 print(glue("Final parameter values: {as.numeric(theta)}"))
+```
+
+```{r}
 print(glue("`glm()` parameter values (for comparison): {as.numeric(coef(model_glm))}"))
 ```
+
+
+
 
 Again, we see that the results are very close to the `glm()` results.
 
