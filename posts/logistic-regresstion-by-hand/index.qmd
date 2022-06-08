@@ -400,6 +400,12 @@ if (!file.exists("nelder_mead_path.mp4")) {
     return(-total_log_likelihood)
   }
   
+  ## Optimizing
+  set.seed(1234)
+  optim_res <- optim(par=c(-5, -5),
+  fn = neg_loglikelihood_function,
+  method="Nelder-Mead")
+  
   run_opt <- function(maxit){
     set.seed(1234)
     res <-
