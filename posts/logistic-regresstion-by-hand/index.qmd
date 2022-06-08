@@ -228,6 +228,7 @@ grid$predicted <- predict(model_glm, grid, type = "response")
 
 # View data
 grid %>%
+  head(100) %>%
   kbl() %>%
   kable_styling() %>%
   scroll_box(height = "300px")
@@ -409,16 +410,16 @@ if (!file.exists("nelder_mead_path.mp4")) {
   ## Optimizing
   set.seed(1234)
   optim_res <- optim(par=c(-5, -5),
-  fn = neg_loglikelihood_function,
-  method="Nelder-Mead")
+                     fn = neg_loglikelihood_function,
+                     method="Nelder-Mead")
   
   run_opt <- function(maxit){
     set.seed(1234)
     res <-
-    optim(par=c(-5, -5),
-          fn = neg_loglikelihood_function,
-          method="Nelder-Mead",
-          control=list(maxit=maxit))
+      optim(par=c(-5, -5),
+            fn = neg_loglikelihood_function,
+            method="Nelder-Mead",
+            control=list(maxit=maxit))
     
     return(tibble(b1=res$par[1],
                   b2=res$par[2],
@@ -440,9 +441,9 @@ if (!file.exists("nelder_mead_path.mp4")) {
   grid$neg_loglikelihood <-
     pmap_dbl(grid,
              ~neg_loglikelihood_function(c(..1, ..2)))
-
+  
   p1 <-
-  path_df %>%
+    path_df %>%
     ggplot() +
     aes(x=b1, y=b2) +
     geom_raster(data=grid, aes(fill = neg_loglikelihood)) +
@@ -457,7 +458,7 @@ if (!file.exists("nelder_mead_path.mp4")) {
          fill = "Negative log-likelihood\n",
          x = "Beta 1",
          y = "Beta 2",
-        title = "Visualizing the path of Nelder-Mead") +
+         title = "Visualizing the path of Nelder-Mead") +
     theme(legend.position = "none",
           legend.key.height = unit(1, "cm"))
   
@@ -473,7 +474,7 @@ if (!file.exists("nelder_mead_path.mp4")) {
   anim_save(animation = gif, filename = "p1.mp4")
   
   p2 <-
-  path_df %>%
+    path_df %>%
     ggplot() +
     aes(x=step, y=val) +
     geom_point() +
@@ -561,6 +562,8 @@ Now we implement the gradient descent algorithm. We stop if the difference betwe
 ```{r}
 #| column: page-right
 #| cache: true
+
+set.seed(777)
 
 step_size <- 0.001
 theta <- c(0,0,0)
