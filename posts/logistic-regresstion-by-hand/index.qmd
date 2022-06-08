@@ -224,7 +224,7 @@ crossing(bill_length_cm = seq(min(df$bill_length_cm)-0.2, max(df$bill_length_cm)
          body_mass_kg = seq(min(df$body_mass_kg)-0.1, max(df$body_mass_kg)+0.1, 0.005))
 ```
 
-We use the `predict()` function to obtain the predicted probabilities. Using `type = "response"` specifies that we want the predictions of the probability scale (i.e., after passing the linear predictor through the `expit` function.).
+We use the `predict()` function to obtain the predicted probabilities. Using `type = "response"` specifies that we want the predictions on the probability scale (i.e., after passing the linear predictor through the `expit` function.).
 
 ```{r}
 grid$predicted <- predict(model_glm, grid, type = "response")
@@ -271,13 +271,13 @@ grid %>%
 
 Now that we know what to expect after using `glm()`, let's implement logistic regression by hand.
 
-Recall that we would like to numerically determine the beta values that minimize the negative log-likelihood. The `optim()` function in R is a general-purpose function for minimizing functions. This [short video](https://youtu.be/Qvye1wDa0kk) is a great introduction to `optim()`.
+Recall that we would like to numerically determine the beta values that minimize the negative log-likelihood. The `optim()` function in R is a general-purpose function for minimizing functions^[This [short video](https://youtu.be/Qvye1wDa0kk) is a good introduction to `optim()`.].
 
-`optim()` has an algorithm called [Nelder-Mead](https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method) that searches the parameter space and converges on the minimum value. It is a direct search method that only requires the negative log-likelihood function as input. This animation demonstrates the Nelder-Mead algorithm in action^[Sourced from [here](https://commons.wikimedia.org/wiki/File:Nelder-Mead_Rosenbrock.gif)].
+`optim()` has an algorithm called [Nelder-Mead](https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method) that searches the parameter space and converges on the minimum value. It is a direct search method that only requires the negative log-likelihood function as input (as opposed to gradient based methods that require specified the gradients of the negative log-likelihood function). This animation demonstrates the Nelder-Mead algorithm in action^[Sourced from [here](https://commons.wikimedia.org/wiki/File:Nelder-Mead_Rosenbrock.gif)].
 
 ![Nelder-Mead animation](nelder_mead.mp4)
 
-To use `optim()`, we create a function that takes as input the parameters and returns the negative log-likelihood function. The below code is a translation of the mathematical notation from above.
+To use `optim()`, we create a function that takes as input the parameters and returns the negative log-likelihood. The below code is a translation of the mathematical notation from above.
 
 ```{r}
 #| column: page-right
@@ -318,7 +318,9 @@ As an example, we can pass in $\beta_0 = 1, \beta_1 = 2, \beta_2 = 3$ and see wh
 neg_loglikelihood_function(c(1,2,3))
 ```
 
-Because it is very high, we know that these are poor choices for the parameter values. We can visualize the negative log-likelihood function for a variety of values. Since there are 3 parameters in our model, and we cannot visualize in 4D, we set $\beta_0 = 58.075$, which was the optimzed value found by `glm()` and we can visualize how the negative log-likelihood varies with $\beta_1$ and $beta_2$.
+Because the negative log-likelihood is very high, we know that these are poor choices for the parameter values.
+
+We can visualize the negative log-likelihood function for a variety of values. Since there are 3 parameters in our model, and we cannot visualize in 4D, we set $\beta_0 = 58.075$, which was the optimzed value found by `glm()` and we can visualize how the negative log-likelihood varies with $\beta_1$ and $beta_2$.
 
 ```{r}
 # Create a grid of parameter values
