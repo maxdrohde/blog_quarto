@@ -1,0 +1,104 @@
+---
+title: "Seth June 7th"
+author: "Max Rohde"
+date: "`r Sys.Date()`"
+toc: true
+toc-depth: 4
+toc-location: left
+cache: false
+format:
+  html:
+    code-tools: true
+    code-fold: show
+    code-link: true
+    code-block-bg: "#f1f3f5"
+    code-block-border-left: "#31BAE9"
+    mainfont: Source Sans Pro
+    theme: journal
+    fontsize: 16px
+    fig-format: retina
+    fig-cap-location: margin
+    tbl-cap-location: top
+    reference-location: margin
+    citation-location: margin
+    fig-width: 8
+    fig-height: 6
+  
+execute:
+  warning: false
+  message: false
+---
+
+```{r}
+library(tidyverse)
+
+# Set default ggplot theme
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=12))
+```
+
+## Question
+
+```
+I have another question:  I want to filter my df based on different criteria in a loop or using the map functions
+ 
+Data:
+df <- tibble(ID1 = c("A", "A", "A","B", "B", "c", "D"),
+             ID2 = c(1,1,2,2,3,4,5))
+ 
+What I want
+First I want to filter it such that ID1 = “A” & ID2 = 2 (1 observation)
+Then I want to filter it so ID1 = B & ID2 = 3 (1 observation)
+ 
+So I know I can store those criteria in vectors, then call those vectors in the filter function:
+id1 <- "A"
+id2 <- 2
+Then
+id1 <- "B"
+id2 <- 3
+ 
+df %>%
+        filter(ID1 == id1,
+         ID2 == id2)
+ 
+However, is there a way to create a list that has both combinations (A, 2 then B,3) then loop through that list , applying the filtering?
+Something like:
+map(list, filter_function) ?
+ 
+The context is, I have a bunch of combinations of filtering criteria I don’t want to have to write out every time.
+```
+
+## Solution
+
+First we create a tibble of test data.
+```{r}
+df <- tibble(ID1 = c("A", "A", "A","B", "B", "c", "D"),
+             ID2 = c(1,1,2,2,3,4,5))
+```
+
+Then we create a custom filter function that inputs the dataset and filters to certain values for `ID1` and `ID2`.
+```{r}
+custom_filter <- function(df, id1, id2){
+  df %>%
+    filter(
+    ID1 == id1,
+    ID2 == id2
+    )
+}
+```
+
+We can store the filtering critera as rows of a tibble. Here we use three criteria: (A, 1), (A, 2), and (B,3).
+```{r}
+filtering_criteria <- tibble(id1 = c("A", "A", "B"),
+                           id2 = c(1, 2, 3))
+```
+
+Iterate through our criterea and apply the custom filter to our data,
+```{r}
+filtered_dfs <- pmap(filtering_criteria, custom_filter, df=df)
+```
+We now have a list of the three filtered data frames.
+```{r}
+filtered_dfs
+```
+
