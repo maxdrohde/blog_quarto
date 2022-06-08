@@ -577,13 +577,13 @@ Now we implement the gradient descent algorithm. We stop if the difference betwe
 
 set.seed(777)
 
-step_size <- 0.001
-theta <- c(0,0,0)
+step_size <- 0.001   # Learning rate
+theta <- c(0,0,0)    # Initial parameter value
 iter <- 1
 
 while (TRUE) {
   iter <- iter + 1
-  current_gradient <- gradient(theta)
+  current_gradient <- gradient(theta)               
   
   theta_new <- theta - (step_size * current_gradient)
   
