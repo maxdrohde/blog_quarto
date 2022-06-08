@@ -272,6 +272,7 @@ Recall that we would like to numerically determine the beta values that minimize
 To use `optim()`, we create a function that takes as input the parameters and returns the negative log-likelihood function. The below code is a translation of the mathematical notation from above.
 
 ```{r}
+#| column: page-right
 neg_loglikelihood_function <- function(parameters){
   
   # optim() expects the parameters as a single vector, so we set the coefficients
@@ -528,6 +529,7 @@ Additionally, automatic differentiation can be used to obtain gradients for arbi
 We implement the above equations in the following function for the gradient.
 
 ```{r}
+#| column: page-right
 gradient <- function(parameters){
   # Given a vector of parameters values, return the current gradient
   
@@ -557,6 +559,7 @@ We must specify `type="2"` in the `norm()` function to specify that we want the 
 Now we implement the gradient descent algorithm. We stop if the difference between the new parameter vector and old parameter vector is less than $10^{-6}$.
 
 ```{r}
+#| column: page-right
 #| cache: true
 
 step_size <- 0.001

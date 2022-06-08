@@ -300,7 +300,7 @@ Recall that we would like to numerically determine the beta values that minimize
 
 `optim()` has an algorithm called [Nelder-Mead](https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method) that searches the parameter space and converges on the minimum value. It is a direct search method that only requires the negative log-likelihood function as input. This animation demonstrates the Nelder-Mead algorithm in action^[Sourced from [here](https://commons.wikimedia.org/wiki/File:Nelder-Mead_Rosenbrock.gif)].
 
-![Nelder-Mead animation](nelder_mead.mp4)]
+![Nelder-Mead animation](nelder_mead.mp4)
 
 To use `optim()`, we create a function that takes as input the parameters and returns the negative log-likelihood function. The below code is a translation of the mathematical notation from above.
 
