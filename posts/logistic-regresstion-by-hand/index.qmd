@@ -188,18 +188,18 @@ This form of writing the Bernoulli PMF works because if Adelie = 1, then $\text{
 and therefore the log-likelihood contribution of a single observation is
 
 $$
-\text{Log-Likelihood}_i = [\text{Adelie} \times \log(p_i)] + [(1 - \text{Adelie}) \times \log(1-p_i)]
+\text{Log-Likelihood}_i = [\text{[Adelie]}_i \times \log(p_i)] + [(1 - \text{[Adelie]}_i) \times \log(1-p_i)]
 $$
 
-The log-likelihood of the entire dataset is just the sum of all the individual log-likelihood, since we are assuming independent observations, so we have
+The log-likelihood of the entire dataset is just the sum of all the individual log-likelihoods, since we are assuming independent observations, so we have
 
 $$
-\text{Log-Likelihood} = \sum_{i=1}^{n} \left[ [\text{Adelie} \times \log(p_i)] + [(1 - \text{Adelie}) \times \log(1-p_i)] \right]
+\text{Log-Likelihood} = \sum_{i=1}^{n} \left[ [\text{[Adelie]}_i \times \log(p_i)] + [(1 - \text{[Adelie]}_i) \times \log(1-p_i)] \right]
 $$
 
 and now substituting in $p_i$ in terms of the parameters, we have
 \begin{align}
-\text{Log-Likelihood} &= \underbrace{\sum_{i=1}^{n} [[\text{Adelie} \times \log(\operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \right))]}_{\text{Contribution from Adelie observations}} \\ &+ \underbrace{[(1 - \text{Adelie}) \times \log(1-\operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \right))]}_{\text{Contribution from Gentoo observations}}]
+\text{Log-Likelihood} &= \underbrace{\sum_{i=1}^{n} [[\text{[Adelie]}_i \times \log(\operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \right))]}_{\text{Contribution from Adelie observations}} \\ &+ \underbrace{[(1 - \text{[Adelie]}_i) \times \log(1-\operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}]_i + \beta_2 [\text{Body Mass}]_i \right))]}_{\text{Contribution from Gentoo observations}}]
 \end{align}
 
 We can then pick $\beta_0$, $\beta_1$, and $\beta_2$ to maximize this log-likelihood function, or as is often done in practice, minimize the negative log-likelihood function. We will need to do this with numerical methods, rather than obtaining an analytical solution with calculus, since no closed-form solution exists.
