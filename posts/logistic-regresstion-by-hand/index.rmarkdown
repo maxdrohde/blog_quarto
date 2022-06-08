@@ -31,6 +31,7 @@ theme_set(cowplot::theme_cowplot(font_size=14,
 ```
 
 
+
 # Overview
 
 Logistic regression is a method for estimating the probability that an observation is in one of two classes given a vector of covariates. For example, given various demographic characteristics (age, sex, etc...), we can estimate the probability that a person owns a home or not. Important predictors would likely be age and level of income. The probabilities returned by the model can then be used for classification based on a cutoff (e.g., 0.5 is a common choice) or used for decision making based on more complex decision rules^[This [article](https://www.fharrell.com/post/classification/) goes into more detail on the difference between prediction of probabilities and classification.]. 
@@ -43,17 +44,20 @@ As an example dataset, we will use the Palmer Penguins data. From the help file 
 
 We'll load the data and save it as a data frame `df`.
 
+
 ```{r}
 # Load and rename data
 data(penguins)
 df <- penguins
 ```
 
+
 Then we can
 
 - filter to two of the penguin species: Adelie and Gentoo
 - create a binary variable, `adelie` corresponding to 1 for Adelie and 0 for Gentoo
 - select the columns that we want to keep
+
 
 ```{r}
 df <-
@@ -64,9 +68,11 @@ df %>%
   drop_na()
 ```
 
+
 ## Exploratory data analysis
 
 You can explore the raw data below.
+
 
 ```{r}
 #| echo: false
@@ -79,18 +85,22 @@ df %>%
 ```
 
 
+
 The `Hmisc::describe()` function can give us a quick summary of the data.
 
 :::{.callout-note .column-page-right collapse="true"}
 ## Expand to view detailed summary statistics for each variable
 
+
 ```{r}
 html(describe(df))
 ```
 
+
 :::
 
 The below plot informs us that Adelie and Gentoo penguins are likely to be easily distinguishable based on the measured features, since there is little overlap between the two species. Because we want to have a bit of a challenge (and because logistic regression doesn't converge if the classes are perfectly separable), we will predict species based on bill length and body mass.
+
 
 ```{r}
 #| column: page-right
@@ -106,12 +116,15 @@ df %>%
   scale_fill_brewer(palette="Dark2")
 ```
 
+
 In order to help our algorithms converge, we will put our variables on a more common scale by converting bill length to cm and body mass to kg.
+
 
 ```{r}
 df$bill_length_cm <- df$bill_length_mm / 10
 df$body_mass_kg <- df$body_mass_g / 1000
 ```
+
 
 # Logistic regression overview
 
@@ -134,13 +147,16 @@ p = \beta_0 + \beta_1 [\text{Bill Length}] + \beta_2 [\text{Body Mass}] \\
 In words, each observation of a penguin is modeled as a Bernoulli random variable, where the probability of being Adelie is a linear function of bill length and body mass. The issue with this model is that if we let the parameters vary, the can exceed the range $[0,1]$, which doesn't make sense if we are trying to model a probability.
 
 The solution is the expit function:
+
 $$
 \operatorname{expit} = \frac{e^{x}}{1+e^{x}}
 $$
 
+
 This function takes in a real valued input and transforms it to lie within $[0,1]$. This also called the logistic function, hence the name "logistic regression".
 
 Let's try it out in an example.
+
 
 ```{r}
 # This is a naive implementation that can overflow for large x
@@ -150,7 +166,9 @@ Let's try it out in an example.
 expit <- plogis
 ```
 
+
 We see that anything below -5 gets squashed to zero and anything above 5 gets squashed to 1.
+
 
 ```{r}
 # Plot the output of the expit() function for x values between -10 and 10
@@ -161,6 +179,7 @@ plot(x,
      main = "Understanding the effect of expit")
 ```
 
+
 We then modify our model to be
 \begin{gather}
 p_i = \operatorname{expit} \left(\beta_0 + \beta_1 [\text{Bill Length}] + \beta_2 [\text{Body Mass}] \right) \\
@@ -170,9 +189,11 @@ so now $p_i$ is constrained to lie within $[0,1]$. This type of model is known a
 
 The likelihood contribution of a single observation is $p_i$ if it is Adelie and $1-p_i$ if it is Gentoo, which we can write as
 
+
 $$
 \text{Likelihood}_i = p_i^{\text{Adelie}} (1-p_i)^{1 - \text{Adelie}}
 $$
+
 
 ::: {.column-margin}
 This form of writing the Bernoulli PMF works because if Adelie = 1, then $\text{Likelihood}_i = p_i^{1} (1-p_i)^{1 - 1} = p_i$ and if Adelie = 0, then $\text{Likelihood}_i = p_i^{0} (1-p_i)^{1 - 0} = 1-p_i$.
@@ -180,15 +201,19 @@ This form of writing the Bernoulli PMF works because if Adelie = 1, then $\text{
 
 and therefore the log-likelihood contribution of a single observation is
 
+
 $$
 \text{Log-Likelihood}_i = [\text{Adelie} \times \log(p_i)] + [(1 - \text{Adelie}) \times \log(1-p_i)]
 $$
 
+
 The log-likelihood of the entire dataset is just the sum of all the individual log-likelihood, since we are assuming independent observations, so we have
+
 
 $$
 \text{Log-Likelihood} = \sum_{i=1}^{n} \left[ [\text{Adelie} \times \log(p_i)] + [(1 - \text{Adelie}) \times \log(1-p_i)] \right]
 $$
+
 
 and now substituting in $p_i$ in terms of the parameters, we have
 \begin{align}
@@ -201,6 +226,7 @@ We can then pick $\beta_0$, $\beta_1$, and $\beta_2$ to maximize this log-likeli
 
 Before we implement logistic regression by hand, we will use the `glm()` function in R as a baseline. Under the hood, R uses the [Fisher Scoring Algorithm](https://en.wikipedia.org/wiki/Scoring_algorithm) to obtain the maximum likelihood estimates.
 
+
 ```{r}
 # Fit the logistic regression model
 model_glm <- glm(adelie ~ bill_length_cm + body_mass_kg,
@@ -208,7 +234,9 @@ model_glm <- glm(adelie ~ bill_length_cm + body_mass_kg,
                  data=df)
 ```
 
+
 Now that we have fit the model, let's look at the predictions of the model. We can make a grid of covariate values, and ask the model to give us the predicted probability of Species = Adelie for each one.
+
 
 ```{r}
 # Create a grid of values on which to evaluate probabilities
@@ -217,7 +245,9 @@ crossing(bill_length_cm = seq(min(df$bill_length_cm)-0.2, max(df$bill_length_cm)
          body_mass_kg = seq(min(df$body_mass_kg)-0.1, max(df$body_mass_kg)+0.1, 0.005))
 ```
 
+
 We use the `predict()` function to obtain the predicted probabilities. Using `type = "response"` specifies that we want the predictions of the probability scale (i.e., after passing the linear predictor through the `expit` function.).
+
 
 ```{r}
 grid$predicted <- predict(model_glm, grid, type = "response")
@@ -233,7 +263,9 @@ grid %>%
   scroll_box(height = "300px")
 ```
 
+
 Now that we have the predictions, let's plot them and overlay the data with their true labels. The model looks to be performing pretty well!
+
 
 ```{r}
 #| column: page-right
@@ -259,6 +291,7 @@ grid %>%
 ```
 
 
+
 # Logistic regression with `optim()`
 
 Now that we know what to expect after using `glm()`, let's implement logistic regression by hand.
@@ -267,9 +300,10 @@ Recall that we would like to numerically determine the beta values that minimize
 
 `optim()` has an algorithm called [Nelder-Mead](https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method) that searches the parameter space and converges on the minimum value. It is a direct search method that only requires the negative log-likelihood function as input. This animation demonstrates the Nelder-Mead algorithm in action^[Sourced from [here](https://commons.wikimedia.org/wiki/File:Nelder-Mead_Rosenbrock.gif)].
 
-![Nelder-Mead animation](nelder_mead.mp4)
+![Nelder-Mead animation](nelder_mead.mp4)]
 
 To use `optim()`, we create a function that takes as input the parameters and returns the negative log-likelihood function. The below code is a translation of the mathematical notation from above.
+
 
 ```{r}
 neg_loglikelihood_function <- function(parameters){
@@ -303,13 +337,17 @@ neg_loglikelihood_function <- function(parameters){
 }
 ```
 
+
 As an example, we can pass in $\beta_0 = 1, \beta_1 = 2, \beta_2 = 3$ and see what the negative log-likelihood is.
+
 
 ```{r}
 neg_loglikelihood_function(c(1,2,3))
 ```
 
+
 Because it is very high, we know that these are poor choices for the parameter values. We can visualize the negative log-likelihood function for a variety of values. Since there are 3 parameters in our model, and we cannot visualize in 4D, we set $\beta_0 = 58.075$, which was the optimzed value found by `glm()` and we can visualize how the negative log-likelihood varies with $\beta_1$ and $beta_2$.
+
 
 ```{r}
 # Create a grid of parameter values
@@ -348,7 +386,9 @@ grid %>%
   theme(legend.key.height = unit(1, "cm"))
 ```
 
+
 To use `optim()`, we pass in the starting parameter values to `par` and the function to be minimized (the negative log-likelihood) to `fn`. Finally, we'll specify `method="Nelder-Mead"`.
+
 
 ```{r}
 optim_results <-
@@ -357,19 +397,25 @@ optim_results <-
         method="Nelder-Mead")              # Optimization method
 ```
 
+
 The maximum likelihood estimates are stored in the `$par` attribute of the `optim` object
+
 
 ```{r}
 optim_results$par
 ```
 
+
 which we can compare with the coefficients obtained from `glm()`, and we see that they match quite closely.
+
 
 ```{r}
 coef(model_glm)
 ```
 
+
 The below animation demonstrates the path of the Nelder-Mead function. As stated above, for the purpose of the animation, we set the optimized value of $\beta_0 = 58.075$ and we can visualize how the negative log-likelihood is optimized with respect to $\beta_1$ and $\beta_2$.
+
 
 ```{r}
 #| echo: false
@@ -499,6 +545,7 @@ if (!file.exists("nelder_mead_path.mp4")) {
 }
 ```
 
+
 ::: {.column-page-right}
 ![Animation of the path taken by the Nelder Mead algorithm](nelder_mead_path.mp4)
 :::
@@ -527,6 +574,7 @@ Additionally, automatic differentiation can be used to obtain gradients for arbi
 
 We implement the above equations in the following function for the gradient.
 
+
 ```{r}
 gradient <- function(parameters){
   # Given a vector of parameters values, return the current gradient
@@ -550,11 +598,13 @@ gradient <- function(parameters){
 }
 ```
 
+
 ::: {.column-margin}
 We must specify `type="2"` in the `norm()` function to specify that we want the Euclidean length of the vector.
 :::
 
 Now we implement the gradient descent algorithm. We stop if the difference between the new parameter vector and old parameter vector is less than $10^{-6}$.
+
 
 ```{r}
 #| cache: true
@@ -581,10 +631,12 @@ print(glue("Final parameter values: {as.numeric(theta)}"))
 print(glue("`glm()` parameter values (for comparison): {as.numeric(coef(model_glm))}"))
 ```
 
+
 Again, we see that the results are very close to the `glm()` results.
 
 # Conclusion
 
 Hopefully this post was helpful for understanding the inner working of logistic regression and how the principles can be extended to other types of models. For example, Poisson regression is another type of generalized linear model just like logistic regression, where in that case we use the `exp` function instead of the `expit` function to constrain parameter values to lie in the range $[0, \infty]$.
+
 
 
