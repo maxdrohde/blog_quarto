@@ -114,6 +114,7 @@ df$body_mass_kg <- df$body_mass_g / 1000
 ```
 
 ```{r}
+#| column: page-right
 # Look at distribution of bill length in cm and body mass in kg
 qplot(df$bill_length_cm,bins=50) + qplot(df$body_mass_kg, bins=50)
 ```
@@ -127,7 +128,7 @@ For example, if we were predicting bill length, we could create a linear model w
 
 \begin{gather}
 \mu_i = \beta_0 + \beta_1 [\text{Body Mass}]_i + \beta_2 [\text{Species = Adelie}]_i \\
-\text{[Bill Length]_i} \sim N(\mu_i, \sigma^2)
+[\text{Bill Length}]_i \sim N(\mu_i, \sigma^2)
 \end{gather}
 
 We have three parameters, $\beta_0$, $\beta_1$, and $\beta_2$. We can determine the likelihood of the data given these parameters. Maximizing the likelihood is the [most common way](https://online.stat.psu.edu/stat415/lesson/1/1.2) to estimate the parameters from data. The idea is that we tune the parameters until we find the set of parameters that made the observed data most likely.
