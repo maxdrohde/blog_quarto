@@ -360,6 +360,7 @@ grid %>%
 To use `optim()`, we pass in the starting parameter values to `par` and the function to be minimized (the negative log-likelihood) to `fn`. Finally, we'll specify `method="Nelder-Mead"`.
 
 ```{r}
+#| column: page-right
 optim_results <-
   optim(par=c(0,0,0),                      # Initial values
         fn = neg_loglikelihood_function,   # Objective function to be minimized
@@ -532,7 +533,9 @@ or equivalently
 
 You can find a nice derivation of the derivative of the negative log-likelihood for logistic regression [here](https://web.stanford.edu/~jurafsky/slp3/5.pdf).
 
-Additionally, automatic differentiation can be used to obtain gradients for arbitrary functions, which is used heavily in deep learning. An example to do this in R using the `torch` library is shown [here](https://rgiordan.github.io/code/2022/04/01/rtorch_example.html).
+::: {.column-margin}
+Another approach is to use automatic differentiation. Automatic differentiation can be used to obtain gradients for arbitrary functions, and is used heavily in deep learning. An example to do this in R using the `torch` library is shown [here](https://rgiordan.github.io/code/2022/04/01/rtorch_example.html).
+:::
 
 We implement the above equations in the following function for the gradient.
 
