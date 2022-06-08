@@ -35,7 +35,7 @@ theme_set(cowplot::theme_cowplot(font_size=14,
 
 Logistic regression is a method for estimating the probability that an observation is in one of two classes given a vector of covariates. For example, given various demographic characteristics (age, sex, etc...), we can estimate the probability that a person owns a home or not. Important predictors would likely be age and level of income. The probabilities returned by the model can then be used for classification based on a cutoff (e.g., 0.5 is a common choice) or used for decision making based on more complex decision rules^[This [article](https://www.fharrell.com/post/classification/) goes into more detail on the difference between prediction of probabilities and classification.]. 
 
-In this post, we'll explore how logistic regression works by implementing it by hand using a few different methods. It can be bit of a black box using the built-in functions in R, so implementing algorithms by hand can aid understandingm, even though it's not practical for data analysis projects.
+In this post, we'll explore how logistic regression works by implementing it by hand using a few different methods. It can be bit of a black box using the built-in functions in R, so implementing algorithms by hand can aid understanding, even though it's not practical for data analysis projects.
 
 # Data
 
@@ -320,7 +320,7 @@ neg_loglikelihood_function(c(1,2,3))
 
 Because the negative log-likelihood is very high, we know that these are poor choices for the parameter values.
 
-We can visualize the negative log-likelihood function for a variety of values. Since there are 3 parameters in our model, and we cannot visualize in 4D, we set $\beta_0 = 58.075$, which was the optimzed value found by `glm()` and we can visualize how the negative log-likelihood varies with $\beta_1$ and $beta_2$.
+We can visualize the negative log-likelihood function for a variety of values. Since there are 3 parameters in our model, and we cannot visualize in 4D, we set $\beta_0 = 58.075$, which was the optimized value found by `glm()` and we can visualize how the negative log-likelihood varies with $\beta_1$ and $\beta_2$.
 
 ```{r}
 # Create a grid of parameter values
