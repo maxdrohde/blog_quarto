@@ -145,7 +145,7 @@ $$
 \operatorname{expit} = \frac{e^{x}}{1+e^{x}}
 $$
 
-This function takes in a real valued input and transforms it to lie within $[0,1]$. THe expit function is also called the logistic function, hence the name "logistic regression".
+This function takes in a real valued input and transforms it to lie within the range $[0,1]$. The expit function is also called the logistic function, hence the name "logistic regression".
 
 Let's try it out in an example.
 
@@ -157,8 +157,6 @@ Let's try it out in an example.
 expit <- plogis
 ```
 
-We see that (approximately) anything below -5 gets squashed to zero and anything above 5 gets squashed to 1.
-
 ```{r}
 # Plot the output of the expit() function for x values between -10 and 10
 x <- seq(-10, 10, length.out=1e5)
@@ -167,6 +165,8 @@ plot(x,
      type = "l",
      main = "Understanding the effect of expit")
 ```
+
+We see that (approximately) anything below -5 gets squashed to zero and anything above 5 gets squashed to 1.
 
 We then modify our model to be
 \begin{gather}
