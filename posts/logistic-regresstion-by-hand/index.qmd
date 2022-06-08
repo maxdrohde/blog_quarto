@@ -488,7 +488,9 @@ if (!file.exists("nelder_mead_path.mp4")) {
 }
 ```
 
-![Animation of the path taken by the Nelder Mead algorithm](nelder_mead_path.mp4){fig-width=100%}
+::: {.column-page-right}
+![Animation of the path taken by the Nelder Mead algorithm](nelder_mead_path.mp4)
+:::
 
 # Logistic regression with gradient descent
 
