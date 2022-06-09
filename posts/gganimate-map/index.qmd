@@ -25,7 +25,7 @@ Animating your `ggplot2` visualizations is easy using the `gganimate` package. B
 ## Data cleaning and exploration
 First, let's load in the data.
 
-```{r, message=FALSE}
+```{r}
 # Read in data
 df <-
   read_csv("Parks_Property_2016.csv") %>%
@@ -33,13 +33,12 @@ df <-
   select(lat, long = lon, year_established = year_estab, acres, park_name =  common_nam)
 ```
 
-Let's take a look at the first couple rows.
-
 ```{r}
-head(df, 2) %>% 
+#| column: page-right
+df %>% 
   kable(format = "html") %>%
   kable_styling("striped") %>%
-  scroll_box(height="400px")
+  scroll_box(height="500px")
 ```
 
 Before we create the animations, let's do some data cleaning.
@@ -47,6 +46,7 @@ Before we create the animations, let's do some data cleaning.
 #### Are parks duplicated?
 
 ```{r}
+#| column: page-right
 df %>%
   filter(duplicated(park_name)) %>%
   kable(format = "html") %>%
@@ -152,6 +152,7 @@ First, let's try to just plot the locations of all the parks. Luckily, the (lati
 We start with the `qmplot()` function from `ggmap`, which is a shortcut for plotting on maps, just like `qplot()` in `ggplot2`. We pass in the latitude and longitude coordinates and the data frame. The argument `maptype = "toner-lite"` indicates the type of basemap to use as the background. We also specify `alpha=0.5` so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by `aes(size=acres)`. Then we add the extra theming using the `cowplot` package.
 
 ```{r}
+#| column: page-right
 qmplot(long, lat, data = df, maptype="toner-lite", alpha=0.5) + 
   aes(size=acres) +
   labs(
@@ -169,6 +170,7 @@ Looks pretty good already. Now let's make this into an animation!
 We will add the `transition_states()` function from `gganimate` and specify that each state of the animation is determined by `year_established`. We also set `subtitle = "Year: {closest_state}"` to display the year of the current frame.
 
 ```{r}
+#| column: page-right
 qmplot(x=long, y=lat, data = df) + 
   aes(size=acres, group=year_established) +
   labs(
@@ -203,6 +205,7 @@ df$year_established <-
 Now that we've made those changes, let's try again.
 
 ```{r}
+#| column: page-right
 qmplot(long, lat, data = df,
        maptype = "toner-lite", alpha=0.5, color="red") + 
   aes(size=acres, group=year_established) +
@@ -224,6 +227,7 @@ Looks good! But wait a second... the animation only goes to 1950. Wasn't it supp
 Let's fix this by saving the animation to a variable, and then using the `animate()` function to increase the number of frames.
 
 ```{r}
+#| column: page-right
 parks_anim <- 
   qmplot(long, lat, data = df,
        maptype = "toner-lite", alpha=0.5, color="red") + 
@@ -255,6 +259,7 @@ We also set `res=300` to increase the resolution. This has the side effect of ma
 Be warned that this may take a bit of time to animate. Here's the final result!
 
 ```{r}
+#| column: page-right
 parks_anim <- 
   qmplot(long, lat, data = df,
        maptype = "toner-lite", alpha=0.5, color="red") + 
