@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.545">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Max Rohde">
+<meta name="dcterms.date" content="2022-03-31">
+<meta name="description" content="The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.">
+<title>Max Rohde - Using the tmerge() function to structure time-dependent covariates for survival analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><style>
+    .quarto-title-block .quarto-title-banner {
+      color: black;
+background: #f1f3f5;
+    }
+    </style>
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css">
+<meta name="twitter:title" content="Max Rohde - Using the tmerge() function to structure time-dependent covariates for survival analysis">
+<meta name="twitter:description" content="The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.">
+<meta name="twitter:image" content="preview.png">
+<meta name="twitter:creator" content="@max_d_rohde">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Max Rohde</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../index.html">Blog</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resume.pdf">Resume</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../anim.html">Animations</a>
+  </li>  
+</ul>
+<div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Using the tmerge() function to structure time-dependent covariates for survival analysis</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+                  <div>
+        <div class="description">
+          The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Max Rohde </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 31, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><nav id="TOC" role="doc-toc"><h2 id="toc-title">On this page</h2>
+   
+  <ul>
+<li><a href="#load-packages" id="toc-load-packages" class="nav-link active" data-scroll-target="#load-packages">Load packages</a></li>
+  <li><a href="#why-do-we-need-tmerge" id="toc-why-do-we-need-tmerge" class="nav-link" data-scroll-target="#why-do-we-need-tmerge">Why do we need <code>tmerge</code>?</a></li>
+  <li>
+<a href="#using-tmerge" id="toc-using-tmerge" class="nav-link" data-scroll-target="#using-tmerge">Using <code>tmerge</code></a>
+  <ul class="collapse">
+<li><a href="#creating-example-data" id="toc-creating-example-data" class="nav-link" data-scroll-target="#creating-example-data">Creating example data</a></li>
+  </ul>
+</li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/maxdrohde/blog_quarto/edit/main/posts/tmerge/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><section id="load-packages" class="level2"><h2 class="anchored" data-anchor-id="load-packages">Load packages</h2>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival">survival</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="why-do-we-need-tmerge" class="level2"><h2 class="anchored" data-anchor-id="why-do-we-need-tmerge">Why do we need <code>tmerge</code>?</h2>
+<p>In survival analysis, we differentiate between <strong>time-independent covariates</strong> and <strong>time-dependent covariates</strong>. Time-independent covariates are constant over time, while time-dependent covariates can vary over time.</p>
+<p>As an example, assume we are modeling time-to-death in years, with exposure to a chemical as our time-dependent covariate of interest. Assume that we can quantify the exposure as 0, 1, or 2. We will use this exposure and the sex of the subject as covariates in our model.</p>
+<p>To represent time-dependent covariates, we need to have multiple rows for each subject, where each row represents a different value of the time dependent covariates.</p>
+<p>Take for example a subject who started with <code>exposure = 1</code>. Then at 4 years, their exposure status changed to <code>exposure = 0</code>. Then at 7 years, their exposure status changed to <code>exposure = 2</code>. Then the subject died at 10 years (i.e., <code>status = 1</code>). We would need three rows to represent this subject, since there are 3 distinct time periods: <code>0-4</code>, <code>4-7</code>, and <code>7-10</code>. The <code>survival</code> package uses the names <code>tstart</code> and <code>tstop</code> to denote the beginning and end of each time period. So when structuring data from time-dependent variables, the rows for this subject would look like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;"> id </th>
+   <th style="text-align:right;"> tstart </th>
+   <th style="text-align:right;"> tstop </th>
+   <th style="text-align:right;"> exposure </th>
+   <th style="text-align:right;"> status </th>
+  </tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</section><section id="using-tmerge" class="level2"><h2 class="anchored" data-anchor-id="using-tmerge">Using <code>tmerge</code>
+</h2>
+<section id="creating-example-data" class="level3"><h3 class="anchored" data-anchor-id="creating-example-data">Creating example data</h3>
+<p>First, we need our data in two data frames, one for the time-independent covariates and one for the time-dependent covariates.</p>
+<p>Here’s some example data for the time-independent covariates. We have 3 subjects, and each row contains their id, sex, survival time, and whether or not they experience the event of interest (in this case, death). We use <code>event = 1</code> to indicate death, and <code>event = 0</code> to indicate censoring.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="va">df_time_ind</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,
+         sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M"</span>,<span class="st">"F"</span>,<span class="st">"F"</span><span class="op">)</span>,
+         surv_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">10</span>,<span class="fl">15</span><span class="op">)</span>,
+         event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;"> id </th>
+   <th style="text-align:left;"> sex </th>
+   <th style="text-align:right;"> surv_time </th>
+   <th style="text-align:right;"> event </th>
+  </tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> M </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>And here’s some example time-dependent data. Each subject has a record for their <code>exposure</code> status at <code>time = 0</code>, and another record whenever their exposure status changes. For example, in the data below, subject 1 has</p>
+<ul>
+<li>exposure status 0 from time 0 to 2</li>
+<li>exposure status 1 from time 2 to 4</li>
+<li>exposure status 2 from time 4 onwards</li>
+</ul>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="va">df_time_dep</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,
+         time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">0</span>,<span class="fl">7</span>,<span class="fl">0</span><span class="op">)</span>,
+         exposure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;"> id </th>
+   <th style="text-align:right;"> time </th>
+   <th style="text-align:right;"> exposure </th>
+  </tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We will use the <code>tmerge</code> function to turn these data frames in a single data frame to use in a time-dependent survival analysis. The <code>tmerge</code> function is used multiple times in the process of formatting data for time-dependent covariates.</p>
+<p>First, we use <code>tmerge</code> with the independent variables. Note that we call <code>tmerge</code> with <code>df_time_ind</code> as both the <code>data1</code> and <code>data2</code> argument. We must also specify the <code>id</code> variable and the <code>event</code> variable using the syntax <code>event(survival_time_variable, event_indicator_variable)</code>. Using the name <code>event</code> on the left of the expression is optional.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="va">df_time_ind</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/survival/man/tmerge.html">tmerge</a></span><span class="op">(</span>data1<span class="op">=</span><span class="va">df_time_ind</span>,
+         data2<span class="op">=</span><span class="va">df_time_ind</span>,
+         id<span class="op">=</span><span class="va">id</span>,
+         event<span class="op">=</span><span class="fu">event</span><span class="op">(</span><span class="va">surv_time</span>, <span class="va">event</span><span class="op">)</span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now the <code>df_time_ind</code> data frame looks like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;"> id </th>
+   <th style="text-align:left;"> sex </th>
+   <th style="text-align:right;"> surv_time </th>
+   <th style="text-align:right;"> event </th>
+   <th style="text-align:right;"> tstart </th>
+   <th style="text-align:right;"> tstop </th>
+  </tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> M </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 15 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Notice that the <code>tstart</code>, <code>tstart</code>, and <code>event</code> variables have been added.</p>
+<p>Now to add the time-dependent variables, we call <code>tmerge</code> again, now with <code>df_time_ind</code> as the <code>data1</code> argument and <code>df_time_dep</code> as the <code>data2</code> argument. To specify the time-dependent exposure variable, we use the <code>tdc</code> function with the syntax <code>time_dependent_variable = tdc(time, time_dependent_variable)</code>.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="va">df_final</span> <span class="op">&lt;-</span>
+<span class="fu"><a href="https://rdrr.io/pkg/survival/man/tmerge.html">tmerge</a></span><span class="op">(</span>data1<span class="op">=</span><span class="va">df_time_ind</span>,
+       data2<span class="op">=</span><span class="va">df_time_dep</span>,
+       id<span class="op">=</span><span class="va">id</span>,
+       exposure<span class="op">=</span><span class="fu">tdc</span><span class="op">(</span><span class="va">time</span>, <span class="va">exposure</span><span class="op">)</span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Below we have our completed dataset with properly structured time-dependent variables.</p>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;"> id </th>
+   <th style="text-align:left;"> sex </th>
+   <th style="text-align:right;"> surv_time </th>
+   <th style="text-align:right;"> event </th>
+   <th style="text-align:right;"> tstart </th>
+   <th style="text-align:right;"> tstop </th>
+   <th style="text-align:right;"> exposure </th>
+  </tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> M </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> M </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> M </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+<tr>
+<td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Finally, fitting a model with the <code>survival</code> package uses the general syntax <code>Surv(tstart, tstop, event_indicator_variable)</code> as shown below, where we fit a Cox proportional hazard model.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">tstart</span>, <span class="va">tstop</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">exposure</span>, data<span class="op">=</span><span class="va">df_final</span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section></section><section id="references" class="level2"><h2 class="anchored" data-anchor-id="references">References</h2>
+<p>For more details, see this <a href="https://ww2.amstat.org/meetings/sdss/2018/onlineprogram/ViewPresentation.cfm?file=304494.pdf">presentation</a> and this <a href="https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf">report</a> on further features of <code>tmerge</code>.</p>
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script><script src="https://utteranc.es/client.js" repo="maxdrohde/blog_quarto" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> Using the tmerge() function to structure time-dependent covariates for survival analysis</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co">  The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> Max Rohde</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 03/31/2022</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> preview.png</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="an">code-fold:</span><span class="co"> show</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">## Load packages</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why do we need `tmerge`?</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>In survival analysis, we differentiate between **time-independent covariates** and **time-dependent covariates**. Time-independent covariates are constant over time, while time-dependent covariates can vary over time.</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>As an example, assume we are modeling time-to-death in years, with exposure to a chemical as our time-dependent covariate of interest. Assume that we can quantify the exposure as 0, 1, or 2. We will use this exposure and the sex of the subject as covariates in our model.</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>To represent time-dependent covariates, we need to have multiple rows for each subject, where each row represents a different value of the time dependent covariates.</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>Take for example a subject who started with <span class="in">`exposure = 1`</span>. Then at 4 years, their exposure status changed to <span class="in">`exposure = 0`</span>. Then at 7 years, their exposure status changed to <span class="in">`exposure = 2`</span>. Then the subject died at 10 years (i.e., <span class="in">`status = 1`</span>). We would need three rows to represent this subject, since there are 3 distinct time periods: <span class="in">`0-4`</span>, <span class="in">`4-7`</span>, and <span class="in">`7-10`</span>. The <span class="in">`survival`</span> package uses the names <span class="in">`tstart`</span> and <span class="in">`tstop`</span> to denote the beginning and end of each time period. So when structuring data from time-dependent variables, the rows for this subject would look like this:</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>         <span class="at">tstart =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">4</span>,<span class="dv">7</span>),</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>         <span class="at">tstop =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">7</span>,<span class="dv">10</span>),</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">exposure =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">2</span>),</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">status =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## Using `tmerge`</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="fu">### Creating example data</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>First, we need our data in two data frames, one for the time-independent covariates and one for the time-dependent covariates.</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>Here's some example data for the time-independent covariates. We have 3 subjects, and each row contains their id, sex, survival time, and whether or not they experience the event of interest (in this case, death). We use <span class="in">`event = 1`</span> to indicate death, and <span class="in">`event = 0`</span> to indicate censoring.</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>df_time_ind <span class="ot">&lt;-</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>         <span class="at">sex =</span> <span class="fu">c</span>(<span class="st">"M"</span>,<span class="st">"F"</span>,<span class="st">"F"</span>),</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>         <span class="at">surv_time =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">15</span>),</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>         <span class="at">event =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>df_time_ind <span class="sc">%&gt;%</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>And here's some example time-dependent data. Each subject has a record for their <span class="in">`exposure`</span> status at <span class="in">`time = 0`</span>, and another record whenever their exposure status changes. For example, in the data below, subject 1 has</span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>exposure status 0 from time 0 to 2</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>exposure status 1 from time 2 to 4</span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>exposure status 2 from time 4 onwards</span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>df_time_dep <span class="ot">&lt;-</span></span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">3</span>),</span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>         <span class="at">time =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">7</span>,<span class="dv">0</span>),</span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>         <span class="at">exposure =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>df_time_dep <span class="sc">%&gt;%</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>We will use the <span class="in">`tmerge`</span> function to turn these data frames in a single data frame to use in a time-dependent survival analysis. The <span class="in">`tmerge`</span> function is used multiple times in the process of formatting data for time-dependent covariates.</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>First, we use <span class="in">`tmerge`</span> with the independent variables. Note that we call <span class="in">`tmerge`</span> with <span class="in">`df_time_ind`</span> as both the <span class="in">`data1`</span> and <span class="in">`data2`</span> argument. We must also specify the <span class="in">`id`</span> variable and the <span class="in">`event`</span> variable using the syntax <span class="in">`event(survival_time_variable, event_indicator_variable)`</span>. Using the name <span class="in">`event`</span> on the left of the expression is optional.</span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>df_time_ind <span class="ot">&lt;-</span></span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tmerge</span>(<span class="at">data1=</span>df_time_ind,</span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a>         <span class="at">data2=</span>df_time_ind,</span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>         <span class="at">id=</span>id,</span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a>         <span class="at">event=</span><span class="fu">event</span>(surv_time, event))</span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a>Now the <span class="in">`df_time_ind`</span> data frame looks like this:</span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>df_time_ind <span class="sc">%&gt;%</span></span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>Notice that the <span class="in">`tstart`</span>, <span class="in">`tstart`</span>, and <span class="in">`event`</span> variables have been added.</span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a>Now to add the time-dependent variables, we call <span class="in">`tmerge`</span> again, now with <span class="in">`df_time_ind`</span> as the <span class="in">`data1`</span> argument and <span class="in">`df_time_dep`</span> as the <span class="in">`data2`</span> argument. To specify the time-dependent exposure variable, we use the <span class="in">`tdc`</span> function with the syntax <span class="in">`time_dependent_variable = tdc(time, time_dependent_variable)`</span>.</span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>df_final <span class="ot">&lt;-</span></span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a><span class="fu">tmerge</span>(<span class="at">data1=</span>df_time_ind,</span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>       <span class="at">data2=</span>df_time_dep,</span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a>       <span class="at">id=</span>id,</span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a>       <span class="at">exposure=</span><span class="fu">tdc</span>(time, exposure))</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>Below we have our completed dataset with properly structured time-dependent variables.</span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>df_final <span class="sc">%&gt;%</span></span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>Finally, fitting a model with the <span class="in">`survival`</span> package uses the general syntax <span class="in">`Surv(tstart, tstop, event_indicator_variable)`</span> as shown below, where we fit a Cox proportional hazard model.</span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a><span class="fu">coxph</span>(<span class="fu">Surv</span>(tstart, tstop, event) <span class="sc">~</span> exposure, <span class="at">data=</span>df_final)</span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a>For more details, see this <span class="co">[</span><span class="ot">presentation</span><span class="co">](https://ww2.amstat.org/meetings/sdss/2018/onlineprogram/ViewPresentation.cfm?file=304494.pdf)</span> and this <span class="co">[</span><span class="ot">report</span><span class="co">](https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf)</span> on further features of <span class="in">`tmerge`</span>.</span>
+<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

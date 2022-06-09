@@ -46,7 +46,7 @@ df <- crossing(trial, size)
 ```{r}
 #| echo: false
 
-df
+head(df, 50)
 ```
 
 Now in each row, we want a unique sample of data with the sample size given by that row. We will use `purrr::map()` to do this.
@@ -62,7 +62,7 @@ The new column, `data`, is a vector of lists, where each list contains a unique 
 ```{r}
 #| echo: false
 
-df
+head(df, 50)
 ```
 
 Now that we have our data, we can compute the mean and median for each sample.
@@ -75,7 +75,7 @@ df$median <- map_dbl(df$data, ~median(.x))
 ```{r}
 #| echo: false
 
-df
+head(df, 50)
 ```
 
 The mean and median of each sample are now in separate columns. However, to get the data into tidy format, also known as long format, we want them in separate rows. Having the data in tidy format allows us to use `ggplot2` and other tidyverse functions more effectively. We use `pivot_longer` to do this.
@@ -86,8 +86,7 @@ df <- pivot_longer(df, cols=mean:median, names_to="Estimator", values_to="Estima
 
 ```{r}
 #| echo: false
-
-df
+head(df, 50)
 ```
 
 Now we are finally ready to analyze the results of our simulation. First, let's compute the bias and variance of our estimators for each sample size.
