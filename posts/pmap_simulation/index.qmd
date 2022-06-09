@@ -6,9 +6,6 @@ date: 05/11/2022
 image: preview.png
 code-fold: show
 draft: true
-
-reference-location: margin
-citation-location: margin
 ---
 
 ```{r}

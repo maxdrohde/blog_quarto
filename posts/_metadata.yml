@@ -17,6 +17,8 @@ format:
     code-fold: true
     code-link: true
     fig-cap-location: margin
+    reference-location: margin
+    citation-location: margin
 
 freeze: true
 
