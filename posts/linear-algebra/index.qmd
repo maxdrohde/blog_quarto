@@ -5,8 +5,6 @@ author: Max Rohde
 date: 04/29/2022
 image: preview.png
 code-fold: show
-freeze: false
-cache: true
 ---
 
 The following material should be understandable to anyone with a basic knowledge of R and linear algebra. I plan to update this page with more material in the future.

@@ -1,32 +1,9 @@
 ---
 title: "Seth June 7th"
 author: "Max Rohde"
-date: "`r Sys.Date()`"
-toc: true
-toc-depth: 4
-toc-location: left
-cache: false
-format:
-  html:
-    code-tools: true
-    code-fold: show
-    code-link: true
-    code-block-bg: "#f1f3f5"
-    code-block-border-left: "#31BAE9"
-    mainfont: Source Sans Pro
-    theme: journal
-    fontsize: 16px
-    fig-format: retina
-    fig-cap-location: margin
-    tbl-cap-location: top
-    reference-location: margin
-    citation-location: margin
-    fig-width: 8
-    fig-height: 6
-  
-execute:
-  warning: false
-  message: false
+date: 06/07/2022
+image: preview.png
+code-fold: show
 ---
 
 ```{r}

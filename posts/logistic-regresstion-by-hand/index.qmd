@@ -5,11 +5,6 @@ author: Max Rohde
 date: 05/11/2022
 image: preview.png
 code-fold: show
-freeze: false
-draft: false
-
-reference-location: margin
-citation-location: margin
 ---
 
 ```{r}
