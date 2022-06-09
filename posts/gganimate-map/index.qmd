@@ -22,10 +22,10 @@ library(kableExtra)
 ```
 
 ## Overview
-Animating your `ggplot2` visualizations is easy using the `gganimate` package. But did you also know that `gganimate` can be used with the `ggmap` package to animate geographic data? Using data from [Nashville Open Data](https://www.nashville.gov/services/open-data.aspx), we'll create an animation to visualize the spatial evolution of parks in Nashville over time.
+Animating your `ggplot2` visualizations is easy using the `gganimate` package. But did you also know that `gganimate` can be used with the `ggmap` package to animate geographic data? Using data from [Nashville Open Data](https://www.nashville.gov/services/open-data.aspx), we'll create an animation to visualize the development of parks in Nashville over time.
 
 ## Data cleaning and exploration
-First, let's load in the data. We can load the data directly from the URL using `read_csv()`.
+First, let's load in the data.
 
 ```{r, message=FALSE}
 # Read in data
@@ -39,13 +39,12 @@ Let's take a look at the first couple rows.
 
 ```{r}
 head(df, 2) %>% 
-  # table styling for HTML output
   kable(format = "html") %>%
   kable_styling("striped") %>%
   scroll_box(height="400px")
 ```
 
-A few basic questions I have about the dataset are the following:
+Before we create the animations, let's do some data cleaning.
 
 #### Are parks duplicated?
 
@@ -54,10 +53,10 @@ df %>%
   filter(duplicated(park_name)) %>%
   kable(format = "html") %>%
   kable_styling("striped") %>%
-  scroll_box(width = "100%")
+  scroll_box(height="300px")
 ```
 
-These looks like errors so we will remove them.
+These look like errors so we will remove them.
 
 ```{r}
 df <-
@@ -77,6 +76,7 @@ df %>%
 ```
 
 ```{r}
+# Convert all long values to negative because of an error
 df$long <- abs(df$long) * -1
 ```
 
@@ -147,11 +147,11 @@ df %>%
 
 ## Creating the Animation
 
-Now that we've cleaned and explored the data, let's create an animation with `gganimate` and `ggmap`. I would like to visualize the spatial evolution of Nashville's parks by year.
+Now that we've cleaned and explored the data, let's create an animation with `gganimate` and `ggmap`. I would like to visualize the development of Nashville's parks by year.
 
 First, let's try to just plot the locations of all the parks. Luckily, the (latitude, longitude) coordinates are provided.
 
-Now we can make the plot. We start with the `qmplot()` function from `ggmap`, which is a shortcut for plotting on maps, just like `qplot()` in `ggplot2`. We pass in the latitude and longitude coordinates and the data frame. The argument `maptype = "toner-lite"` indicates the type of basemap to use as the background. We also specify `alpha=0.5` so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by `aes(size=acres)`. Then we add the extra theming using the `cowplot` package.
+We start with the `qmplot()` function from `ggmap`, which is a shortcut for plotting on maps, just like `qplot()` in `ggplot2`. We pass in the latitude and longitude coordinates and the data frame. The argument `maptype = "toner-lite"` indicates the type of basemap to use as the background. We also specify `alpha=0.5` so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by `aes(size=acres)`. Then we add the extra theming using the `cowplot` package.
 
 ```{r}
 qmplot(long, lat, data = df, maptype="toner-lite", alpha=0.5) + 
@@ -166,7 +166,7 @@ qmplot(long, lat, data = df, maptype="toner-lite", alpha=0.5) +
   theme(legend.position = "none")
 ```
 
-Looks pretty good already. Now let's make this animated!
+Looks pretty good already. Now let's make this into an animation!
 
 We will add the `transition_states()` function from `gganimate` and specify that each state of the animation is determined by `year_established`. We also set `subtitle = "Year: {closest_state}"` to display the year of the current frame.
 
@@ -254,7 +254,7 @@ The `animate()` function has parameters for `duration` (total duration in second
 
 We also set `res=300` to increase the resolution. This has the side effect of making the font appear larger, so we decrease the font size in the call to `theme_cowplot()`.
 
-Be warned that this may take a bit of time to animate. Usually, I put my code in a `.R` file and run it from the terminal, rather than in RStudio, which seems to crash less and render more quickly. Otherwise, when I render the animations in an R Markdown file, I set `cache=TRUE` in the cell so that I don't have to render each time I knit the document.
+Be warned that this may take a bit of time to animate. Here's the final result!
 
 ```{r}
 parks_anim <- 

@@ -1157,10 +1157,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>Animating your <span class="in">`ggplot2`</span> visualizations is easy using the <span class="in">`gganimate`</span> package. But did you also know that <span class="in">`gganimate`</span> can be used with the <span class="in">`ggmap`</span> package to animate geographic data? Using data from <span class="co">[</span><span class="ot">Nashville Open Data</span><span class="co">](https://www.nashville.gov/services/open-data.aspx)</span>, we'll create an animation to visualize the spatial evolution of parks in Nashville over time.</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>Animating your <span class="in">`ggplot2`</span> visualizations is easy using the <span class="in">`gganimate`</span> package. But did you also know that <span class="in">`gganimate`</span> can be used with the <span class="in">`ggmap`</span> package to animate geographic data? Using data from <span class="co">[</span><span class="ot">Nashville Open Data</span><span class="co">](https://www.nashville.gov/services/open-data.aspx)</span>, we'll create an animation to visualize the development of parks in Nashville over time.</span>
 <span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data cleaning and exploration</span></span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>First, let's load in the data. We can load the data directly from the URL using <span class="in">`read_csv()`</span>.</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>First, let's load in the data.</span>
 <span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE}</span></span>
 <span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
@@ -1174,44 +1174,44 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df, <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># table styling for HTML output</span></span>
-<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">height=</span><span class="st">"400px"</span>)</span>
-<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>A few basic questions I have about the dataset are the following:</span>
-<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Are parks duplicated?</span></span>
-<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">duplicated</span>(park_name)) <span class="sc">%&gt;%</span></span>
-<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>)</span>
-<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>These looks like errors so we will remove them.</span>
-<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
-<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(lat <span class="sc">==</span> <span class="dv">0</span>),</span>
-<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(long <span class="sc">==</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(park_name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a>We also need to remove unreasonable lat/long values.</span>
-<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
-<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(<span class="fu">abs</span>(lat) <span class="sc">&gt;=</span> <span class="dv">180</span>),</span>
-<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(<span class="fu">abs</span>(long) <span class="sc">&gt;=</span> <span class="dv">180</span>))</span>
-<span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb25-86"><a href="#cb25-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">height=</span><span class="st">"400px"</span>)</span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>Before we create the animations, let's do some data cleaning.</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Are parks duplicated?</span></span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">duplicated</span>(park_name)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">height=</span><span class="st">"300px"</span>)</span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>These look like errors so we will remove them.</span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(lat <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(long <span class="sc">==</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(park_name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a>We also need to remove unreasonable lat/long values.</span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(<span class="fu">abs</span>(lat) <span class="sc">&gt;=</span> <span class="dv">180</span>),</span>
+<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(<span class="fu">abs</span>(long) <span class="sc">&gt;=</span> <span class="dv">180</span>))</span>
+<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-88"><a href="#cb25-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert all long values to negative because of an error</span></span>
 <span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>long <span class="ot">&lt;-</span> <span class="fu">abs</span>(df<span class="sc">$</span>long) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span></span>
 <span id="cb25-91"><a href="#cb25-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb25-92"><a href="#cb25-92" aria-hidden="true" tabindex="-1"></a></span>
@@ -1282,11 +1282,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb25-169"><a href="#cb25-169" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-170"><a href="#cb25-170" aria-hidden="true" tabindex="-1"></a><span class="fu">## Creating the Animation</span></span>
 <span id="cb25-171"><a href="#cb25-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-172"><a href="#cb25-172" aria-hidden="true" tabindex="-1"></a>Now that we've cleaned and explored the data, let's create an animation with <span class="in">`gganimate`</span> and <span class="in">`ggmap`</span>. I would like to visualize the spatial evolution of Nashville's parks by year.</span>
+<span id="cb25-172"><a href="#cb25-172" aria-hidden="true" tabindex="-1"></a>Now that we've cleaned and explored the data, let's create an animation with <span class="in">`gganimate`</span> and <span class="in">`ggmap`</span>. I would like to visualize the development of Nashville's parks by year.</span>
 <span id="cb25-173"><a href="#cb25-173" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-174"><a href="#cb25-174" aria-hidden="true" tabindex="-1"></a>First, let's try to just plot the locations of all the parks. Luckily, the (latitude, longitude) coordinates are provided.</span>
 <span id="cb25-175"><a href="#cb25-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-176"><a href="#cb25-176" aria-hidden="true" tabindex="-1"></a>Now we can make the plot. We start with the <span class="in">`qmplot()`</span> function from <span class="in">`ggmap`</span>, which is a shortcut for plotting on maps, just like <span class="in">`qplot()`</span> in <span class="in">`ggplot2`</span>. We pass in the latitude and longitude coordinates and the data frame. The argument <span class="in">`maptype = "toner-lite"`</span> indicates the type of basemap to use as the background. We also specify <span class="in">`alpha=0.5`</span> so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by <span class="in">`aes(size=acres)`</span>. Then we add the extra theming using the <span class="in">`cowplot`</span> package.</span>
+<span id="cb25-176"><a href="#cb25-176" aria-hidden="true" tabindex="-1"></a>We start with the <span class="in">`qmplot()`</span> function from <span class="in">`ggmap`</span>, which is a shortcut for plotting on maps, just like <span class="in">`qplot()`</span> in <span class="in">`ggplot2`</span>. We pass in the latitude and longitude coordinates and the data frame. The argument <span class="in">`maptype = "toner-lite"`</span> indicates the type of basemap to use as the background. We also specify <span class="in">`alpha=0.5`</span> so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by <span class="in">`aes(size=acres)`</span>. Then we add the extra theming using the <span class="in">`cowplot`</span> package.</span>
 <span id="cb25-177"><a href="#cb25-177" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-180"><a href="#cb25-180" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb25-181"><a href="#cb25-181" aria-hidden="true" tabindex="-1"></a><span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df, <span class="at">maptype=</span><span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span> </span>
@@ -1301,7 +1301,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb25-190"><a href="#cb25-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
 <span id="cb25-191"><a href="#cb25-191" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb25-192"><a href="#cb25-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-193"><a href="#cb25-193" aria-hidden="true" tabindex="-1"></a>Looks pretty good already. Now let's make this animated!</span>
+<span id="cb25-193"><a href="#cb25-193" aria-hidden="true" tabindex="-1"></a>Looks pretty good already. Now let's make this into an animation!</span>
 <span id="cb25-194"><a href="#cb25-194" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-195"><a href="#cb25-195" aria-hidden="true" tabindex="-1"></a>We will add the <span class="in">`transition_states()`</span> function from <span class="in">`gganimate`</span> and specify that each state of the animation is determined by <span class="in">`year_established`</span>. We also set <span class="in">`subtitle = "Year: {closest_state}"`</span> to display the year of the current frame.</span>
 <span id="cb25-196"><a href="#cb25-196" aria-hidden="true" tabindex="-1"></a></span>
@@ -1389,7 +1389,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb25-286"><a href="#cb25-286" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-287"><a href="#cb25-287" aria-hidden="true" tabindex="-1"></a>We also set <span class="in">`res=300`</span> to increase the resolution. This has the side effect of making the font appear larger, so we decrease the font size in the call to <span class="in">`theme_cowplot()`</span>.</span>
 <span id="cb25-288"><a href="#cb25-288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-289"><a href="#cb25-289" aria-hidden="true" tabindex="-1"></a>Be warned that this may take a bit of time to animate. Usually, I put my code in a <span class="in">`.R`</span> file and run it from the terminal, rather than in RStudio, which seems to crash less and render more quickly. Otherwise, when I render the animations in an R Markdown file, I set <span class="in">`cache=TRUE`</span> in the cell so that I don't have to render each time I knit the document.</span>
+<span id="cb25-289"><a href="#cb25-289" aria-hidden="true" tabindex="-1"></a>Be warned that this may take a bit of time to animate. Here's the final result!</span>
 <span id="cb25-290"><a href="#cb25-290" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-293"><a href="#cb25-293" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb25-294"><a href="#cb25-294" aria-hidden="true" tabindex="-1"></a>parks_anim <span class="ot">&lt;-</span> </span>

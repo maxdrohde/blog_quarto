@@ -5,8 +5,6 @@ author: Max Rohde
 date: 08/10/2021
 image: preview.png
 code-fold: show
-freeze: false
-cache: true
 ---
 
 ## What is the bs4 theme?

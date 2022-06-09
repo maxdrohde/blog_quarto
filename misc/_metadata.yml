@@ -12,6 +12,8 @@ format:
     toc-depth: 4
     fig-cap-location: margin
 
+freeze: true
+
 execute:
   warning: false
   message: false

@@ -18,6 +18,8 @@ format:
     code-link: true
     fig-cap-location: margin
 
+freeze: true
+
 execute:
   warning: false
   message: false
