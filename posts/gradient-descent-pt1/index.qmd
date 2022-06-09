@@ -5,8 +5,8 @@ author: Max Rohde
 date: 01/16/2021
 image: preview.png
 code-fold: show
-freeze: false
-cache: true
+freeze: true
+cache: false
 ---
 
 ```{r}

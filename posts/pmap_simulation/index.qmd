@@ -1,0 +1,31 @@
+---
+title: Statistical simulation using `pmap()`
+description: The `purrr` package is a powerful tool for functional programming. This post explores how the `pmap()` function can be used for statistical simulations.
+author: Max Rohde
+date: 05/11/2022
+image: preview.png
+code-fold: show
+draft: true
+
+reference-location: margin
+citation-location: margin
+---
+
+```{r}
+# Load packages
+library(tidyverse)
+library(gganimate)
+
+library(Hmisc)
+
+library(palmerpenguins)
+
+library(patchwork)
+library(kableExtra)
+library(glue)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=14,
+                                 font_family = "Source Sans Pro"))
+```
+

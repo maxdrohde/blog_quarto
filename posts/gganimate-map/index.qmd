@@ -1,0 +1,287 @@
+---
+title: Using gganimate with ggmap
+description: Combining gganimate with ggmap can be used to create animations of geographic data. I give a few examples using data from Nashville Open Data.
+author: Max Rohde
+date: 01/06/2021
+image: preview.jpg
+code-fold: show
+cache: false
+freeze: true
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(ggmap)
+library(gganimate)
+
+# ggplot2 themes
+library(cowplot)
+
+# Formatting of HTML tables
+library(kableExtra)
+```
+
+## Overview
+Animating your `ggplot2` visualizations is easy using the `gganimate` package. But did you also know that `gganimate` can be used with the `ggmap` package to animate geographic data? Using data from [Nashville Open Data](https://www.nashville.gov/services/open-data.aspx), we'll create an animation to visualize the spatial evolution of parks in Nashville over time.
+
+## Data cleaning and exploration
+First, let's load in the data. We can load the data directly from the URL using `read_csv()`.
+
+```{r, message=FALSE}
+# Read in data
+df <-
+  read_csv("Parks_Property_2016.csv") %>%
+  janitor::clean_names() %>%
+  select(lat, long = lon, year_established = year_estab, acres, park_name =  common_nam)
+```
+
+Let's take a look at the first couple rows.
+
+```{r}
+head(df, 2) %>% 
+  # table styling for HTML output
+  kable(format = "html") %>%
+  kable_styling("striped") %>%
+  scroll_box(height="400px")
+```
+
+A few basic questions I have about the dataset are the following:
+
+#### Are parks duplicated?
+
+```{r}
+df %>%
+  filter(duplicated(park_name)) %>%
+  kable(format = "html") %>%
+  kable_styling("striped") %>%
+  scroll_box(width = "100%")
+```
+
+These looks like errors so we will remove them.
+
+```{r}
+df <-
+df %>%
+  filter(!(lat == 0),
+         !(long == 0)) %>%
+  distinct(park_name, .keep_all = TRUE)
+```
+
+We also need to remove unreasonable lat/long values.
+
+```{r}
+df <-
+df %>%
+  filter(!(abs(lat) >= 180),
+         !(abs(long) >= 180))
+```
+
+```{r}
+df$long <- abs(df$long) * -1
+```
+
+#### How many parks are there?
+
+```{r}
+nrow(df)
+```
+
+125 parks in Nashville -- not bad!
+
+#### Which years are represented in the data?
+
+```{r}
+range(df$year_established)
+```
+
+Strange, it looks like the oldest park was established in year "0". This must be a mistake.
+
+```{r}
+# Newest 5 parks
+sort(df$year_established) %>% tail()
+
+# Oldest 5 parks
+sort(df$year_established) %>% head()
+```
+
+The true range of the data is 1901 - 2015. It looks like the park recorded as being established in year zero was a mistake. Let's remove it from the dataset.
+
+```{r}
+df <-
+  df %>%
+  filter(year_established != 0)
+```
+
+Now let's take a look at the distribution of the years when parks were established. First, we'll make a histogram.
+
+```{r}
+df %>%
+  ggplot() +
+  aes(year_established) +
+  geom_histogram(bins=30, color="black", fill="grey") +
+  labs(
+    title = "Number of parks established in Nashville per year",
+    subtitle = "",
+    x= "Year Established",
+    y= "Frequency") +
+  cowplot::theme_cowplot(font_family = "Source Sans Pro",
+                         font_size = 12)
+  
+```
+
+The rate of new park development looks to be increasing over time. An ECDF plot supports this observation.
+
+```{r}
+df %>%
+  ggplot()+
+  aes(year_established) +
+  stat_ecdf() +
+  labs(
+    title = "Cumulative distribution of Nashville parks over time",
+    subtitle = "",
+    x= "Year Established",
+    y= "ECDF") +
+  cowplot::theme_cowplot(font_family = "Source Sans Pro",
+                         font_size = 12)
+```
+
+## Creating the Animation
+
+Now that we've cleaned and explored the data, let's create an animation with `gganimate` and `ggmap`. I would like to visualize the spatial evolution of Nashville's parks by year.
+
+First, let's try to just plot the locations of all the parks. Luckily, the (latitude, longitude) coordinates are provided.
+
+Now we can make the plot. We start with the `qmplot()` function from `ggmap`, which is a shortcut for plotting on maps, just like `qplot()` in `ggplot2`. We pass in the latitude and longitude coordinates and the data frame. The argument `maptype = "toner-lite"` indicates the type of basemap to use as the background. We also specify `alpha=0.5` so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by `aes(size=acres)`. Then we add the extra theming using the `cowplot` package.
+
+```{r}
+qmplot(long, lat, data = df, maptype="toner-lite", alpha=0.5) + 
+  aes(size=acres) +
+  labs(
+    title = "Nashville Parks",
+    x= "Longitude",
+    y= "Latitude",
+    caption = "Area corresponds to acreage \n Data available from Nashville Open Data") +
+  cowplot::theme_cowplot(font_family = "Source Sans Pro",
+                         font_size = 12) +
+  theme(legend.position = "none")
+```
+
+Looks pretty good already. Now let's make this animated!
+
+We will add the `transition_states()` function from `gganimate` and specify that each state of the animation is determined by `year_established`. We also set `subtitle = "Year: {closest_state}"` to display the year of the current frame.
+
+```{r}
+qmplot(x=long, y=lat, data = df) + 
+  aes(size=acres, group=year_established) +
+  labs(
+    title = "Nashville Parks",
+    subtitle = "Year: {closest_state}",
+    x= "Longitude",
+    y= "Latitude",
+    caption = "Area corresponds to acreage \n Data available from Nashville Open Data") +
+  cowplot::theme_cowplot(font_family = "Source Sans Pro",
+                         font_size = 12) +
+  theme(legend.position = "none") +
+  transition_states(year_established)
+```
+
+It's animated now, but there are two problems.
+
+First, the points are disappearing after each year. We can add `shadow_mark(color="black")` to have the points stay on the plot. We specify that the old points are colored black so that we can color the current points red, to highlight which points were just displayed.
+
+Second, the passage of time is not constant. We want to have each frame change in increments of one year. In our current animation, the years are skipping between the years present in the data. To fix this, we convert `year_established` to a factor, and fill in the missing years.
+
+```{r}
+df$year_established <-
+  df$year_established %>%
+  # convert to factor
+  as.factor() %>%
+  # add extra years
+  fct_expand(1900:2019 %>% as.character) %>%
+  # sort years
+  fct_relevel(1900:2019 %>% as.character)
+```
+
+Now that we've made those changes, let's try again.
+
+```{r}
+qmplot(long, lat, data = df,
+       maptype = "toner-lite", alpha=0.5, color="red") + 
+  aes(size=acres, group=year_established) +
+  labs(
+    title = "Nashville Parks",
+    subtitle = "Year: {closest_state}",
+    x= "Longitude",
+    y= "Latitude",
+    caption = "Area corresponds to acreage \n Data available from Nashville Open Data") +
+  cowplot::theme_cowplot(font_family = "Source Sans Pro",
+                         font_size = 12) +
+  theme(legend.position = "none") +
+  transition_states(year_established) +
+  shadow_mark(color="black")
+```
+
+Looks good! But wait a second... the animation only goes to 1950. Wasn't it supposed to go to 2015? This is a little quirk of `gganimate`. By default, the animation is capped at 100 frames. For the `transition_states()` animation, by default a single frame is allocated for each state, and another frame is allocated for transitions between states. So 100 frames can represent 50 years of data. The animation is cut short because we have more than 50 years of data.
+
+Let's fix this by saving the animation to a variable, and then using the `animate()` function to increase the number of frames.
+
+```{r}
+parks_anim <- 
+  qmplot(long, lat, data = df,
+       maptype = "toner-lite", alpha=0.5, color="red") + 
+  aes(size=acres, group=year_established) +
+  labs(
+    title = "Nashville Parks",
+    subtitle = "Year: {closest_state}",
+    x= "Longitude",
+    y= "Latitude",
+    caption = "Area corresponds to acreage \n Data available from Nashville Open Data") +
+  cowplot::theme_cowplot(font_family = "Source Sans Pro",
+                         font_size = 12) +
+  theme(legend.position = "none") +
+  transition_states(year_established) +
+  shadow_mark(color="black")
+
+animate(
+  parks_anim,
+  nframes=300, # number of frames to compute
+  )
+```
+
+My preferred method of rendering the animation is to use `ffmpeg`, instead of the default GIF renderer, because it creates videos (.mp4) rather than GIFs. You will need to [install ffpmeg](https://ffmpeg.org) on your computer separately. Using ffmpeg also allows for finer control over the frame rate of the animation and creates smaller files. I'll show how to use it below.
+
+The `animate()` function has parameters for `duration` (total duration in seconds), `fps` (frames per second), and `nframes` (total number of frames). You can specify any two. For our case, we give the duration and number of frames, and `gganimate` figures out the proper frame rate to fit the specified number of frames into the specified number of seconds.
+
+We also set `res=300` to increase the resolution. This has the side effect of making the font appear larger, so we decrease the font size in the call to `theme_cowplot()`.
+
+Be warned that this may take a bit of time to animate. Usually, I put my code in a `.R` file and run it from the terminal, rather than in RStudio, which seems to crash less and render more quickly. Otherwise, when I render the animations in an R Markdown file, I set `cache=TRUE` in the cell so that I don't have to render each time I knit the document.
+
+```{r}
+parks_anim <- 
+  qmplot(long, lat, data = df,
+       maptype = "toner-lite", alpha=0.5, color="red") + 
+  aes(size=acres, group=year_established) +
+  labs(
+    title = "Nashville Parks",
+    subtitle = "Year: {closest_state}",
+    x= "Longitude",
+    y= "Latitude",
+    caption = "Area corresponds to acreage \n Data available from Nashville Open Data") +
+  cowplot::theme_cowplot(font_family = "Source Sans Pro",
+                         font_size = 10) +
+  theme(legend.position = "none") +
+  transition_states(year_established) +
+  shadow_mark(color="black")
+
+animate(
+  parks_anim,
+  duration=15, # duration of the animation in seconds
+  nframes=768, # number of frames to compute
+  height = 6,
+  width = 6,
+  units = "in",
+  res = 300, # resolution of the output
+  renderer = ffmpeg_renderer() # render to video with ffmpeg
+  )
+```
+
