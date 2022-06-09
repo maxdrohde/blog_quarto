@@ -1,7 +1,7 @@
 {
-  "hash": "c9aff90ced34b928ef08e8449319b4dc",
+  "hash": "bab9347f540466a44ce02639318147f8",
   "result": {
-    "markdown": "---\ntitle: Statistical simulation using `pmap()`\ndescription: The `purrr` package is a powerful tool for functional programming. This post explores how the `pmap()` function can be used for statistical simulations.\nauthor: Max Rohde\ndate: 05/11/2022\nimage: preview.png\ncode-fold: show\ndraft: true\n\nreference-location: margin\ncitation-location: margin\n---\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load packages\nlibrary(tidyverse)\nlibrary(gganimate)\n\nlibrary(Hmisc)\n\nlibrary(palmerpenguins)\n\nlibrary(patchwork)\nlibrary(kableExtra)\nlibrary(glue)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=14,\n                                 font_family = \"Source Sans Pro\"))\n```\n:::\n",
+    "markdown": "---\ntitle: Statistical simulation using `pmap()`\ndescription: The `purrr` package is a powerful tool for functional programming. This post explores how the `pmap()` function can be used for statistical simulations.\nauthor: Max Rohde\ndate: 05/11/2022\nimage: preview.png\ncode-fold: show\ndraft: true\n---\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load packages\nlibrary(tidyverse)\nlibrary(gganimate)\n\nlibrary(Hmisc)\n\nlibrary(palmerpenguins)\n\nlibrary(patchwork)\nlibrary(kableExtra)\nlibrary(glue)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=14,\n                                 font_family = \"Source Sans Pro\"))\n```\n:::\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"

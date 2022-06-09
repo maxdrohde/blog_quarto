@@ -20,7 +20,7 @@ format:
     reference-location: margin
     citation-location: margin
 
-freeze: true
+freeze: auto
 
 execute:
   warning: false
