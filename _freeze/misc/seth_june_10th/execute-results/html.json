@@ -1,0 +1,14 @@
+{
+  "hash": "7025386ad6a337ed726df07b9eb272b3",
+  "result": {
+    "markdown": "---\ntitle: \"Seth June 10th\"\nauthor: \"Max Rohde\"\ndate: 06/10/2022\nimage: preview.png\ncode-fold: show\n---\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\n\n# Set default ggplot theme\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=12))\n```\n:::\n\n\n## Question\n\n```\nI am trying to apply a function to each element of a vector, then to all elements of the vector.\n \nFor example:\nI have my vector: numbers <- c(1,2)\n \nThen my purr function to print them in a list: map(numbers, ~. )\n \n[[1]]\n[1] 1\n \n[[2]]\n[1] 2\n \nHow can apply the function to both numbers in the vector also, so my output looks something like :\n[[1]]\n[1] 1\n \n[[2]]\n[1] 2\n \n[[3]]\n[1] 1 2\n```\n\n## Solution\n\n\n::: {.cell}\n\n```{.r .cell-code}\nnumbers <- c(1,2)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nsquare <- function(x) x^2\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nmap(numbers, ~square(.x)) %>%     \n    append(list(square(numbers))) \n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[[1]]\n[1] 1\n\n[[2]]\n[1] 4\n\n[[3]]\n[1] 1 4\n```\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

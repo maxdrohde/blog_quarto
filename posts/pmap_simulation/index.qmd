@@ -1,8 +1,8 @@
 ---
-title: Statistical simulation using `pmap()`
+title: Statistical simulation using functional programming with `pmap()`
 description: The `purrr` package is a powerful tool for functional programming. This post explores how the `pmap()` function can be used for statistical simulations.
 author: Max Rohde
-date: 05/11/2022
+date: 06/11/2022
 image: preview.png
 code-fold: show
 draft: true
@@ -11,12 +11,8 @@ draft: true
 ```{r}
 # Load packages
 library(tidyverse)
-library(gganimate)
 
-library(Hmisc)
-
-library(palmerpenguins)
-
+# Utilities
 library(patchwork)
 library(kableExtra)
 library(glue)
@@ -25,4 +21,97 @@ library(glue)
 theme_set(cowplot::theme_cowplot(font_size=14,
                                  font_family = "Source Sans Pro"))
 ```
+
+```{r}
+generate_text <- function(animal, color, month){
+ 
+  text <- glue("My favorite animal is {animal}
+                My favorite color is {color}
+                My favorite month is {month}")
+  
+  return(text)
+}
+```
+
+```{r}
+generate_text("cat", "blue", "October")
+```
+
+```{r}
+# Using `map()` can do 1 argument at a time
+animals <- c("cat", "dog", "fish")
+colors <- c("red", "green", "blue")
+months <- c("August", "October", "December")
+
+# Mapping over animals and setting color and month to be fixed
+map(animals, ~generate_text(.x, color="blue", month = "October"))
+```
+
+```{r}
+favorites_df <- tibble(animal = animals,
+                       color = colors,
+                       month = months)
+
+favorites_list <- list(animal = animals,
+                       color = colors,
+                       month = months)
+```
+
+```{r}
+favorites_df
+```
+
+```{r}
+favorites_list
+```
+
+```{r}
+# Match by name
+pmap(favorites_df, generate_text)
+```
+```{r}
+# Specify by location, not name
+pmap(favorites_df, ~generate_text(animal = ..1, color=..2, month=..3))
+```
+
+### 2
+
+```{r}
+# Without names, location is used (giving the wrong order in this case)
+favorites_list = list(colors,
+                      months,
+                      animals)
+
+pmap(favorites_list, generate_text)
+```
+
+```{r}
+# If names are given, they take precedence over location
+favorites_list = list(color = colors,
+                    month = months,
+                    animal = animals)
+
+pmap(favorites_list, generate_text)
+```
+
+```{r}
+# Cool example from documentation
+
+# Use `...` to absorb unused components of input list .l
+df <- data.frame(
+  x = 1:3,
+  y = 10:12,
+  z = letters[1:3]
+)
+plus <- function(x, y) x + y
+## Not run: 
+# this won't work
+# pmap(df, plus)
+
+## End(Not run)
+# but this will
+plus2 <- function(x, y, ...) x + y
+pmap_dbl(df, plus2)
+```
+
 

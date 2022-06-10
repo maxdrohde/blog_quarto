@@ -1,0 +1,59 @@
+---
+title: "Seth June 10th"
+author: "Max Rohde"
+date: 06/10/2022
+image: preview.png
+code-fold: show
+---
+
+```{r}
+library(tidyverse)
+
+# Set default ggplot theme
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=12))
+```
+
+## Question
+
+```
+I am trying to apply a function to each element of a vector, then to all elements of the vector.
+ 
+For example:
+I have my vector: numbers <- c(1,2)
+ 
+Then my purr function to print them in a list: map(numbers, ~. )
+ 
+[[1]]
+[1] 1
+ 
+[[2]]
+[1] 2
+ 
+How can apply the function to both numbers in the vector also, so my output looks something like :
+[[1]]
+[1] 1
+ 
+[[2]]
+[1] 2
+ 
+[[3]]
+[1] 1 2
+```
+
+## Solution
+
+```{r}
+numbers <- c(1,2)
+```
+
+```{r}
+square <- function(x) x^2
+```
+
+```{r}
+map(numbers, ~square(.x)) %>%     
+    append(list(square(numbers))) 
+    
+```
+
