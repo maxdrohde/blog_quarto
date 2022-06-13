@@ -81,10 +81,10 @@ df$long <- abs(df$long) * -1
 #### How many parks are there?
 
 ```{r}
-nrow(df)
+(num_parks <-nrow(df))
 ```
 
-125 parks in Nashville -- not bad!
+`r num_parks` parks in Nashville -- not bad!
 
 #### Which years are represented in the data?
 

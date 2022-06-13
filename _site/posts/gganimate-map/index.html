@@ -2791,12 +2791,12 @@ background: #f1f3f5;
 </div>
 </section><section id="how-many-parks-are-there" class="level4"><h4 class="anchored" data-anchor-id="how-many-parks-are-there">How many parks are there?</h4>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="op">(</span><span class="va">num_parks</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>[1] 123</code></pre>
 </div>
 </div>
-<p>125 parks in Nashville – not bad!</p>
+<p>123 parks in Nashville – not bad!</p>
 </section><section id="which-years-are-represented-in-the-data" class="level4"><h4 class="anchored" data-anchor-id="which-years-are-represented-in-the-data">Which years are represented in the data?</h4>
 <div class="cell">
 <details open=""><summary>Code</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">year_established</span><span class="op">)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3210,10 +3210,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb25-93"><a href="#cb25-93" aria-hidden="true" tabindex="-1"></a><span class="fu">#### How many parks are there?</span></span>
 <span id="cb25-94"><a href="#cb25-94" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-97"><a href="#cb25-97" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb25-98"><a href="#cb25-98" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df)</span>
+<span id="cb25-98"><a href="#cb25-98" aria-hidden="true" tabindex="-1"></a>(num_parks <span class="ot">&lt;-</span><span class="fu">nrow</span>(df))</span>
 <span id="cb25-99"><a href="#cb25-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb25-100"><a href="#cb25-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-101"><a href="#cb25-101" aria-hidden="true" tabindex="-1"></a>125 parks in Nashville -- not bad!</span>
+<span id="cb25-101"><a href="#cb25-101" aria-hidden="true" tabindex="-1"></a><span class="in">`r num_parks`</span> parks in Nashville -- not bad!</span>
 <span id="cb25-102"><a href="#cb25-102" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-103"><a href="#cb25-103" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Which years are represented in the data?</span></span>
 <span id="cb25-104"><a href="#cb25-104" aria-hidden="true" tabindex="-1"></a></span>
