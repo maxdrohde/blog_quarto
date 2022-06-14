@@ -288,3 +288,74 @@ animate(
   )
 ```
 
+# Update (June 13th 2022)
+
+After learning more about geographic visualization in R (mainly thanks to [Geocomputation with R](https://geocompr.robinlovelace.net/)), here is an updated version that incorporates the full shape of each park.
+
+```{r}
+library(sf)
+```
+
+```{r}
+df <- read_sf("parks.geojson")
+
+df$year_estab <- as.integer(df$year_estab)
+```
+
+```{r}
+df <-
+  df %>%
+  filter(year_estab != 0)
+```
+
+```{r}
+(min_year <- min(df$year_estab))
+(max_year <- max(df$year_estab))
+```
+
+```{r}
+df$year_estab <-
+  df$year_estab %>%
+  as.factor() %>%
+  fct_expand(1900:2019 %>% as.character) %>%
+  fct_relevel(1900:2019 %>% as.character)
+```
+
+```{r}
+anim <-
+df %>%
+  ggplot() +
+  basemapR::base_map(st_bbox(df), basemap = "voyager", increase_zoom = 3) +
+  geom_sf(fill="#BF616A", color="#BF616A") +
+  cowplot::theme_map(font_family = "Source Sans Pro", font_size = 12) +
+  labs(
+    title = "Development of Nashville Parks",
+    subtitle = "Year Established: {closest_state}",
+    caption = "Data available from Nashville Open Data\nBasemap from OpenStreetMap") +
+  transition_states(year_estab) +
+  shadow_mark(fill="#2E3440", color="#2E3440")
+
+anim <-
+animate(
+  anim,
+  duration=12,
+  fps=30,
+  height = 5,
+  width = 5,
+  units = "in",
+  res = 500, 
+  renderer = ffmpeg_renderer()
+  )
+```
+
+```{r}
+anim
+```
+
+```{r}
+anim_save(animation = anim,
+      filename = "nashville_parks.mp4")
+```
+
+
+

@@ -1,0 +1,14 @@
+{
+  "hash": "4dcb5ac0d5764a25de8b55e7bf6cadad",
+  "result": {
+    "markdown": "---\ntitle: Geopspatial plots with the `sf` package\ndescription: Plotting the development of Nashville parks with the `sf` and `gganimate` packages\nauthor: Max Rohde\ndate: 06/13/2022\nimage: preview.png\ncode-fold: show\ndraft: true\n---\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load packages\nlibrary(tidyverse)\nlibrary(sf)\n\nlibrary(gganimate)\n\n# Utilities\nlibrary(patchwork)\nlibrary(kableExtra)\nlibrary(glue)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=14,\n                                 font_family = \"Source Sans Pro\"))\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ndf <- read_sf(\"parks.geojson\")\n\ndf$year_estab <- as.integer(df$year_estab)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ndf <-\n  df %>%\n  filter(year_estab != 0)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n(min_year <- min(df$year_estab))\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 1901\n```\n:::\n\n```{.r .cell-code}\n(max_year <- max(df$year_estab))\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 2015\n```\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ndf$year_estab <-\n  df$year_estab %>%\n  as.factor() %>%\n  fct_expand(1900:2019 %>% as.character) %>%\n  fct_relevel(1900:2019 %>% as.character)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nanim <-\ndf %>%\n  ggplot() +\n  basemapR::base_map(st_bbox(df), basemap = \"voyager\", increase_zoom = 3) +\n  geom_sf(fill=\"#BF616A\", color=\"#BF616A\") +\n  cowplot::theme_map(font_family = \"Source Sans Pro\", font_size = 12) +\n  labs(\n    title = \"Development of Nashville Parks\",\n    subtitle = \"Year Established: {closest_state}\",\n    caption = \"Data available from Nashville Open Data\\nBasemap from OpenStreetMap\") +\n  transition_states(year_estab) +\n  shadow_mark(fill=\"#2E3440\", color=\"#2E3440\")\n\nanim <-\nanimate(\n  anim,\n  duration=12,\n  fps=30,\n  height = 5,\n  width = 5,\n  units = \"in\",\n  res = 500, \n  renderer = ffmpeg_renderer()\n  )\n\nanim_save(animation = anim,\n          filename = \"nashville_parks.mp4\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ndf <- read_sf(\"boston_parks_data.geojson\")\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
