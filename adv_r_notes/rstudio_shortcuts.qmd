@@ -1,0 +1,56 @@
+# RStudio Shortcuts
+
+Here is a collection of my favorite RStudio shortcuts:
+
+## Code
+
+- Shift-Enter: Run the current line
+- Command-Shift-Enter: Run the current cell
+- Shift-Option-Command-P: Run all cells above
+- Option-Command-I: Insert a code cell
+- Control-Option-X: Turn code into a function
+- Shift-Control-C: Comment / Uncomment code
+
+## Formatting
+
+- Tab: Indent
+- Shift-Tab: Unindent
+
+## Quarto
+
+- Shift-Option-K: Render the document
+- F7: Spellcheck the document
+
+## My code snippets
+
+### `newgg`
+
+Code for a new ggplot.
+
+```{}
+df %>%
+  ggplot() +
+  aes() +
+```
+
+### `callout`
+
+Provides the boilerplate code for a Quarto callout block.
+
+### `note`
+
+Same as `callout`
+
+### `aside`
+
+Provides the boilerplate code for a Quarto aside.
+
+```
+[]{.aside}
+```
+
+
+
+
+
+ 

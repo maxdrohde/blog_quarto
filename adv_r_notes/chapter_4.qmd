@@ -1,0 +1,161 @@
+# Subsetting
+
+## Six ways to subset a vector
+
+:::{.callout-note}
+The following rules works for atomic vectors and lists.
+:::
+
+
+```{r}
+# We'll use this vector as an example
+x <- c(2.1, 4.2, 3.3, 5.4)
+```
+
+
+### Positive integers
+
+Get elements at specified positions
+
+```{r}
+x[c(3, 1)]
+```
+
+You can duplicate indices.
+
+```{r}
+x[c(1, 1)]
+```
+
+Decimals are truncated if provided as indices.
+
+```{r}
+x[c(2.1, 2.9)]
+```
+
+### Negative integers
+
+```{r}
+x[c(-3, -1)]
+```
+
+You can't mix positive and negative integers.
+
+```{r}
+#| eval: false
+x[c(-3, 1)]
+```
+
+### Nothing and Zero
+
+Nothing returns the original vector:
+
+```{r}
+x[]
+```
+
+Zero returns a zero-length vector:
+
+```{r}
+x[0]
+```
+
+and is ignored when used with other values:
+
+```{r}
+x[c(0,3,1,0,0,0,2)]
+```
+
+
+### Character vectors
+
+If a vector is named, you can subset with character vectors:
+
+```{r}
+y <- setNames(x, letters[1:4])
+
+print(y)
+
+y[c("d", "c", "a")]
+
+y[c("a", "a", "a")]
+```
+
+Names must be matched exactly:
+
+```{r}
+z <- c(abc = 1, def = 2)
+
+z[c("a", "d")]
+```
+
+
+
+### Subsetting with factors (don't do it)
+
+```{r}
+b <- factor("b")
+
+print(b)
+```
+
+```{r}
+x <- c(a=1, b=2, c=3)
+```
+
+Notice how the integer representation of the factor is used for subsetting, which gives a counterintuitive result.
+
+```{r}
+x[b]
+```
+
+```{r}
+x["b"]
+```
+
+## Selecting a single element
+
+Use ``[[ ]]`` when selected a single element.
+
+`$` is a shortcut for ``[[ ]]`` that can also do partial matching.
+
+```{r}
+x <- list(abc = 1, def = 2, ghi = 3)
+```
+
+```{r}
+x[["g"]]
+```
+
+```{r}
+# Both of these work due to partial matching
+
+x$ghi
+
+x$g
+```
+
+## Subsetting and assignment
+
+You can combine subsetting with assignment to modify objects in R.
+
+```{r}
+x <- list(1, 2, a = 3, "abc", 1:5)
+```
+
+
+```{r}
+x["a"] <- 15
+
+print(x)
+```
+
+Remove an element by setting it to `NULL`
+
+```{r}
+x["a"] <- NULL
+
+print(x)
+```
+
+

@@ -1,0 +1,14 @@
+{
+  "hash": "161449c86b0c31202cc5e206866f196c",
+  "result": {
+    "markdown": "# Functions\n\nFunctions have three parts:\n\n- Arguments\n- Body\n- Environment\n\nFunctions are objects.\n\nLet's use `sd()` as an example.\n\n`formals()` tells you about the arguments to a function.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nformals(sd)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n$x\n\n\n$na.rm\n[1] FALSE\n```\n:::\n:::\n\n\n`body()` gives you the code:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nbody(sd)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\nsqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), \n    na.rm = na.rm))\n```\n:::\n:::\n\n\nand `environment()` describes how to function finds the values associated with variables:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nenvironment(sd)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n<environment: namespace:stats>\n```\n:::\n:::\n\n\n\n:::{.callout-note}\n## Primative functions\n\n\"Primitive functions are only found in the base package. While they have certain performance advantages, this benefit comes at a price: they are harder to write. For this reason, R-core generally avoids creating them unless there is no other option.\"\n:::\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1+2\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 3\n```\n:::\n\n```{.r .cell-code}\n1+2\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 3\n```\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

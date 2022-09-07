@@ -1,0 +1,14 @@
+{
+  "hash": "e25ee10097017222c6a8016e0f452e02",
+  "result": {
+    "markdown": "---\ntitle: TBD\ndescription: TBD\nauthor: Max Rohde\ndate: 08/29/2022\nimage: preview.png\ncode-fold: show\ndraft: true\n---\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load packages\nlibrary(tidyverse)\n\n# Utilities\nlibrary(patchwork)\nlibrary(kableExtra)\nlibrary(glue)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=14,\n                                 font_family = \"Source Sans Pro\"))\n```\n:::\n\n\n\nWrite about how thinking in a bayesian and frequentist way can both be useful.\n\nThey both rely on probability theory, but have different aims.\n\nFrequentist: Create procedures that have favorable long-run properties when assumptions are met\nBayesian: Create a model that includes prior belief about parameters and see how the data should affect that belief\n\nEmphasize that bayes procedures can be evaluated in a frequentist way\n\nShow that bayes with flat priors can be equivalent to a standard frequentist CI\n\nMotivate the whole discussion with inference for a proportion.\n\n- Introduce the problem of inference for a proportion using a story\n- Explain the problem again using mathematical notation\n- Show how a frequentist test is conducted. With type 1 and type 2 errors simulated\n- Show how a frequentist CI is constructed. Show how coverage changes with n and true values of \\theta.\n- Show how a bayesian approaches the problem with beta binomial conjugate prior.\n- Show how MCMC can be used to solve the problem with any prior\n- show the frequentist coverage of the bayesian procedures\n\nRead the first few chapters of computer age statistical inference and use it to guide some of the discussion.\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

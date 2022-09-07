@@ -1,0 +1,14 @@
+{
+  "hash": "36ad10c411c2b588a97b27c745f372ba",
+  "result": {
+    "markdown": "# Other notes\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\n```\n:::\n\n\n## Anonymous function syntax\n\nStandard `purrr` syntax\n\n\n::: {.cell}\n\n```{.r .cell-code}\nmap_dbl(1:10, ~.x^2)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n [1]   1   4   9  16  25  36  49  64  81 100\n```\n:::\n:::\n\n\nNew R anonymous function syntax\n\n\n::: {.cell}\n\n```{.r .cell-code}\nmap_dbl(1:10, \\(x) x^2)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n [1]   1   4   9  16  25  36  49  64  81 100\n```\n:::\n:::\n\n\nAnother example:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nf <- \\(x,y,z) x+y+z\n\nf(1,2,3)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 6\n```\n:::\n:::\n\n\nEven shorter:\n\n\n::: {.cell}\n\n```{.r .cell-code}\n(\\(x,y,z) x+y+z)(1,2,3)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 6\n```\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

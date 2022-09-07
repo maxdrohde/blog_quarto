@@ -1,0 +1,246 @@
+---
+title: Linear Regression with Torch
+description: Automatic differentiation using Torch is usually applied to deep learning, but we can try it out on a simple problem like linear regression.
+author: Max Rohde
+date: 07/23/2022
+image: preview.png
+code-fold: show
+draft: true
+---
+
+This post is heavily inspired by a [talk](https://youtu.be/On2vLEJMFgg) by one of the Torch developers, Daniel Falber.
+
+```{r}
+# Load packages
+library(tidyverse)
+library(gganimate)
+
+library(patchwork)
+library(kableExtra)
+library(glue)
+
+library(rgl)                   # Library for 3D plots
+setupKnitr(autoprint = TRUE)   # Allow RGL plots to work with Quarto
+options(rgl.useNULL = TRUE)    # Don't automatically show RGL plots
+
+library(torch)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=14,
+                                 font_family = "Source Sans Pro"))
+```
+
+```{r}
+# Create data generated from the true model
+# y = 3 + 2*x1 + 7+x2
+
+# Generate predictors at random
+x1 <- runif(n=500, min=0, max=1)
+x2 <- runif(n=500, min=0, max=1)
+
+# Generate response
+y <- 3 + 2*x1 + 7*x2
+
+# Add random noise
+y <- y + rnorm(n=length(y), mean=0, sd=0.5)
+```
+
+```{r}
+# Generate predictors at random
+x1 <- runif(n=1000, min=0, max=1)
+x2 <- runif(n=1000, min=0, max=1)
+
+X <- cbind(rep(1, length(x1)), x1, x2)
+beta <- rbind(3,2,7)
+
+# y = Xβ  + ε
+y <- X %*% beta + rnorm(n=length(y), mean=0, sd=0.5)
+```
+
+```{r}
+# Check data was generated properly by plotting it
+test_plot <- plot3d(
+  x=X[,2],
+  y=X[,3],
+  z=y, 
+  type = 's', 
+  radius = .1,
+  xlab="x1",
+  ylab="x2",
+  zlab="y", 
+  )
+
+# Display the animation in Quarto
+rglwidget()
+```
+
+# Short introduction to automatic differetiation (autograd)
+
+```{r}
+x <- torch_tensor(c(2), requires_grad = TRUE)
+```
+
+```{r}
+f <- x^3 + 2*x^2 + x - 3
+```
+
+```{r}
+# Compute the derivatives. Note that the derivative gets saved in the `x` variable.
+f$backward()
+```
+
+```{r}
+x$grad
+```
+
+![Derivative computed symbolically with Wolfram Alpha](wolfram.png)
+
+Now an example with more inputs.
+
+```{r}
+x <- torch_tensor(c(2,5,8), requires_grad = TRUE)
+```
+
+```{r}
+f <- 3*x[1] + 5*x[2] + 7*x[3] + x[2]^3
+```
+
+```{r}
+# Compute the derivatives. Note that the derivative gets saved in the `x` variable.
+f$backward()
+```
+
+```{r}
+x$grad
+```
+
+Very cool stuff!!
+
+# Linear regression with Torch
+
+```{r}
+# Our initial parameter vector. Could also be set randomly.
+# Important to note that rbind(1,1,1) creates a column vector with 3 elements. Using `c(1,1,1)` wouldn't work.
+beta <- torch_tensor(rbind(1,1,1), requires_grad = TRUE)
+X <- torch_tensor(X)
+y <- torch_tensor(y)
+```
+
+```{r}
+# Note that torch_mm is for matrix multiply. torch_multiply is for element-wise multiply with broadcasting.
+predicted_values <- torch_mm(X, beta)
+
+# We use MSE for loss
+training_loss <- torch_sum((y - predicted_values)^2) / length(y)
+```
+
+```{r}
+training_loss$backward()
+```
+
+```{r}
+beta$grad
+```
+
+```{r}
+beta <- torch_tensor(rbind(1,1,1), requires_grad = TRUE)
+X <- torch_tensor(X)
+y <- torch_tensor(y)
+
+lr <- 0.01
+
+for (iter in 1:1e4) {
+  
+  predicted_values <- torch_mm(X, beta)
+  
+  training_loss <- torch_mean((y - predicted_values)^2)
+  
+  # Calculate the gradient
+  training_loss$backward()
+  
+  with_no_grad({
+  beta$subtract_(lr*beta$grad)
+  })
+  
+  # Zero out the gradient
+  beta$grad$zero_()
+}
+
+```
+
+Compare with `lm()`.
+
+```{r}
+df <- tibble(
+  y = as_array(y),
+  x1 = as_array(X[,2]),
+  x2 = as_array(X[,3])
+)
+```
+
+```{r}
+lm(y ~ x1 + x2, data=df)
+```
+
+```{r}
+# See documentation for `planes3d()` here: https://rdrr.io/rforge/rgl/man/planes.html
+
+a <- as_array(beta[2])
+b <- as_array(beta[3])
+c <- -1
+d <- as_array(beta[1])
+planes3d(a, b, c, d, alpha = 0.7, color="red")
+```
+
+# Function of a single variables (with animation)
+
+```{r}
+x <- runif(n=1000, min=1, max=2)
+y <- 0.5*x + 0.3*x^2 + rnorm(1000, sd=0.01)
+plot(x,y)
+
+X <- cbind(x, x^2)
+```
+
+```{r}
+df <- tibble(x,y)
+
+lm(y ~ poly(x,2, raw=TRUE) - 1)
+```
+
+```{r}
+beta <- torch_tensor(rbind(0.1, 0.1), requires_grad = TRUE)
+X <- torch_tensor(X)
+y <- torch_tensor(y)
+
+loss <- numeric()
+
+lr <- 0.00001
+
+for (iter in 1:1e5) {
+  
+  predicted_values <- torch_mm(X, beta)
+  
+  training_loss <- torch_mean(torch_square((torch_subtract(y, predicted_values))))
+  
+  loss <- c(loss, as_array(training_loss))
+  
+  # Calculate the gradient
+  training_loss$backward()
+  
+  with_no_grad({
+  beta$subtract_(lr*beta$grad)
+  })
+  
+  # Zero out the gradient
+  beta$grad$zero_()
+}
+
+print(beta)
+plot(loss)
+```
+
+
+
+
+

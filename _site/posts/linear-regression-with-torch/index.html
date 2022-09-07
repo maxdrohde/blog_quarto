@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.168">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Max Rohde">
+<meta name="dcterms.date" content="2022-07-23">
+<meta name="description" content="Automatic differentiation using Torch is usually applied to deep learning, but we can try it out on a simple problem like linear regression.">
+<title>Max Rohde - Linear Regression with Torch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><style>
+    .quarto-title-block .quarto-title-banner {
+      color: black;
+background: #f1f3f5;
+    }
+    </style>
+<script src="../../site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="../../site_libs/rglWebGL-binding-0.109.6/rglWebGL.js"></script><link href="../../site_libs/rglwidgetClass-0.109.6/rgl.css" rel="stylesheet">
+<script src="../../site_libs/rglwidgetClass-0.109.6/rglClass.min.js"></script><script type="text/plain" id="rgl-vertex-shader">
+#line 2 1
+// File 1 is the vertex shader
+#ifdef GL_ES
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+#endif
+
+attribute vec3 aPos;
+attribute vec4 aCol;
+uniform mat4 mvMatrix;
+uniform mat4 prMatrix;
+varying vec4 vCol;
+varying vec4 vPosition;
+
+#ifdef NEEDS_VNORMAL
+attribute vec3 aNorm;
+uniform mat4 normMatrix;
+varying vec4 vNormal;
+#endif
+
+#if defined(HAS_TEXTURE) || defined (IS_TEXT)
+attribute vec2 aTexcoord;
+varying vec2 vTexcoord;
+#endif
+
+#ifdef FIXED_SIZE
+uniform vec3 textScale;
+#endif
+
+#ifdef FIXED_QUADS
+attribute vec3 aOfs;
+#endif
+
+#ifdef IS_TWOSIDED
+#ifdef HAS_NORMALS
+varying float normz;
+uniform mat4 invPrMatrix;
+#else
+attribute vec3 aPos1;
+attribute vec3 aPos2;
+varying float normz;
+#endif
+#endif // IS_TWOSIDED
+
+#ifdef FAT_LINES
+attribute vec3 aNext;
+attribute vec2 aPoint;
+varying vec2 vPoint;
+varying float vLength;
+uniform float uAspect;
+uniform float uLwd;
+#endif
+
+
+void main(void) {
+  
+#ifndef IS_BRUSH
+#if defined(NCLIPPLANES) || !defined(FIXED_QUADS) || defined(HAS_FOG)
+  vPosition = mvMatrix * vec4(aPos, 1.);
+#endif
+  
+#ifndef FIXED_QUADS
+  gl_Position = prMatrix * vPosition;
+#endif
+#endif // !IS_BRUSH
+  
+#ifdef IS_POINTS
+  gl_PointSize = POINTSIZE;
+#endif
+  
+  vCol = aCol;
+  
+#ifdef NEEDS_VNORMAL
+  vNormal = normMatrix * vec4(-aNorm, dot(aNorm, aPos));
+#endif
+  
+#ifdef IS_TWOSIDED
+#ifdef HAS_NORMALS
+  /* normz should be calculated *after* projection */
+  normz = (invPrMatrix*vNormal).z;
+#else
+  vec4 pos1 = prMatrix*(mvMatrix*vec4(aPos1, 1.));
+  pos1 = pos1/pos1.w - gl_Position/gl_Position.w;
+  vec4 pos2 = prMatrix*(mvMatrix*vec4(aPos2, 1.));
+  pos2 = pos2/pos2.w - gl_Position/gl_Position.w;
+  normz = pos1.x*pos2.y - pos1.y*pos2.x;
+#endif
+#endif // IS_TWOSIDED
+  
+#ifdef NEEDS_VNORMAL
+  vNormal = vec4(normalize(vNormal.xyz/vNormal.w), 1);
+#endif
+  
+#if defined(HAS_TEXTURE) || defined(IS_TEXT)
+  vTexcoord = aTexcoord;
+#endif
+  
+#if defined(FIXED_SIZE) && !defined(ROTATING)
+  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);
+  pos = pos/pos.w;
+  gl_Position = pos + vec4(aOfs*textScale, 0.);
+#endif
+  
+#if defined(IS_SPRITES) && !defined(FIXED_SIZE)
+  vec4 pos = mvMatrix * vec4(aPos, 1.);
+  pos = pos/pos.w + vec4(aOfs,  0.);
+  gl_Position = prMatrix*pos;
+#endif
+  
+#ifdef FAT_LINES
+  /* This code was inspired by Matt Deslauriers' code in 
+   https://mattdesl.svbtle.com/drawing-lines-is-hard */
+  vec2 aspectVec = vec2(uAspect, 1.0);
+  mat4 projViewModel = prMatrix * mvMatrix;
+  vec4 currentProjected = projViewModel * vec4(aPos, 1.0);
+  currentProjected = currentProjected/currentProjected.w;
+  vec4 nextProjected = projViewModel * vec4(aNext, 1.0);
+  vec2 currentScreen = currentProjected.xy * aspectVec;
+  vec2 nextScreen = (nextProjected.xy / nextProjected.w) * aspectVec;
+  float len = uLwd;
+  vec2 dir = vec2(1.0, 0.0);
+  vPoint = aPoint;
+  vLength = length(nextScreen - currentScreen)/2.0;
+  vLength = vLength/(vLength + len);
+  if (vLength > 0.0) {
+    dir = normalize(nextScreen - currentScreen);
+  }
+  vec2 normal = vec2(-dir.y, dir.x);
+  dir.x /= uAspect;
+  normal.x /= uAspect;
+  vec4 offset = vec4(len*(normal*aPoint.x*aPoint.y - dir), 0.0, 0.0);
+  gl_Position = currentProjected + offset;
+#endif
+  
+#ifdef IS_BRUSH
+  gl_Position = vec4(aPos, 1.);
+#endif
+}
+</script><script type="text/plain" id="rgl-fragment-shader">
+#line 2 2
+// File 2 is the fragment shader
+#ifdef GL_ES
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+#endif
+varying vec4 vCol; // carries alpha
+varying vec4 vPosition;
+#if defined(HAS_TEXTURE) || defined (IS_TEXT)
+varying vec2 vTexcoord;
+uniform sampler2D uSampler;
+#endif
+
+#ifdef HAS_FOG
+uniform int uFogMode;
+uniform vec3 uFogColor;
+uniform vec4 uFogParms;
+#endif
+
+#if defined(IS_LIT) && !defined(FIXED_QUADS)
+varying vec4 vNormal;
+#endif
+
+#if NCLIPPLANES > 0
+uniform vec4 vClipplane[NCLIPPLANES];
+#endif
+
+#if NLIGHTS > 0
+uniform mat4 mvMatrix;
+#endif
+
+#ifdef IS_LIT
+uniform vec3 emission;
+uniform float shininess;
+#if NLIGHTS > 0
+uniform vec3 ambient[NLIGHTS];
+uniform vec3 specular[NLIGHTS]; // light*material
+uniform vec3 diffuse[NLIGHTS];
+uniform vec3 lightDir[NLIGHTS];
+uniform bool viewpoint[NLIGHTS];
+uniform bool finite[NLIGHTS];
+#endif
+#endif // IS_LIT
+
+#ifdef IS_TWOSIDED
+uniform bool front;
+varying float normz;
+#endif
+
+#ifdef FAT_LINES
+varying vec2 vPoint;
+varying float vLength;
+#endif
+
+void main(void) {
+  vec4 fragColor;
+#ifdef FAT_LINES
+  vec2 point = vPoint;
+  bool neg = point.y < 0.0;
+  point.y = neg ? (point.y + vLength)/(1.0 - vLength) :
+                 -(point.y - vLength)/(1.0 - vLength);
+#if defined(IS_TRANSPARENT) && defined(IS_LINESTRIP)
+  if (neg && length(point) <= 1.0) discard;
+#endif
+  point.y = min(point.y, 0.0);
+  if (length(point) > 1.0) discard;
+#endif // FAT_LINES
+  
+#ifdef ROUND_POINTS
+  vec2 coord = gl_PointCoord - vec2(0.5);
+  if (length(coord) > 0.5) discard;
+#endif
+  
+#if NCLIPPLANES > 0
+  for (int i = 0; i < NCLIPPLANES; i++)
+    if (dot(vPosition, vClipplane[i]) < 0.0) discard;
+#endif
+    
+#ifdef FIXED_QUADS
+    vec3 n = vec3(0., 0., 1.);
+#elif defined(IS_LIT)
+    vec3 n = normalize(vNormal.xyz);
+#endif
+    
+#ifdef IS_TWOSIDED
+    if ((normz <= 0.) != front) discard;
+#endif
+    
+#ifdef IS_LIT
+    vec3 eye = normalize(-vPosition.xyz/vPosition.w);
+    vec3 lightdir;
+    vec4 colDiff;
+    vec3 halfVec;
+    vec4 lighteffect = vec4(emission, 0.);
+    vec3 col;
+    float nDotL;
+#ifdef FIXED_QUADS
+    n = -faceforward(n, n, eye);
+#endif
+    
+#if NLIGHTS > 0
+    for (int i=0;i<NLIGHTS;i++) {
+      colDiff = vec4(vCol.rgb * diffuse[i], vCol.a);
+      lightdir = lightDir[i];
+      if (!viewpoint[i])
+        lightdir = (mvMatrix * vec4(lightdir, 1.)).xyz;
+      if (!finite[i]) {
+        halfVec = normalize(lightdir + eye);
+      } else {
+        lightdir = normalize(lightdir - vPosition.xyz/vPosition.w);
+        halfVec = normalize(lightdir + eye);
+      }
+      col = ambient[i];
+      nDotL = dot(n, lightdir);
+      col = col + max(nDotL, 0.) * colDiff.rgb;
+      col = col + pow(max(dot(halfVec, n), 0.), shininess) * specular[i];
+      lighteffect = lighteffect + vec4(col, colDiff.a);
+    }
+#endif
+    
+#else // not IS_LIT
+    vec4 colDiff = vCol;
+    vec4 lighteffect = colDiff;
+#endif
+    
+#ifdef IS_TEXT
+    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);
+#endif
+    
+#ifdef HAS_TEXTURE
+#ifdef TEXTURE_rgb
+    vec4 textureColor = lighteffect*vec4(texture2D(uSampler, vTexcoord).rgb, 1.);
+#endif
+    
+#ifdef TEXTURE_rgba
+    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);
+#endif
+    
+#ifdef TEXTURE_alpha
+    vec4 textureColor = texture2D(uSampler, vTexcoord);
+    float luminance = dot(vec3(1.,1.,1.), textureColor.rgb)/3.;
+    textureColor =  vec4(lighteffect.rgb, lighteffect.a*luminance);
+#endif
+    
+#ifdef TEXTURE_luminance
+    vec4 textureColor = vec4(lighteffect.rgb*dot(texture2D(uSampler, vTexcoord).rgb, vec3(1.,1.,1.))/3., lighteffect.a);
+#endif
+    
+#ifdef TEXTURE_luminance_alpha
+    vec4 textureColor = texture2D(uSampler, vTexcoord);
+    float luminance = dot(vec3(1.,1.,1.),textureColor.rgb)/3.;
+    textureColor = vec4(lighteffect.rgb*luminance, lighteffect.a*textureColor.a);
+#endif
+    
+    fragColor = textureColor;
+
+#elif defined(IS_TEXT)
+    if (textureColor.a < 0.1)
+      discard;
+    else
+      fragColor = textureColor;
+#else
+    fragColor = lighteffect;
+#endif // HAS_TEXTURE
+    
+#ifdef HAS_FOG
+    // uFogParms elements: x = near, y = far, z = fogscale, w = (1-sin(FOV/2))/(1+sin(FOV/2))
+    // In Exp and Exp2: use density = density/far
+    // fogF will be the proportion of fog
+    // Initialize it to the linear value
+    float fogF;
+    if (uFogMode > 0) {
+      fogF = (uFogParms.y - vPosition.z/vPosition.w)/(uFogParms.y - uFogParms.x);
+      if (uFogMode > 1)
+        fogF = mix(uFogParms.w, 1.0, fogF);
+      fogF = fogF*uFogParms.z;
+      if (uFogMode == 2)
+        fogF = 1.0 - exp(-fogF);
+      // Docs are wrong: use (density*c)^2, not density*c^2
+      // https://gitlab.freedesktop.org/mesa/mesa/-/blob/master/src/mesa/swrast/s_fog.c#L58
+      else if (uFogMode == 3)
+        fogF = 1.0 - exp(-fogF*fogF);
+      fogF = clamp(fogF, 0.0, 1.0);
+      gl_FragColor = vec4(mix(fragColor.rgb, uFogColor, fogF), fragColor.a);
+    } else gl_FragColor = fragColor;
+#else
+    gl_FragColor = fragColor;
+#endif // HAS_FOG
+    
+}
+</script><script src="../../site_libs/CanvasMatrix4-0.109.6/CanvasMatrix.min.js"></script><link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Max Rohde - Linear Regression with Torch">
+<meta property="og:description" content="Automatic differentiation using Torch is usually applied to deep learning, but we can try it out on a simple problem like linear regression.">
+<meta property="og:image" content="preview.png">
+<meta property="og:site-name" content="Max Rohde">
+<meta name="twitter:title" content="Max Rohde - Linear Regression with Torch">
+<meta name="twitter:description" content="Automatic differentiation using Torch is usually applied to deep learning, but we can try it out on a simple problem like linear regression.">
+<meta name="twitter:image" content="preview.png">
+<meta name="twitter:creator" content="@max_d_rohde">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="floating nav-fixed slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Max Rohde</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../index.html">Blog</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resume.pdf">Resume</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../anim.html">Animations</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../shiny.html">Shiny Apps</a>
+  </li>  
+</ul>
+<div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Linear Regression with Torch</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+                  <div>
+        <div class="description">
+          Automatic differentiation using Torch is usually applied to deep learning, but we can try it out on a simple problem like linear regression.
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Max Rohde </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 23, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+   
+  <ul>
+<li><a href="#short-introduction-to-automatic-differetiation-autograd" id="toc-short-introduction-to-automatic-differetiation-autograd" class="nav-link active" data-scroll-target="#short-introduction-to-automatic-differetiation-autograd">Short introduction to automatic differetiation (autograd)</a></li>
+  <li><a href="#linear-regression-with-torch" id="toc-linear-regression-with-torch" class="nav-link" data-scroll-target="#linear-regression-with-torch">Linear regression with Torch</a></li>
+  <li><a href="#function-of-a-single-variables-with-animation" id="toc-function-of-a-single-variables-with-animation" class="nav-link" data-scroll-target="#function-of-a-single-variables-with-animation">Function of a single variables (with animation)</a></li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/maxdrohde/blog_quarto/edit/main/posts/linear-regression-with-torch/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content"><p>This post is heavily inspired by a <a href="https://youtu.be/On2vLEJMFgg">talk</a> by one of the Torch developers, Daniel Falber.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Load packages</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gganimate.com">gganimate</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidyverse/glue">glue</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dmurdoch/rgl">rgl</a></span><span class="op">)</span>                   <span class="co"># Library for 3D plots</span></span>
+<span><span class="fu"><a href="https://dmurdoch.github.io/rgl/dev/reference/setupKnitr.html">setupKnitr</a></span><span class="op">(</span>autoprint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># Allow RGL plots to work with Quarto</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>rgl.useNULL <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>    <span class="co"># Don't automatically show RGL plots</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://torch.mlverse.org/docs">torch</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Set global ggplot theme</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span><span class="op">(</span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/theme_cowplot.html">theme_cowplot</a></span><span class="op">(</span>font_size<span class="op">=</span><span class="fl">14</span>,</span>
+<span>                                 font_family <span class="op">=</span> <span class="st">"Source Sans Pro"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create data generated from the true model</span></span>
+<span><span class="co"># y = 3 + 2*x1 + 7+x2</span></span>
+<span></span>
+<span><span class="co"># Generate predictors at random</span></span>
+<span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">500</span>, min<span class="op">=</span><span class="fl">0</span>, max<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">500</span>, min<span class="op">=</span><span class="fl">0</span>, max<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Generate response</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="va">x1</span> <span class="op">+</span> <span class="fl">7</span><span class="op">*</span><span class="va">x2</span></span>
+<span></span>
+<span><span class="co"># Add random noise</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">y</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, mean<span class="op">=</span><span class="fl">0</span>, sd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generate predictors at random</span></span>
+<span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">1000</span>, min<span class="op">=</span><span class="fl">0</span>, max<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">1000</span>, min<span class="op">=</span><span class="fl">0</span>, max<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x1</span><span class="op">)</span><span class="op">)</span>, <span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span></span>
+<span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">2</span>,<span class="fl">7</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># y = Xβ  + ε</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">X</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">beta</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, mean<span class="op">=</span><span class="fl">0</span>, sd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Check data was generated properly by plotting it</span></span>
+<span><span class="va">test_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dmurdoch.github.io/rgl/dev/reference/plot3d.html">plot3d</a></span><span class="op">(</span></span>
+<span>  x<span class="op">=</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>,</span>
+<span>  y<span class="op">=</span><span class="va">X</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span>,</span>
+<span>  z<span class="op">=</span><span class="va">y</span>, </span>
+<span>  type <span class="op">=</span> <span class="st">'s'</span>, </span>
+<span>  radius <span class="op">=</span> <span class="fl">.1</span>,</span>
+<span>  xlab<span class="op">=</span><span class="st">"x1"</span>,</span>
+<span>  ylab<span class="op">=</span><span class="st">"x2"</span>,</span>
+<span>  zlab<span class="op">=</span><span class="st">"y"</span>, </span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Display the animation in Quarto</span></span>
+<span><span class="fu"><a href="https://dmurdoch.github.io/rgl/dev/reference/rglwidget.html">rglwidget</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display no-overflow-x">
+<div id="rgl47678" style="width:100%;height:487px;" class="rglWebGL html-widget"></div>
+<script type="application/json" data-for="rgl47678">{"x":{"material":{"color":"#000000","alpha":1,"lit":true,"ambient":"#000000","specular":"#FFFFFF","emission":"#000000","shininess":50,"smooth":true,"front":"filled","back":"filled","size":3,"lwd":1,"fog":true,"point_antialias":false,"line_antialias":false,"texture":null,"textype":"rgb","texmipmap":false,"texminfilter":"linear","texmagfilter":"linear","texenvmap":false,"depth_mask":true,"depth_test":"less","isTransparent":false,"polygon_offset":[0,0],"margin":"","floating":false,"tag":""},"rootSubscene":19,"objects":{"25":{"id":25,"type":"spheres","material":{},"vertices":"0","colors":"1","radii":[[0.100000001490116]],"centers":"2","ignoreExtent":false,"fastTransparency":true,"flags":32771},"27":{"id":27,"type":"text","material":{"lit":false,"margin":0,"floating":true,"edge":[0,1,1]},"vertices":"3","colors":"4","texts":[["x1"]],"cex":[[1]],"adj":[[0.5,0.5,0.5]],"centers":"5","family":[["sans"]],"font":[[1]],"ignoreExtent":true,"flags":33808},"28":{"id":28,"type":"text","material":{"lit":false,"margin":1,"floating":true,"edge":[1,1,1]},"vertices":"6","colors":"7","texts":[["x2"]],"cex":[[1]],"adj":[[0.5,0.5,0.5]],"centers":"8","family":[["sans"]],"font":[[1]],"ignoreExtent":true,"flags":33808},"29":{"id":29,"type":"text","material":{"lit":false,"margin":2,"floating":true,"edge":[1,1,1]},"vertices":"9","colors":"10","texts":[["y"]],"cex":[[1]],"adj":[[0.5,0.5,0.5]],"centers":"11","family":[["sans"]],"font":[[1]],"ignoreExtent":true,"flags":33808},"23":{"id":23,"type":"light","vertices":[[0,0,1]],"colors":[[1,1,1,1],[1,1,1,1],[1,1,1,1]],"viewpoint":true,"finite":false},"22":{"id":22,"type":"background","material":{},"colors":"12","centers":"13","sphere":false,"fogtype":"none","fogscale":1,"flags":32768},"24":{"id":24,"type":"background","material":{"lit":false,"back":"lines"},"colors":"14","centers":"15","sphere":false,"fogtype":"none","fogscale":1,"flags":32768},"26":{"id":26,"type":"bboxdeco","material":{"front":"lines","back":"lines"},"vertices":"16","colors":"17","axes":{"mode":["pretty","pretty","pretty"],"step":[0.200000002980232,0.200000002980232,2],"nticks":[5,5,5],"marklen":[15,15,15],"expand":[1.02999997138977,1.02999997138977,1.02999997138977]},"draw_front":true,"flags":32769},"19":{"id":19,"type":"subscene","par3d":{"antialias":8,"FOV":30,"ignoreExtent":false,"listeners":19,"mouseMode":{"none":"none","left":"trackball","right":"zoom","middle":"fov","wheel":"pull"},"observer":[0,0,25.9706363677979],"modelMatrix":[[5.93829154968262,0,0,-2.96773624420166],[0,2.03019690513611,0.547736167907715,-4.99126482009888],[0,-5.57791996002197,0.19935967028141,-24.6305332183838],[0,0,0,1]],"projMatrix":[[3.73205089569092,0,0,0],[0,3.73205089569092,0,0],[0,0,-3.86370325088501,-93.6211318969727],[0,0,-1,0]],"skipRedraw":false,"userMatrix":[[1,0,0,0],[0,0.342020143325668,0.939692620785909,0],[0,-0.939692620785909,0.342020143325668,0],[0,0,0,1]],"userProjection":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],"scale":[5.93829154968262,5.9358983039856,0.582888662815094],"viewport":{"x":0,"y":0,"width":1,"height":1},"zoom":1,"bbox":[-0.0161715410649776,1.0156968832016,-0.0164036341011524,1.01588082313538,2.0040602684021,12.5164222717285],"windowRect":[0,0,256,256],"family":"sans","font":1,"cex":1,"useFreeType":true,"fontname":"NULL","maxClipPlanes":2147483647,"glVersion":"NA","activeSubscene":0},"embeddings":{"viewport":"replace","projection":"replace","model":"replace","mouse":"replace"},"objects":[24,26,25,27,28,29,23],"subscenes":[],"flags":34067}},"crosstalk":{"key":[],"group":[],"id":[],"options":[]},"width":768,"height":576,"buffer":{"accessors":[{"bufferView":0,"componentType":5126,"count":1000,"type":"VEC3"},{"bufferView":1,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":2,"componentType":5126,"count":1000,"type":"VEC3"},{"bufferView":3,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":4,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":5,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":6,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":7,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":8,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":9,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":10,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":11,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":12,"componentType":5126,"count":1,"type":"VEC4"},{"bufferView":13,"componentType":5121,"count":1,"type":"VEC3"},{"bufferView":14,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":15,"componentType":5121,"count":1,"type":"VEC3"},{"bufferView":16,"componentType":5126,"count":17,"type":"VEC3"},{"bufferView":17,"componentType":5121,"count":1,"type":"VEC4"}],"bufferViews":[{"buffer":0,"byteLength":12000,"byteOffset":0},{"buffer":0,"byteLength":4,"byteOffset":12000},{"buffer":0,"byteLength":12000,"byteOffset":12004},{"buffer":0,"byteLength":12,"byteOffset":24004},{"buffer":0,"byteLength":4,"byteOffset":24016},{"buffer":0,"byteLength":12,"byteOffset":24020},{"buffer":0,"byteLength":12,"byteOffset":24032},{"buffer":0,"byteLength":4,"byteOffset":24044},{"buffer":0,"byteLength":12,"byteOffset":24048},{"buffer":0,"byteLength":12,"byteOffset":24060},{"buffer":0,"byteLength":4,"byteOffset":24072},{"buffer":0,"byteLength":12,"byteOffset":24076},{"buffer":0,"byteLength":16,"byteOffset":24088},{"buffer":0,"byteLength":3,"byteOffset":24104},{"buffer":0,"byteLength":4,"byteOffset":24107},{"buffer":0,"byteLength":3,"byteOffset":24111},{"buffer":0,"byteLength":204,"byteOffset":24116},{"buffer":0,"byteLength":4,"byteOffset":24320}],"buffers":[{"byteLength":24324,"bytes":"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\nAADAfwAAIEEAAMB/AADAfwAAQEEAAAAB"}]},"context":{"shiny":false,"rmarkdown":null},"vertexShader":"#line 2 1\n// File 1 is the vertex shader\n#ifdef GL_ES\n#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n#endif\n\nattribute vec3 aPos;\nattribute vec4 aCol;\nuniform mat4 mvMatrix;\nuniform mat4 prMatrix;\nvarying vec4 vCol;\nvarying vec4 vPosition;\n\n#ifdef NEEDS_VNORMAL\nattribute vec3 aNorm;\nuniform mat4 normMatrix;\nvarying vec4 vNormal;\n#endif\n\n#if defined(HAS_TEXTURE) || defined (IS_TEXT)\nattribute vec2 aTexcoord;\nvarying vec2 vTexcoord;\n#endif\n\n#ifdef FIXED_SIZE\nuniform vec3 textScale;\n#endif\n\n#ifdef FIXED_QUADS\nattribute vec3 aOfs;\n#endif\n\n#ifdef IS_TWOSIDED\n#ifdef HAS_NORMALS\nvarying float normz;\nuniform mat4 invPrMatrix;\n#else\nattribute vec3 aPos1;\nattribute vec3 aPos2;\nvarying float normz;\n#endif\n#endif // IS_TWOSIDED\n\n#ifdef FAT_LINES\nattribute vec3 aNext;\nattribute vec2 aPoint;\nvarying vec2 vPoint;\nvarying float vLength;\nuniform float uAspect;\nuniform float uLwd;\n#endif\n\n\nvoid main(void) {\n  \n#ifndef IS_BRUSH\n#if defined(NCLIPPLANES) || !defined(FIXED_QUADS) || defined(HAS_FOG)\n  vPosition = mvMatrix * vec4(aPos, 1.);\n#endif\n  \n#ifndef FIXED_QUADS\n  gl_Position = prMatrix * vPosition;\n#endif\n#endif // !IS_BRUSH\n  \n#ifdef IS_POINTS\n  gl_PointSize = POINTSIZE;\n#endif\n  \n  vCol = aCol;\n  \n#ifdef NEEDS_VNORMAL\n  vNormal = normMatrix * vec4(-aNorm, dot(aNorm, aPos));\n#endif\n  \n#ifdef IS_TWOSIDED\n#ifdef HAS_NORMALS\n  /* normz should be calculated *after* projection */\n  normz = (invPrMatrix*vNormal).z;\n#else\n  vec4 pos1 = prMatrix*(mvMatrix*vec4(aPos1, 1.));\n  pos1 = pos1/pos1.w - gl_Position/gl_Position.w;\n  vec4 pos2 = prMatrix*(mvMatrix*vec4(aPos2, 1.));\n  pos2 = pos2/pos2.w - gl_Position/gl_Position.w;\n  normz = pos1.x*pos2.y - pos1.y*pos2.x;\n#endif\n#endif // IS_TWOSIDED\n  \n#ifdef NEEDS_VNORMAL\n  vNormal = vec4(normalize(vNormal.xyz/vNormal.w), 1);\n#endif\n  \n#if defined(HAS_TEXTURE) || defined(IS_TEXT)\n  vTexcoord = aTexcoord;\n#endif\n  \n#if defined(FIXED_SIZE) && !defined(ROTATING)\n  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);\n  pos = pos/pos.w;\n  gl_Position = pos + vec4(aOfs*textScale, 0.);\n#endif\n  \n#if defined(IS_SPRITES) && !defined(FIXED_SIZE)\n  vec4 pos = mvMatrix * vec4(aPos, 1.);\n  pos = pos/pos.w + vec4(aOfs,  0.);\n  gl_Position = prMatrix*pos;\n#endif\n  \n#ifdef FAT_LINES\n  /* This code was inspired by Matt Deslauriers' code in \n   https://mattdesl.svbtle.com/drawing-lines-is-hard */\n  vec2 aspectVec = vec2(uAspect, 1.0);\n  mat4 projViewModel = prMatrix * mvMatrix;\n  vec4 currentProjected = projViewModel * vec4(aPos, 1.0);\n  currentProjected = currentProjected/currentProjected.w;\n  vec4 nextProjected = projViewModel * vec4(aNext, 1.0);\n  vec2 currentScreen = currentProjected.xy * aspectVec;\n  vec2 nextScreen = (nextProjected.xy / nextProjected.w) * aspectVec;\n  float len = uLwd;\n  vec2 dir = vec2(1.0, 0.0);\n  vPoint = aPoint;\n  vLength = length(nextScreen - currentScreen)/2.0;\n  vLength = vLength/(vLength + len);\n  if (vLength > 0.0) {\n    dir = normalize(nextScreen - currentScreen);\n  }\n  vec2 normal = vec2(-dir.y, dir.x);\n  dir.x /= uAspect;\n  normal.x /= uAspect;\n  vec4 offset = vec4(len*(normal*aPoint.x*aPoint.y - dir), 0.0, 0.0);\n  gl_Position = currentProjected + offset;\n#endif\n  \n#ifdef IS_BRUSH\n  gl_Position = vec4(aPos, 1.);\n#endif\n}","fragmentShader":"#line 2 2\n// File 2 is the fragment shader\n#ifdef GL_ES\n#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n#endif\nvarying vec4 vCol; // carries alpha\nvarying vec4 vPosition;\n#if defined(HAS_TEXTURE) || defined (IS_TEXT)\nvarying vec2 vTexcoord;\nuniform sampler2D uSampler;\n#endif\n\n#ifdef HAS_FOG\nuniform int uFogMode;\nuniform vec3 uFogColor;\nuniform vec4 uFogParms;\n#endif\n\n#if defined(IS_LIT) && !defined(FIXED_QUADS)\nvarying vec4 vNormal;\n#endif\n\n#if NCLIPPLANES > 0\nuniform vec4 vClipplane[NCLIPPLANES];\n#endif\n\n#if NLIGHTS > 0\nuniform mat4 mvMatrix;\n#endif\n\n#ifdef IS_LIT\nuniform vec3 emission;\nuniform float shininess;\n#if NLIGHTS > 0\nuniform vec3 ambient[NLIGHTS];\nuniform vec3 specular[NLIGHTS]; // light*material\nuniform vec3 diffuse[NLIGHTS];\nuniform vec3 lightDir[NLIGHTS];\nuniform bool viewpoint[NLIGHTS];\nuniform bool finite[NLIGHTS];\n#endif\n#endif // IS_LIT\n\n#ifdef IS_TWOSIDED\nuniform bool front;\nvarying float normz;\n#endif\n\n#ifdef FAT_LINES\nvarying vec2 vPoint;\nvarying float vLength;\n#endif\n\nvoid main(void) {\n  vec4 fragColor;\n#ifdef FAT_LINES\n  vec2 point = vPoint;\n  bool neg = point.y < 0.0;\n  point.y = neg ? (point.y + vLength)/(1.0 - vLength) :\n                 -(point.y - vLength)/(1.0 - vLength);\n#if defined(IS_TRANSPARENT) && defined(IS_LINESTRIP)\n  if (neg && length(point) <= 1.0) discard;\n#endif\n  point.y = min(point.y, 0.0);\n  if (length(point) > 1.0) discard;\n#endif // FAT_LINES\n  \n#ifdef ROUND_POINTS\n  vec2 coord = gl_PointCoord - vec2(0.5);\n  if (length(coord) > 0.5) discard;\n#endif\n  \n#if NCLIPPLANES > 0\n  for (int i = 0; i < NCLIPPLANES; i++)\n    if (dot(vPosition, vClipplane[i]) < 0.0) discard;\n#endif\n    \n#ifdef FIXED_QUADS\n    vec3 n = vec3(0., 0., 1.);\n#elif defined(IS_LIT)\n    vec3 n = normalize(vNormal.xyz);\n#endif\n    \n#ifdef IS_TWOSIDED\n    if ((normz <= 0.) != front) discard;\n#endif\n    \n#ifdef IS_LIT\n    vec3 eye = normalize(-vPosition.xyz/vPosition.w);\n    vec3 lightdir;\n    vec4 colDiff;\n    vec3 halfVec;\n    vec4 lighteffect = vec4(emission, 0.);\n    vec3 col;\n    float nDotL;\n#ifdef FIXED_QUADS\n    n = -faceforward(n, n, eye);\n#endif\n    \n#if NLIGHTS > 0\n    for (int i=0;i<NLIGHTS;i++) {\n      colDiff = vec4(vCol.rgb * diffuse[i], vCol.a);\n      lightdir = lightDir[i];\n      if (!viewpoint[i])\n        lightdir = (mvMatrix * vec4(lightdir, 1.)).xyz;\n      if (!finite[i]) {\n        halfVec = normalize(lightdir + eye);\n      } else {\n        lightdir = normalize(lightdir - vPosition.xyz/vPosition.w);\n        halfVec = normalize(lightdir + eye);\n      }\n      col = ambient[i];\n      nDotL = dot(n, lightdir);\n      col = col + max(nDotL, 0.) * colDiff.rgb;\n      col = col + pow(max(dot(halfVec, n), 0.), shininess) * specular[i];\n      lighteffect = lighteffect + vec4(col, colDiff.a);\n    }\n#endif\n    \n#else // not IS_LIT\n    vec4 colDiff = vCol;\n    vec4 lighteffect = colDiff;\n#endif\n    \n#ifdef IS_TEXT\n    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n#endif\n    \n#ifdef HAS_TEXTURE\n#ifdef TEXTURE_rgb\n    vec4 textureColor = lighteffect*vec4(texture2D(uSampler, vTexcoord).rgb, 1.);\n#endif\n    \n#ifdef TEXTURE_rgba\n    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n#endif\n    \n#ifdef TEXTURE_alpha\n    vec4 textureColor = texture2D(uSampler, vTexcoord);\n    float luminance = dot(vec3(1.,1.,1.), textureColor.rgb)/3.;\n    textureColor =  vec4(lighteffect.rgb, lighteffect.a*luminance);\n#endif\n    \n#ifdef TEXTURE_luminance\n    vec4 textureColor = vec4(lighteffect.rgb*dot(texture2D(uSampler, vTexcoord).rgb, vec3(1.,1.,1.))/3., lighteffect.a);\n#endif\n    \n#ifdef TEXTURE_luminance_alpha\n    vec4 textureColor = texture2D(uSampler, vTexcoord);\n    float luminance = dot(vec3(1.,1.,1.),textureColor.rgb)/3.;\n    textureColor = vec4(lighteffect.rgb*luminance, lighteffect.a*textureColor.a);\n#endif\n    \n    fragColor = textureColor;\n\n#elif defined(IS_TEXT)\n    if (textureColor.a < 0.1)\n      discard;\n    else\n      fragColor = textureColor;\n#else\n    fragColor = lighteffect;\n#endif // HAS_TEXTURE\n    \n#ifdef HAS_FOG\n    // uFogParms elements: x = near, y = far, z = fogscale, w = (1-sin(FOV/2))/(1+sin(FOV/2))\n    // In Exp and Exp2: use density = density/far\n    // fogF will be the proportion of fog\n    // Initialize it to the linear value\n    float fogF;\n    if (uFogMode > 0) {\n      fogF = (uFogParms.y - vPosition.z/vPosition.w)/(uFogParms.y - uFogParms.x);\n      if (uFogMode > 1)\n        fogF = mix(uFogParms.w, 1.0, fogF);\n      fogF = fogF*uFogParms.z;\n      if (uFogMode == 2)\n        fogF = 1.0 - exp(-fogF);\n      // Docs are wrong: use (density*c)^2, not density*c^2\n      // https://gitlab.freedesktop.org/mesa/mesa/-/blob/master/src/mesa/swrast/s_fog.c#L58\n      else if (uFogMode == 3)\n        fogF = 1.0 - exp(-fogF*fogF);\n      fogF = clamp(fogF, 0.0, 1.0);\n      gl_FragColor = vec4(mix(fragColor.rgb, uFogColor, fogF), fragColor.a);\n    } else gl_FragColor = fragColor;\n#else\n    gl_FragColor = fragColor;\n#endif // HAS_FOG\n    \n}","players":[],"webGLoptions":{"preserveDrawingBuffer":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<section id="short-introduction-to-automatic-differetiation-autograd" class="level1 page-columns page-full"><h1>Short introduction to automatic differetiation (autograd)</h1>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, requires_grad <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">^</span><span class="fl">3</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">x</span> <span class="op">-</span> <span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Compute the derivatives. Note that the derivative gets saved in the `x` variable.</span></span>
+<span><span class="va">f</span><span class="op">$</span><span class="fu">backward</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">grad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>torch_tensor
+ 21
+[ CPUFloatType{1} ]</code></pre>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full"><p><img src="wolfram.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption margin-caption">Derivative computed symbolically with Wolfram Alpha</figcaption><p></p>
+</figure>
+</div>
+<p>Now an example with more inputs.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">5</span>,<span class="fl">8</span><span class="op">)</span>, requires_grad <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fl">3</span><span class="op">*</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="fl">5</span><span class="op">*</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="fl">7</span><span class="op">*</span><span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">^</span><span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Compute the derivatives. Note that the derivative gets saved in the `x` variable.</span></span>
+<span><span class="va">f</span><span class="op">$</span><span class="fu">backward</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">grad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>torch_tensor
+  3
+ 80
+  7
+[ CPUFloatType{3} ]</code></pre>
+</div>
+</div>
+<p>Very cool stuff!!</p>
+</section><section id="linear-regression-with-torch" class="level1"><h1>Linear regression with Torch</h1>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Our initial parameter vector. Could also be set randomly.</span></span>
+<span><span class="co"># Important to note that rbind(1,1,1) creates a column vector with 3 elements. Using `c(1,1,1)` wouldn't work.</span></span>
+<span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, requires_grad <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Note that torch_mm is for matrix multiply. torch_multiply is for element-wise multiply with broadcasting.</span></span>
+<span><span class="va">predicted_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_mm.html">torch_mm</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">beta</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># We use MSE for loss</span></span>
+<span><span class="va">training_loss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_sum.html">torch_sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">y</span> <span class="op">-</span> <span class="va">predicted_values</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">training_loss</span><span class="op">$</span><span class="fu">backward</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">beta</span><span class="op">$</span><span class="va">grad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>torch_tensor
+-10.9579
+ -5.7901
+ -6.5482
+[ CPUFloatType{3,1} ]</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, requires_grad <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lr</span> <span class="op">&lt;-</span> <span class="fl">0.01</span></span>
+<span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">iter</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1e4</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">predicted_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_mm.html">torch_mm</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">beta</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">training_loss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_mean.html">torch_mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y</span> <span class="op">-</span> <span class="va">predicted_values</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># Calculate the gradient</span></span>
+<span>  <span class="va">training_loss</span><span class="op">$</span><span class="fu">backward</span><span class="op">(</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/torch/man/with_no_grad.html">with_no_grad</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">beta</span><span class="op">$</span><span class="fu">subtract_</span><span class="op">(</span><span class="va">lr</span><span class="op">*</span><span class="va">beta</span><span class="op">$</span><span class="va">grad</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># Zero out the gradient</span></span>
+<span>  <span class="va">beta</span><span class="op">$</span><span class="va">grad</span><span class="op">$</span><span class="fu">zero_</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Compare with <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/as_array.html">as_array</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>,</span>
+<span>  x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/as_array.html">as_array</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/as_array.html">as_array</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>, data<span class="op">=</span><span class="va">df</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x1 + x2, data = df)
+
+Coefficients:
+(Intercept)           x1           x2  
+      2.918        2.072        6.993  </code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># See documentation for `planes3d()` here: https://rdrr.io/rforge/rgl/man/planes.html</span></span>
+<span></span>
+<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/as_array.html">as_array</a></span><span class="op">(</span><span class="va">beta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/as_array.html">as_array</a></span><span class="op">(</span><span class="va">beta</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">c</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">1</span></span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/as_array.html">as_array</a></span><span class="op">(</span><span class="va">beta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://dmurdoch.github.io/rgl/dev/reference/planes.html">planes3d</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span>, <span class="va">d</span>, alpha <span class="op">=</span> <span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display no-overflow-x">
+<div id="rgl18966" style="width:100%;height:487px;" class="rglWebGL html-widget"></div>
+<script type="application/json" data-for="rgl18966">{"x":{"material":{"color":"#000000","alpha":1,"lit":true,"ambient":"#000000","specular":"#FFFFFF","emission":"#000000","shininess":50,"smooth":true,"front":"filled","back":"filled","size":3,"lwd":1,"fog":true,"point_antialias":false,"line_antialias":false,"texture":null,"textype":"rgb","texmipmap":false,"texminfilter":"linear","texmagfilter":"linear","texenvmap":false,"depth_mask":true,"depth_test":"less","isTransparent":false,"polygon_offset":[0,0],"margin":"","floating":false,"tag":""},"rootSubscene":126,"objects":{"132":{"id":132,"type":"planes","material":{"alpha":0.69803923368454,"isTransparent":true},"vertices":"0","colors":"2","offsets":[[2.9184398651123]],"centers":"3","normals":"1","ignoreExtent":true,"flags":32803},"130":{"id":130,"type":"light","vertices":[[0,0,1]],"colors":[[1,1,1,1],[1,1,1,1],[1,1,1,1]],"viewpoint":true,"finite":false},"129":{"id":129,"type":"background","material":{},"colors":"4","centers":"5","sphere":false,"fogtype":"none","fogscale":1,"flags":32768},"131":{"id":131,"type":"background","material":{"lit":false,"back":"lines"},"colors":"6","centers":"7","sphere":false,"fogtype":"none","fogscale":1,"flags":32768},"126":{"id":126,"type":"subscene","par3d":{"antialias":8,"FOV":30,"ignoreExtent":false,"listeners":126,"mouseMode":{"none":"none","left":"trackball","right":"zoom","middle":"fov","wheel":"pull"},"observer":[0,0,823.132080078125],"modelMatrix":[[1,0,0,0],[0,0.342020153999329,0.939692616462708,0],[0,-0.939692616462708,0.342020153999329,-823.132080078125],[0,0,0,1]],"projMatrix":[[3.73205065727234,0,0,0],[0,3.73205065727234,0,0],[0,0,-3.86370372772217,-2967.29638671875],[0,0,-1,0]],"skipRedraw":false,"userMatrix":[[1,0,0,0],[0,0.342020143325668,0.939692620785909,0],[0,-0.939692620785909,0.342020143325668,0],[0,0,0,1]],"userProjection":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],"scale":[1,1,1],"viewport":{"x":0,"y":0,"width":1,"height":1},"zoom":1,"bbox":[123,-123,123,-123,123,-123],"windowRect":[0,0,256,256],"family":"sans","font":1,"cex":1,"useFreeType":true,"fontname":"NULL","maxClipPlanes":2147483647,"glVersion":"NA","activeSubscene":0},"embeddings":{"viewport":"replace","projection":"replace","model":"replace","mouse":"replace"},"objects":[131,132,130],"subscenes":[],"flags":33059}},"crosstalk":{"key":[],"group":[],"id":[],"options":[]},"width":768,"height":576,"buffer":{"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3"},{"bufferView":1,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":2,"componentType":5126,"count":1,"type":"VEC4"},{"bufferView":3,"componentType":5126,"count":4,"type":"VEC3"},{"bufferView":4,"componentType":5126,"count":1,"type":"VEC4"},{"bufferView":5,"componentType":5121,"count":1,"type":"VEC3"},{"bufferView":6,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":7,"componentType":5121,"count":1,"type":"VEC3"}],"bufferViews":[{"buffer":0,"byteLength":36,"byteOffset":0},{"buffer":0,"byteLength":12,"byteOffset":36},{"buffer":0,"byteLength":16,"byteOffset":48},{"buffer":0,"byteLength":48,"byteOffset":64},{"buffer":0,"byteLength":16,"byteOffset":112},{"buffer":0,"byteLength":3,"byteOffset":128},{"buffer":0,"byteLength":4,"byteOffset":131},{"buffer":0,"byteLength":3,"byteOffset":135}],"buffers":[{"byteLength":138,"bytes":"AADAfwAAwH8AAMB/AADAfwAAwH8AAMB/AADAfwAAwH8AAMB/fZ0EQLrC30AAAIC/AACAPwAA\nAAAAAAAAs7IyPwAAwH8AAMB/AADAfwAAwH8AAMB/AADAfwAAwH8AAMB/AADAfwAAwH8AAMB/\nAADAf5mYmD6ZmJg+mZiYPgAAgD8AAAABAQEBAAAA"}]},"context":{"shiny":false,"rmarkdown":null},"vertexShader":"#line 2 1\n// File 1 is the vertex shader\n#ifdef GL_ES\n#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n#endif\n\nattribute vec3 aPos;\nattribute vec4 aCol;\nuniform mat4 mvMatrix;\nuniform mat4 prMatrix;\nvarying vec4 vCol;\nvarying vec4 vPosition;\n\n#ifdef NEEDS_VNORMAL\nattribute vec3 aNorm;\nuniform mat4 normMatrix;\nvarying vec4 vNormal;\n#endif\n\n#if defined(HAS_TEXTURE) || defined (IS_TEXT)\nattribute vec2 aTexcoord;\nvarying vec2 vTexcoord;\n#endif\n\n#ifdef FIXED_SIZE\nuniform vec3 textScale;\n#endif\n\n#ifdef FIXED_QUADS\nattribute vec3 aOfs;\n#endif\n\n#ifdef IS_TWOSIDED\n#ifdef HAS_NORMALS\nvarying float normz;\nuniform mat4 invPrMatrix;\n#else\nattribute vec3 aPos1;\nattribute vec3 aPos2;\nvarying float normz;\n#endif\n#endif // IS_TWOSIDED\n\n#ifdef FAT_LINES\nattribute vec3 aNext;\nattribute vec2 aPoint;\nvarying vec2 vPoint;\nvarying float vLength;\nuniform float uAspect;\nuniform float uLwd;\n#endif\n\n\nvoid main(void) {\n  \n#ifndef IS_BRUSH\n#if defined(NCLIPPLANES) || !defined(FIXED_QUADS) || defined(HAS_FOG)\n  vPosition = mvMatrix * vec4(aPos, 1.);\n#endif\n  \n#ifndef FIXED_QUADS\n  gl_Position = prMatrix * vPosition;\n#endif\n#endif // !IS_BRUSH\n  \n#ifdef IS_POINTS\n  gl_PointSize = POINTSIZE;\n#endif\n  \n  vCol = aCol;\n  \n#ifdef NEEDS_VNORMAL\n  vNormal = normMatrix * vec4(-aNorm, dot(aNorm, aPos));\n#endif\n  \n#ifdef IS_TWOSIDED\n#ifdef HAS_NORMALS\n  /* normz should be calculated *after* projection */\n  normz = (invPrMatrix*vNormal).z;\n#else\n  vec4 pos1 = prMatrix*(mvMatrix*vec4(aPos1, 1.));\n  pos1 = pos1/pos1.w - gl_Position/gl_Position.w;\n  vec4 pos2 = prMatrix*(mvMatrix*vec4(aPos2, 1.));\n  pos2 = pos2/pos2.w - gl_Position/gl_Position.w;\n  normz = pos1.x*pos2.y - pos1.y*pos2.x;\n#endif\n#endif // IS_TWOSIDED\n  \n#ifdef NEEDS_VNORMAL\n  vNormal = vec4(normalize(vNormal.xyz/vNormal.w), 1);\n#endif\n  \n#if defined(HAS_TEXTURE) || defined(IS_TEXT)\n  vTexcoord = aTexcoord;\n#endif\n  \n#if defined(FIXED_SIZE) && !defined(ROTATING)\n  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);\n  pos = pos/pos.w;\n  gl_Position = pos + vec4(aOfs*textScale, 0.);\n#endif\n  \n#if defined(IS_SPRITES) && !defined(FIXED_SIZE)\n  vec4 pos = mvMatrix * vec4(aPos, 1.);\n  pos = pos/pos.w + vec4(aOfs,  0.);\n  gl_Position = prMatrix*pos;\n#endif\n  \n#ifdef FAT_LINES\n  /* This code was inspired by Matt Deslauriers' code in \n   https://mattdesl.svbtle.com/drawing-lines-is-hard */\n  vec2 aspectVec = vec2(uAspect, 1.0);\n  mat4 projViewModel = prMatrix * mvMatrix;\n  vec4 currentProjected = projViewModel * vec4(aPos, 1.0);\n  currentProjected = currentProjected/currentProjected.w;\n  vec4 nextProjected = projViewModel * vec4(aNext, 1.0);\n  vec2 currentScreen = currentProjected.xy * aspectVec;\n  vec2 nextScreen = (nextProjected.xy / nextProjected.w) * aspectVec;\n  float len = uLwd;\n  vec2 dir = vec2(1.0, 0.0);\n  vPoint = aPoint;\n  vLength = length(nextScreen - currentScreen)/2.0;\n  vLength = vLength/(vLength + len);\n  if (vLength > 0.0) {\n    dir = normalize(nextScreen - currentScreen);\n  }\n  vec2 normal = vec2(-dir.y, dir.x);\n  dir.x /= uAspect;\n  normal.x /= uAspect;\n  vec4 offset = vec4(len*(normal*aPoint.x*aPoint.y - dir), 0.0, 0.0);\n  gl_Position = currentProjected + offset;\n#endif\n  \n#ifdef IS_BRUSH\n  gl_Position = vec4(aPos, 1.);\n#endif\n}","fragmentShader":"#line 2 2\n// File 2 is the fragment shader\n#ifdef GL_ES\n#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n#endif\nvarying vec4 vCol; // carries alpha\nvarying vec4 vPosition;\n#if defined(HAS_TEXTURE) || defined (IS_TEXT)\nvarying vec2 vTexcoord;\nuniform sampler2D uSampler;\n#endif\n\n#ifdef HAS_FOG\nuniform int uFogMode;\nuniform vec3 uFogColor;\nuniform vec4 uFogParms;\n#endif\n\n#if defined(IS_LIT) && !defined(FIXED_QUADS)\nvarying vec4 vNormal;\n#endif\n\n#if NCLIPPLANES > 0\nuniform vec4 vClipplane[NCLIPPLANES];\n#endif\n\n#if NLIGHTS > 0\nuniform mat4 mvMatrix;\n#endif\n\n#ifdef IS_LIT\nuniform vec3 emission;\nuniform float shininess;\n#if NLIGHTS > 0\nuniform vec3 ambient[NLIGHTS];\nuniform vec3 specular[NLIGHTS]; // light*material\nuniform vec3 diffuse[NLIGHTS];\nuniform vec3 lightDir[NLIGHTS];\nuniform bool viewpoint[NLIGHTS];\nuniform bool finite[NLIGHTS];\n#endif\n#endif // IS_LIT\n\n#ifdef IS_TWOSIDED\nuniform bool front;\nvarying float normz;\n#endif\n\n#ifdef FAT_LINES\nvarying vec2 vPoint;\nvarying float vLength;\n#endif\n\nvoid main(void) {\n  vec4 fragColor;\n#ifdef FAT_LINES\n  vec2 point = vPoint;\n  bool neg = point.y < 0.0;\n  point.y = neg ? (point.y + vLength)/(1.0 - vLength) :\n                 -(point.y - vLength)/(1.0 - vLength);\n#if defined(IS_TRANSPARENT) && defined(IS_LINESTRIP)\n  if (neg && length(point) <= 1.0) discard;\n#endif\n  point.y = min(point.y, 0.0);\n  if (length(point) > 1.0) discard;\n#endif // FAT_LINES\n  \n#ifdef ROUND_POINTS\n  vec2 coord = gl_PointCoord - vec2(0.5);\n  if (length(coord) > 0.5) discard;\n#endif\n  \n#if NCLIPPLANES > 0\n  for (int i = 0; i < NCLIPPLANES; i++)\n    if (dot(vPosition, vClipplane[i]) < 0.0) discard;\n#endif\n    \n#ifdef FIXED_QUADS\n    vec3 n = vec3(0., 0., 1.);\n#elif defined(IS_LIT)\n    vec3 n = normalize(vNormal.xyz);\n#endif\n    \n#ifdef IS_TWOSIDED\n    if ((normz <= 0.) != front) discard;\n#endif\n    \n#ifdef IS_LIT\n    vec3 eye = normalize(-vPosition.xyz/vPosition.w);\n    vec3 lightdir;\n    vec4 colDiff;\n    vec3 halfVec;\n    vec4 lighteffect = vec4(emission, 0.);\n    vec3 col;\n    float nDotL;\n#ifdef FIXED_QUADS\n    n = -faceforward(n, n, eye);\n#endif\n    \n#if NLIGHTS > 0\n    for (int i=0;i<NLIGHTS;i++) {\n      colDiff = vec4(vCol.rgb * diffuse[i], vCol.a);\n      lightdir = lightDir[i];\n      if (!viewpoint[i])\n        lightdir = (mvMatrix * vec4(lightdir, 1.)).xyz;\n      if (!finite[i]) {\n        halfVec = normalize(lightdir + eye);\n      } else {\n        lightdir = normalize(lightdir - vPosition.xyz/vPosition.w);\n        halfVec = normalize(lightdir + eye);\n      }\n      col = ambient[i];\n      nDotL = dot(n, lightdir);\n      col = col + max(nDotL, 0.) * colDiff.rgb;\n      col = col + pow(max(dot(halfVec, n), 0.), shininess) * specular[i];\n      lighteffect = lighteffect + vec4(col, colDiff.a);\n    }\n#endif\n    \n#else // not IS_LIT\n    vec4 colDiff = vCol;\n    vec4 lighteffect = colDiff;\n#endif\n    \n#ifdef IS_TEXT\n    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n#endif\n    \n#ifdef HAS_TEXTURE\n#ifdef TEXTURE_rgb\n    vec4 textureColor = lighteffect*vec4(texture2D(uSampler, vTexcoord).rgb, 1.);\n#endif\n    \n#ifdef TEXTURE_rgba\n    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n#endif\n    \n#ifdef TEXTURE_alpha\n    vec4 textureColor = texture2D(uSampler, vTexcoord);\n    float luminance = dot(vec3(1.,1.,1.), textureColor.rgb)/3.;\n    textureColor =  vec4(lighteffect.rgb, lighteffect.a*luminance);\n#endif\n    \n#ifdef TEXTURE_luminance\n    vec4 textureColor = vec4(lighteffect.rgb*dot(texture2D(uSampler, vTexcoord).rgb, vec3(1.,1.,1.))/3., lighteffect.a);\n#endif\n    \n#ifdef TEXTURE_luminance_alpha\n    vec4 textureColor = texture2D(uSampler, vTexcoord);\n    float luminance = dot(vec3(1.,1.,1.),textureColor.rgb)/3.;\n    textureColor = vec4(lighteffect.rgb*luminance, lighteffect.a*textureColor.a);\n#endif\n    \n    fragColor = textureColor;\n\n#elif defined(IS_TEXT)\n    if (textureColor.a < 0.1)\n      discard;\n    else\n      fragColor = textureColor;\n#else\n    fragColor = lighteffect;\n#endif // HAS_TEXTURE\n    \n#ifdef HAS_FOG\n    // uFogParms elements: x = near, y = far, z = fogscale, w = (1-sin(FOV/2))/(1+sin(FOV/2))\n    // In Exp and Exp2: use density = density/far\n    // fogF will be the proportion of fog\n    // Initialize it to the linear value\n    float fogF;\n    if (uFogMode > 0) {\n      fogF = (uFogParms.y - vPosition.z/vPosition.w)/(uFogParms.y - uFogParms.x);\n      if (uFogMode > 1)\n        fogF = mix(uFogParms.w, 1.0, fogF);\n      fogF = fogF*uFogParms.z;\n      if (uFogMode == 2)\n        fogF = 1.0 - exp(-fogF);\n      // Docs are wrong: use (density*c)^2, not density*c^2\n      // https://gitlab.freedesktop.org/mesa/mesa/-/blob/master/src/mesa/swrast/s_fog.c#L58\n      else if (uFogMode == 3)\n        fogF = 1.0 - exp(-fogF*fogF);\n      fogF = clamp(fogF, 0.0, 1.0);\n      gl_FragColor = vec4(mix(fragColor.rgb, uFogColor, fogF), fragColor.a);\n    } else gl_FragColor = fragColor;\n#else\n    gl_FragColor = fragColor;\n#endif // HAS_FOG\n    \n}","players":[],"webGLoptions":{"preserveDrawingBuffer":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section><section id="function-of-a-single-variables-with-animation" class="level1"><h1>Function of a single variables (with animation)</h1>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">1000</span>, min<span class="op">=</span><span class="fl">1</span>, max<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">x</span> <span class="op">+</span> <span class="fl">0.3</span><span class="op">*</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, sd<span class="op">=</span><span class="fl">0.01</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="768"></p>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html">poly</a></span><span class="op">(</span><span class="va">x</span>,<span class="fl">2</span>, raw<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ poly(x, 2, raw = TRUE) - 1)
+
+Coefficients:
+poly(x, 2, raw = TRUE)1  poly(x, 2, raw = TRUE)2  
+                 0.5013                   0.2993  </code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>, requires_grad <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_tensor.html">torch_tensor</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">loss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lr</span> <span class="op">&lt;-</span> <span class="fl">0.00001</span></span>
+<span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">iter</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1e5</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">predicted_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_mm.html">torch_mm</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">beta</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">training_loss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_mean.html">torch_mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_square.html">torch_square</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_subtract.html">torch_subtract</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">predicted_values</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">loss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">loss</span>, <span class="fu"><a href="https://rdrr.io/pkg/torch/man/as_array.html">as_array</a></span><span class="op">(</span><span class="va">training_loss</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># Calculate the gradient</span></span>
+<span>  <span class="va">training_loss</span><span class="op">$</span><span class="fu">backward</span><span class="op">(</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/torch/man/with_no_grad.html">with_no_grad</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">beta</span><span class="op">$</span><span class="fu">subtract_</span><span class="op">(</span><span class="va">lr</span><span class="op">*</span><span class="va">beta</span><span class="op">$</span><span class="va">grad</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># Zero out the gradient</span></span>
+<span>  <span class="va">beta</span><span class="op">$</span><span class="va">grad</span><span class="op">$</span><span class="fu">zero_</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">beta</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>torch_tensor
+ 0.4306
+ 0.2922
+[ CPUFloatType{2,1} ][ requires_grad = TRUE ]</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">loss</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script><script src="https://utteranc.es/client.js" repo="maxdrohde/blog_quarto" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb32" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> Linear Regression with Torch</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> Automatic differentiation using Torch is usually applied to deep learning, but we can try it out on a simple problem like linear regression.</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> Max Rohde</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 07/23/2022</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> preview.png</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="an">code-fold:</span><span class="co"> show</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> true</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>This post is heavily inspired by a <span class="co">[</span><span class="ot">talk</span><span class="co">](https://youtu.be/On2vLEJMFgg)</span> by one of the Torch developers, Daniel Falber.</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgl)                   <span class="co"># Library for 3D plots</span></span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a><span class="fu">setupKnitr</span>(<span class="at">autoprint =</span> <span class="cn">TRUE</span>)   <span class="co"># Allow RGL plots to work with Quarto</span></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">rgl.useNULL =</span> <span class="cn">TRUE</span>)    <span class="co"># Don't automatically show RGL plots</span></span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(torch)</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Set global ggplot theme</span></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_size=</span><span class="dv">14</span>,</span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>))</span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Create data generated from the true model</span></span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a><span class="co"># y = 3 + 2*x1 + 7+x2</span></span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate predictors at random</span></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n=</span><span class="dv">500</span>, <span class="at">min=</span><span class="dv">0</span>, <span class="at">max=</span><span class="dv">1</span>)</span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n=</span><span class="dv">500</span>, <span class="at">min=</span><span class="dv">0</span>, <span class="at">max=</span><span class="dv">1</span>)</span>
+<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate response</span></span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>x1 <span class="sc">+</span> <span class="dv">7</span><span class="sc">*</span>x2</span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Add random noise</span></span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> y <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="fu">length</span>(y), <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.5</span>)</span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-51"><a href="#cb32-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-54"><a href="#cb32-54" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-55"><a href="#cb32-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate predictors at random</span></span>
+<span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n=</span><span class="dv">1000</span>, <span class="at">min=</span><span class="dv">0</span>, <span class="at">max=</span><span class="dv">1</span>)</span>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n=</span><span class="dv">1000</span>, <span class="at">min=</span><span class="dv">0</span>, <span class="at">max=</span><span class="dv">1</span>)</span>
+<span id="cb32-58"><a href="#cb32-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-59"><a href="#cb32-59" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">length</span>(x1)), x1, x2)</span>
+<span id="cb32-60"><a href="#cb32-60" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">7</span>)</span>
+<span id="cb32-61"><a href="#cb32-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-62"><a href="#cb32-62" aria-hidden="true" tabindex="-1"></a><span class="co"># y = Xβ  + ε</span></span>
+<span id="cb32-63"><a href="#cb32-63" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> X <span class="sc">%*%</span> beta <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="fu">length</span>(y), <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.5</span>)</span>
+<span id="cb32-64"><a href="#cb32-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-65"><a href="#cb32-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-68"><a href="#cb32-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-69"><a href="#cb32-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Check data was generated properly by plotting it</span></span>
+<span id="cb32-70"><a href="#cb32-70" aria-hidden="true" tabindex="-1"></a>test_plot <span class="ot">&lt;-</span> <span class="fu">plot3d</span>(</span>
+<span id="cb32-71"><a href="#cb32-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">x=</span>X[,<span class="dv">2</span>],</span>
+<span id="cb32-72"><a href="#cb32-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">y=</span>X[,<span class="dv">3</span>],</span>
+<span id="cb32-73"><a href="#cb32-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">z=</span>y, </span>
+<span id="cb32-74"><a href="#cb32-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">'s'</span>, </span>
+<span id="cb32-75"><a href="#cb32-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">radius =</span> .<span class="dv">1</span>,</span>
+<span id="cb32-76"><a href="#cb32-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab=</span><span class="st">"x1"</span>,</span>
+<span id="cb32-77"><a href="#cb32-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab=</span><span class="st">"x2"</span>,</span>
+<span id="cb32-78"><a href="#cb32-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">zlab=</span><span class="st">"y"</span>, </span>
+<span id="cb32-79"><a href="#cb32-79" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-80"><a href="#cb32-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-81"><a href="#cb32-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the animation in Quarto</span></span>
+<span id="cb32-82"><a href="#cb32-82" aria-hidden="true" tabindex="-1"></a><span class="fu">rglwidget</span>()</span>
+<span id="cb32-83"><a href="#cb32-83" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-84"><a href="#cb32-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-85"><a href="#cb32-85" aria-hidden="true" tabindex="-1"></a><span class="fu"># Short introduction to automatic differetiation (autograd)</span></span>
+<span id="cb32-86"><a href="#cb32-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-89"><a href="#cb32-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-90"><a href="#cb32-90" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">c</span>(<span class="dv">2</span>), <span class="at">requires_grad =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-91"><a href="#cb32-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-92"><a href="#cb32-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-95"><a href="#cb32-95" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-96"><a href="#cb32-96" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> x<span class="sc">^</span><span class="dv">3</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> x <span class="sc">-</span> <span class="dv">3</span></span>
+<span id="cb32-97"><a href="#cb32-97" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-98"><a href="#cb32-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-101"><a href="#cb32-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-102"><a href="#cb32-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the derivatives. Note that the derivative gets saved in the `x` variable.</span></span>
+<span id="cb32-103"><a href="#cb32-103" aria-hidden="true" tabindex="-1"></a>f<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb32-104"><a href="#cb32-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-105"><a href="#cb32-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-108"><a href="#cb32-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-109"><a href="#cb32-109" aria-hidden="true" tabindex="-1"></a>x<span class="sc">$</span>grad</span>
+<span id="cb32-110"><a href="#cb32-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-111"><a href="#cb32-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-112"><a href="#cb32-112" aria-hidden="true" tabindex="-1"></a><span class="al">![Derivative computed symbolically with Wolfram Alpha](wolfram.png)</span></span>
+<span id="cb32-113"><a href="#cb32-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-114"><a href="#cb32-114" aria-hidden="true" tabindex="-1"></a>Now an example with more inputs.</span>
+<span id="cb32-115"><a href="#cb32-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-118"><a href="#cb32-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-119"><a href="#cb32-119" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">8</span>), <span class="at">requires_grad =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-120"><a href="#cb32-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-121"><a href="#cb32-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-124"><a href="#cb32-124" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-125"><a href="#cb32-125" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="dv">3</span><span class="sc">*</span>x[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>x[<span class="dv">2</span>] <span class="sc">+</span> <span class="dv">7</span><span class="sc">*</span>x[<span class="dv">3</span>] <span class="sc">+</span> x[<span class="dv">2</span>]<span class="sc">^</span><span class="dv">3</span></span>
+<span id="cb32-126"><a href="#cb32-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-127"><a href="#cb32-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-130"><a href="#cb32-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-131"><a href="#cb32-131" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the derivatives. Note that the derivative gets saved in the `x` variable.</span></span>
+<span id="cb32-132"><a href="#cb32-132" aria-hidden="true" tabindex="-1"></a>f<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb32-133"><a href="#cb32-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-134"><a href="#cb32-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-137"><a href="#cb32-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-138"><a href="#cb32-138" aria-hidden="true" tabindex="-1"></a>x<span class="sc">$</span>grad</span>
+<span id="cb32-139"><a href="#cb32-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-140"><a href="#cb32-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-141"><a href="#cb32-141" aria-hidden="true" tabindex="-1"></a>Very cool stuff!!</span>
+<span id="cb32-142"><a href="#cb32-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-143"><a href="#cb32-143" aria-hidden="true" tabindex="-1"></a><span class="fu"># Linear regression with Torch</span></span>
+<span id="cb32-144"><a href="#cb32-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-147"><a href="#cb32-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-148"><a href="#cb32-148" aria-hidden="true" tabindex="-1"></a><span class="co"># Our initial parameter vector. Could also be set randomly.</span></span>
+<span id="cb32-149"><a href="#cb32-149" aria-hidden="true" tabindex="-1"></a><span class="co"># Important to note that rbind(1,1,1) creates a column vector with 3 elements. Using `c(1,1,1)` wouldn't work.</span></span>
+<span id="cb32-150"><a href="#cb32-150" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">rbind</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">requires_grad =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-151"><a href="#cb32-151" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(X)</span>
+<span id="cb32-152"><a href="#cb32-152" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(y)</span>
+<span id="cb32-153"><a href="#cb32-153" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-154"><a href="#cb32-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-157"><a href="#cb32-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-158"><a href="#cb32-158" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that torch_mm is for matrix multiply. torch_multiply is for element-wise multiply with broadcasting.</span></span>
+<span id="cb32-159"><a href="#cb32-159" aria-hidden="true" tabindex="-1"></a>predicted_values <span class="ot">&lt;-</span> <span class="fu">torch_mm</span>(X, beta)</span>
+<span id="cb32-160"><a href="#cb32-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-161"><a href="#cb32-161" aria-hidden="true" tabindex="-1"></a><span class="co"># We use MSE for loss</span></span>
+<span id="cb32-162"><a href="#cb32-162" aria-hidden="true" tabindex="-1"></a>training_loss <span class="ot">&lt;-</span> <span class="fu">torch_sum</span>((y <span class="sc">-</span> predicted_values)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">length</span>(y)</span>
+<span id="cb32-163"><a href="#cb32-163" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-164"><a href="#cb32-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-167"><a href="#cb32-167" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-168"><a href="#cb32-168" aria-hidden="true" tabindex="-1"></a>training_loss<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb32-169"><a href="#cb32-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-170"><a href="#cb32-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-173"><a href="#cb32-173" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-174"><a href="#cb32-174" aria-hidden="true" tabindex="-1"></a>beta<span class="sc">$</span>grad</span>
+<span id="cb32-175"><a href="#cb32-175" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-176"><a href="#cb32-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-179"><a href="#cb32-179" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-180"><a href="#cb32-180" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">rbind</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">requires_grad =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-181"><a href="#cb32-181" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(X)</span>
+<span id="cb32-182"><a href="#cb32-182" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(y)</span>
+<span id="cb32-183"><a href="#cb32-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-184"><a href="#cb32-184" aria-hidden="true" tabindex="-1"></a>lr <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
+<span id="cb32-185"><a href="#cb32-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-186"><a href="#cb32-186" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fl">1e4</span>) {</span>
+<span id="cb32-187"><a href="#cb32-187" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-188"><a href="#cb32-188" aria-hidden="true" tabindex="-1"></a>  predicted_values <span class="ot">&lt;-</span> <span class="fu">torch_mm</span>(X, beta)</span>
+<span id="cb32-189"><a href="#cb32-189" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-190"><a href="#cb32-190" aria-hidden="true" tabindex="-1"></a>  training_loss <span class="ot">&lt;-</span> <span class="fu">torch_mean</span>((y <span class="sc">-</span> predicted_values)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb32-191"><a href="#cb32-191" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-192"><a href="#cb32-192" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate the gradient</span></span>
+<span id="cb32-193"><a href="#cb32-193" aria-hidden="true" tabindex="-1"></a>  training_loss<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb32-194"><a href="#cb32-194" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-195"><a href="#cb32-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with_no_grad</span>({</span>
+<span id="cb32-196"><a href="#cb32-196" aria-hidden="true" tabindex="-1"></a>  beta<span class="sc">$</span><span class="fu">subtract_</span>(lr<span class="sc">*</span>beta<span class="sc">$</span>grad)</span>
+<span id="cb32-197"><a href="#cb32-197" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb32-198"><a href="#cb32-198" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-199"><a href="#cb32-199" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Zero out the gradient</span></span>
+<span id="cb32-200"><a href="#cb32-200" aria-hidden="true" tabindex="-1"></a>  beta<span class="sc">$</span>grad<span class="sc">$</span><span class="fu">zero_</span>()</span>
+<span id="cb32-201"><a href="#cb32-201" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-202"><a href="#cb32-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-203"><a href="#cb32-203" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-204"><a href="#cb32-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-205"><a href="#cb32-205" aria-hidden="true" tabindex="-1"></a>Compare with <span class="in">`lm()`</span>.</span>
+<span id="cb32-206"><a href="#cb32-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-209"><a href="#cb32-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-210"><a href="#cb32-210" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb32-211"><a href="#cb32-211" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">as_array</span>(y),</span>
+<span id="cb32-212"><a href="#cb32-212" aria-hidden="true" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="fu">as_array</span>(X[,<span class="dv">2</span>]),</span>
+<span id="cb32-213"><a href="#cb32-213" aria-hidden="true" tabindex="-1"></a>  <span class="at">x2 =</span> <span class="fu">as_array</span>(X[,<span class="dv">3</span>])</span>
+<span id="cb32-214"><a href="#cb32-214" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-215"><a href="#cb32-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-216"><a href="#cb32-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-219"><a href="#cb32-219" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-220"><a href="#cb32-220" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data=</span>df)</span>
+<span id="cb32-221"><a href="#cb32-221" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-222"><a href="#cb32-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-225"><a href="#cb32-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-226"><a href="#cb32-226" aria-hidden="true" tabindex="-1"></a><span class="co"># See documentation for `planes3d()` here: https://rdrr.io/rforge/rgl/man/planes.html</span></span>
+<span id="cb32-227"><a href="#cb32-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-228"><a href="#cb32-228" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_array</span>(beta[<span class="dv">2</span>])</span>
+<span id="cb32-229"><a href="#cb32-229" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">as_array</span>(beta[<span class="dv">3</span>])</span>
+<span id="cb32-230"><a href="#cb32-230" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb32-231"><a href="#cb32-231" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">as_array</span>(beta[<span class="dv">1</span>])</span>
+<span id="cb32-232"><a href="#cb32-232" aria-hidden="true" tabindex="-1"></a><span class="fu">planes3d</span>(a, b, c, d, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">color=</span><span class="st">"red"</span>)</span>
+<span id="cb32-233"><a href="#cb32-233" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-234"><a href="#cb32-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-235"><a href="#cb32-235" aria-hidden="true" tabindex="-1"></a><span class="fu"># Function of a single variables (with animation)</span></span>
+<span id="cb32-236"><a href="#cb32-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-239"><a href="#cb32-239" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-240"><a href="#cb32-240" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n=</span><span class="dv">1000</span>, <span class="at">min=</span><span class="dv">1</span>, <span class="at">max=</span><span class="dv">2</span>)</span>
+<span id="cb32-241"><a href="#cb32-241" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.5</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fl">0.3</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="at">sd=</span><span class="fl">0.01</span>)</span>
+<span id="cb32-242"><a href="#cb32-242" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x,y)</span>
+<span id="cb32-243"><a href="#cb32-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-244"><a href="#cb32-244" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x, x<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb32-245"><a href="#cb32-245" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-246"><a href="#cb32-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-249"><a href="#cb32-249" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-250"><a href="#cb32-250" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(x,y)</span>
+<span id="cb32-251"><a href="#cb32-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-252"><a href="#cb32-252" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x,<span class="dv">2</span>, <span class="at">raw=</span><span class="cn">TRUE</span>) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb32-253"><a href="#cb32-253" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-254"><a href="#cb32-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-257"><a href="#cb32-257" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-258"><a href="#cb32-258" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">rbind</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="at">requires_grad =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-259"><a href="#cb32-259" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(X)</span>
+<span id="cb32-260"><a href="#cb32-260" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(y)</span>
+<span id="cb32-261"><a href="#cb32-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-262"><a href="#cb32-262" aria-hidden="true" tabindex="-1"></a>loss <span class="ot">&lt;-</span> <span class="fu">numeric</span>()</span>
+<span id="cb32-263"><a href="#cb32-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-264"><a href="#cb32-264" aria-hidden="true" tabindex="-1"></a>lr <span class="ot">&lt;-</span> <span class="fl">0.00001</span></span>
+<span id="cb32-265"><a href="#cb32-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-266"><a href="#cb32-266" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fl">1e5</span>) {</span>
+<span id="cb32-267"><a href="#cb32-267" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-268"><a href="#cb32-268" aria-hidden="true" tabindex="-1"></a>  predicted_values <span class="ot">&lt;-</span> <span class="fu">torch_mm</span>(X, beta)</span>
+<span id="cb32-269"><a href="#cb32-269" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-270"><a href="#cb32-270" aria-hidden="true" tabindex="-1"></a>  training_loss <span class="ot">&lt;-</span> <span class="fu">torch_mean</span>(<span class="fu">torch_square</span>((<span class="fu">torch_subtract</span>(y, predicted_values))))</span>
+<span id="cb32-271"><a href="#cb32-271" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-272"><a href="#cb32-272" aria-hidden="true" tabindex="-1"></a>  loss <span class="ot">&lt;-</span> <span class="fu">c</span>(loss, <span class="fu">as_array</span>(training_loss))</span>
+<span id="cb32-273"><a href="#cb32-273" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-274"><a href="#cb32-274" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate the gradient</span></span>
+<span id="cb32-275"><a href="#cb32-275" aria-hidden="true" tabindex="-1"></a>  training_loss<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb32-276"><a href="#cb32-276" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-277"><a href="#cb32-277" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with_no_grad</span>({</span>
+<span id="cb32-278"><a href="#cb32-278" aria-hidden="true" tabindex="-1"></a>  beta<span class="sc">$</span><span class="fu">subtract_</span>(lr<span class="sc">*</span>beta<span class="sc">$</span>grad)</span>
+<span id="cb32-279"><a href="#cb32-279" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb32-280"><a href="#cb32-280" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-281"><a href="#cb32-281" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Zero out the gradient</span></span>
+<span id="cb32-282"><a href="#cb32-282" aria-hidden="true" tabindex="-1"></a>  beta<span class="sc">$</span>grad<span class="sc">$</span><span class="fu">zero_</span>()</span>
+<span id="cb32-283"><a href="#cb32-283" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-284"><a href="#cb32-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-285"><a href="#cb32-285" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(beta)</span>
+<span id="cb32-286"><a href="#cb32-286" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(loss)</span>
+<span id="cb32-287"><a href="#cb32-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-288"><a href="#cb32-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-289"><a href="#cb32-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-290"><a href="#cb32-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-291"><a href="#cb32-291" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

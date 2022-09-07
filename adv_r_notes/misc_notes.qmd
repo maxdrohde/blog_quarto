@@ -1,0 +1,34 @@
+# Other notes
+
+```{r}
+library(tidyverse)
+```
+
+## Anonymous function syntax
+
+Standard `purrr` syntax
+
+```{r}
+map_dbl(1:10, ~.x^2)
+```
+
+New R anonymous function syntax
+
+```{r}
+map_dbl(1:10, \(x) x^2)
+```
+
+Another example:
+
+```{r}
+f <- \(x,y,z) x+y+z
+
+f(1,2,3)
+```
+
+Even shorter:
+
+```{r}
+(\(x,y,z) x+y+z)(1,2,3)
+```
+

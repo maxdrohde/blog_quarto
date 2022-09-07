@@ -1,0 +1,7 @@
+# Introduction
+
+Techniques for learning to program:
+
+- Reading source code -- especially of the functions you use often.
+- A scientific mindset: develop hypotheses and design experiment to make conclusions.
+

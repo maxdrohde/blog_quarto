@@ -1,0 +1,47 @@
+---
+title: TBD
+description: TBD
+author: Max Rohde
+date: 08/29/2022
+image: preview.png
+code-fold: show
+draft: true
+---
+
+```{r}
+# Load packages
+library(tidyverse)
+
+# Utilities
+library(patchwork)
+library(kableExtra)
+library(glue)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=14,
+                                 font_family = "Source Sans Pro"))
+```
+
+
+Write about how thinking in a bayesian and frequentist way can both be useful.
+
+They both rely on probability theory, but have different aims.
+
+Frequentist: Create procedures that have favorable long-run properties when assumptions are met
+Bayesian: Create a model that includes prior belief about parameters and see how the data should affect that belief
+
+Emphasize that bayes procedures can be evaluated in a frequentist way
+
+Show that bayes with flat priors can be equivalent to a standard frequentist CI
+
+Motivate the whole discussion with inference for a proportion.
+
+- Introduce the problem of inference for a proportion using a story
+- Explain the problem again using mathematical notation
+- Show how a frequentist test is conducted. With type 1 and type 2 errors simulated
+- Show how a frequentist CI is constructed. Show how coverage changes with n and true values of \theta.
+- Show how a bayesian approaches the problem with beta binomial conjugate prior.
+- Show how MCMC can be used to solve the problem with any prior
+- show the frequentist coverage of the bayesian procedures
+
+Read the first few chapters of computer age statistical inference and use it to guide some of the discussion.

@@ -1,0 +1,220 @@
+# Names and values
+
+```{r}
+# This package lets us look at the representation of R objects
+library(lobstr)
+
+# Allow inclusion of documentation in Quarto
+library(printr)
+
+# Precise timing of functions
+library(bench)
+
+library(tidyverse)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=12,
+                                 font_family = "Source Sans Pro"))
+```
+
+An object is different than it's name.
+
+## Quiz
+
+### Q1
+
+Given the following data frame, how do I create a new column called "3" that contains the sum of `1` and `2`? You may only use `$`, not `[[`. What makes `1`, `2`, and `3` challenging as variable names?
+
+```{r}
+df <- data.frame(runif(3), runif(3))
+names(df) <- c(1, 2)
+```
+
+### Solution
+
+You need to use backticks to specify non-standard column names.
+
+```{r}
+df$`3` <- df$`1` + df$`2`
+
+df
+```
+
+### Q2
+
+In the following code, how much memory does `y` occupy?
+
+```{r}
+x <- runif(1e6)
+y <- list(x, x, x)
+```
+
+### Solution
+
+TBD
+
+### Q3
+
+On which line does `a` get copied in the following example?
+
+```{r}
+a <- c(1, 5, 3, 2)
+b <- a
+b[[1]] <- 10
+```
+
+### Solution
+
+TBD
+
+## Chapter Notes
+
+### Difference between names and values
+
+What happens when we create `x`?
+
+```{r}
+x <- c(1, 2, 3)
+```
+
+- A vector `(1,2,3)` is created.
+- A name `x` is created, which points to the above vector.
+
+Now what if we assign `x` to a new variable?
+
+```{r}
+y <- x
+```
+
+Does the original vector get copied (i.e., are we now effectively storing 6 numbers)? No, we are still only storing 3 numbers because `y` and `x` are pointing to the same underlying object.
+
+Here's how we can verify that this is true:
+
+```{r}
+lobstr::obj_addr(x) # Address of the object that x points to
+lobstr::obj_addr(y) # Address of the object that y points to
+
+lobstr::obj_addr(x) == lobstr::obj_addr(y) # See that they are equal
+```
+
+### What are valid names?
+
+> A syntactic name must consist of letters, digits, `.` and `_` but can’t begin with `_` or a digit. Additionally, you can’t use any of the reserved words like `TRUE`, `NULL`, `if`, and `function` (see the complete list in `?Reserved`).
+
+:::{.callout-note collapse="true"}
+## Expand to read full rules on syntactic names
+
+```{r}
+?make.names
+```
+
+:::
+
+:::{.callout-note collapse="true"}
+## Expand to read the `Reserved` documentation
+
+```{r}
+?Reserved
+```
+:::
+
+However, you can circumvent these rules by using backticks.
+
+```{r}
+# Note that this leaves the reserved keyword "if" untouched
+# since if and `if` are different
+`if` <- 10
+```
+
+
+### Copy-on-modify
+
+R objects are only copied when they need to be. This saves memory.
+
+For example,
+
+```{r}
+x <- 17
+y <- x
+```
+
+```{r}
+# x and y point to the same object
+lobstr::obj_addr(x) == lobstr::obj_addr(y)
+```
+
+At first, `x` and `y` point to the same object. Now we modify `x`. When we do this, the object that holds the number `17` is copied so that `x` and `y` have seperate objects that they point to.
+
+```{r}
+x <- x*2
+```
+
+```{r}
+x
+y
+
+# x and y point to the different objects now
+lobstr::obj_addr(x) == lobstr::obj_addr(y)
+```
+
+### Columns vs Rows
+
+The copy-on-modify behavior of R has implication for speed when operating on columns of a data frame vs. the rows.
+
+```{r}
+f1 <- function(){
+  df <-
+    runif(50*50) %>%
+    matrix(nrow=50, ncol=50) %>%
+    as.data.frame()
+  
+  for (i in 1:nrow(df)) {
+    df[i,] <- df[i,]*2
+  }
+}
+
+f2 <- function(){
+  df <-
+    runif(50*50) %>%
+    matrix(nrow=50, ncol=50) %>%
+    as.data.frame()
+  
+  for (i in 1:ncol(df)) {
+    df[,i] <- df[,i]*2
+  }
+}
+```
+
+```{r}
+#| cache: true
+#| column: body-outset-right
+
+bench::mark(`Operate on rows` = f1(),
+            `Operate on columns` = f2(),
+            iterations = 1e4,
+            time_unit = "ms") %>%
+  mutate(expression = as.character(expression)) %>%
+  unnest_longer(time) %>%
+  mutate(time = as.numeric(time) * 1000) %>%
+  ggplot() +
+  aes(x=time) +
+  geom_histogram(bins=100, color="black", fill="lightgray") +
+  scale_x_log10() +
+  facet_wrap(~expression, nrow = 2) +
+  labs(x = "Time (ms)",
+       y = "Trials")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+# Functions
+
+Functions have three parts:
+
+- Arguments
+- Body
+- Environment
+
+Functions are objects.
+
+Let's use `sd()` as an example.
+
+`formals()` tells you about the arguments to a function.
+
+```{r}
+formals(sd)
+```
+
+`body()` gives you the code:
+
+```{r}
+body(sd)
+```
+
+and `environment()` describes how to function finds the values associated with variables:
+
+```{r}
+environment(sd)
+```
+
+
+:::{.callout-note}
+## Primative functions
+
+"Primitive functions are only found in the base package. While they have certain performance advantages, this benefit comes at a price: they are harder to write. For this reason, R-core generally avoids creating them unless there is no other option."
+:::
+
+```{r}
+
+1+2
+
+1+2
+
+```
+
+> To detect this problem, use codetools::findGlobals(). This function lists all the external dependencies (unbound symbols) within a function:
+
+```{r}
+g12 <- function() x + 1
+
+x <- 15
+g12()
+
+x <- 20
+g12()
+```
+
+```{r}
+codetools::findGlobals(g12)
+```
+
+This is an interesting piece of code to reason about function environments:
+
+```{r}
+y <- 10
+h02 <- function(x) {
+  y <- 100
+  x + 1
+}
+
+h02(y)
+```
+
+

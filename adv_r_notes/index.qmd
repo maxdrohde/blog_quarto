@@ -1,0 +1,5 @@
+# About {.unnumbered}
+
+A collection of notes of [Advanced R 2nd Edition](https://adv-r.hadley.nz/), by Hadley Wickam.
+
+Solutions to the book exercises can be found [here](https://advanced-r-solutions.rbind.io/).

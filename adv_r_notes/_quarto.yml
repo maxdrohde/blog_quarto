@@ -1,0 +1,54 @@
+project:
+  type: book
+  output-dir: docs
+  
+book:
+  title: "Advanced R 2nd Ed Notes"
+  author: "Max Rohde"
+  description: | 
+    Notes on Advanced R (2nd Ed)
+  #cover-image: images/cover.png
+  chapters:
+    - index.qmd
+    - chapter_1.qmd
+    - chapter_2.qmd
+    - chapter_3.qmd
+    - chapter_4.qmd
+    - chapter_5.qmd
+    - chapter_6.qmd
+    - chapter_7.qmd
+    - chapter_8.qmd
+    - chapter_9.qmd
+    - rstudio_shortcuts.qmd
+    - misc_notes.qmd
+    #- chapter_10.qmd
+    #- chapter_11.qmd
+    #- chapter_12.qmd
+    #- chapter_13.qmd
+    #- chapter_14.qmd
+
+format:
+  html: 
+    toc: true
+    toc-location: right
+    toc-depth: 4
+    theme:
+      - journal
+      - custom.scss
+    fontsize: 18px
+    code-fold: false
+    code-link: true
+    code-tools: true
+    #code-line-numbers: true
+    code-block-bg: "#f3f3f3"
+    code-block-border-left: "#31BAE9"
+    mainfont: Source Sans Pro
+    fig-format: retina
+    fig-width: 10
+    fig-height: 6
+    cache: false
+    freeze: auto
+    
+execute:
+  warning: false
+  message: false

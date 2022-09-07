@@ -1,0 +1,14 @@
+{
+  "hash": "9ea0873e7ab1f497f663e10cb0d74ef5",
+  "result": {
+    "markdown": "# RStudio Shortcuts\n\nHere is a collection of my favorite RStudio shortcuts:\n\n## Code\n\n- Shift-Enter: Run the current line\n- Command-Shift-Enter: Run the current cell\n- Shift-Option-Command-P: Run all cells above\n- Option-Command-I: Insert a code cell\n- Control-Option-X: Turn code into a function\n- Shift-Control-C: Comment / Uncomment code\n\n## Formatting\n\n- Tab: Indent\n- Shift-Tab: Unindent\n\n## Quarto\n\n- Shift-Option-K: Render the document\n- F7: Spellcheck the document\n\n## My code snippets\n\n### `newgg`\n\nCode for a new ggplot.\n\n\n::: {.cell}\n\n```{.r .cell-code}\ndf %>%\n  ggplot() +\n  aes() +\n```\n:::\n\n\n### `callout`\n\nProvides the boilerplate code for a Quarto callout block.\n\n### `aside`\n\nProvides the boilerplate code for a Quarto aside.\n\n```\n[]{.aside}\n```\n\n\n\n \n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

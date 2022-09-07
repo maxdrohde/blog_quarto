@@ -1,5 +1,9 @@
 project:
   type: website
+  render:
+    - "*.qmd"
+    - "!archived/"
+    - "!adv_r_notes/"
 
 website:
   title: "Max Rohde"
@@ -9,7 +13,7 @@ website:
   favicon: images/favicon.png
   twitter-card:
     creator: "@max_d_rohde"
-  opengraph: true
+  open-graph: true
   navbar:
     background: "#5b7eb0"
     #logo: images/logo.png
@@ -22,6 +26,8 @@ website:
         text: "Resume"
       - href: anim.qmd
         text: Animations
+      - href: shiny.qmd
+        text: Shiny Apps
 
 format:
   html:
@@ -39,6 +45,7 @@ format:
     fig-format: retina
     fig-width: 8
     fig-height: 6
+    freeze: auto
 
 
 

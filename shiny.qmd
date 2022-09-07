@@ -1,0 +1,21 @@
+---
+title: "R Shiny Apps"
+description: ""
+toc: true
+toc-depth: 4
+title-block-banner: true
+title-block-banner: "#f1f3f5"
+title-block-banner-color: black
+---
+
+### Understanding cumulative ordinal models
+
+Link: [https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/](https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/)
+
+Preview:
+
+<p>
+  <a href="https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/">
+    ![Elephant](images/ordinal_model_shiny_preview.png)
+  </a>
+</p>

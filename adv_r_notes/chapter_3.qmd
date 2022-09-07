@@ -1,0 +1,145 @@
+# Vectors
+
+```{r}
+library(tidyverse)
+```
+
+
+## Attributes
+
+Set an attribute with `attr()`.
+
+```{r}
+x <- c(1,3,5)
+```
+
+```{r}
+str(x)
+```
+
+```{r}
+attr(x, "y") <- "hello"
+```
+
+```{r}
+x
+```
+
+```{r}
+str(x)
+```
+
+Create an object with attributes using `structure()`
+
+```{r}
+my_struc <-
+  structure(c(1,3,5),
+            color="red",
+            name = "max")
+```
+
+```{r}
+my_struc
+```
+
+If you give the `dim` attribute to a vector, it will become a matrix.
+
+```{r}
+a <- 1:10
+
+print(a)
+```
+
+```{r}
+# Give it 2 rows and 5 columns
+dim(a) <- c(2,5)
+```
+
+```{r}
+print(a)
+```
+
+A cool fact is that you can create "list-matrices" by passing the `dim` attribute to a list.
+
+```{r}
+l <- list(c(1L, 2L, 3L),
+          "a",
+          TRUE,
+          1.0)
+
+print(l)
+```
+
+```{r}
+dim(l) <- c(2, 2)
+
+print(l)
+```
+
+## Factors
+
+You can make a factor by specifying the proper attributes: `class` and `levels`. Note that this will only work on a vector of integers.
+
+```{r}
+x <- c(1L, 1L, 2L, 2L, 3L, 3L)
+
+# This won't work because these aren't integers.
+# x <- c(1,1,2,2,3,3)
+```
+
+```{r}
+attributes(x) <- list(class="factor",
+                      levels=c("a", "b", "c"))
+```
+
+```{r}
+# Now we have a factor!
+print(x)
+```
+
+## Data Frames
+
+Important point:
+
+> A data frame is a named list of vectors with attributes for (column) `names`, `row.names`, and its class, `data.frame`.
+
+> [T]he length of each of its vectors must be the same
+
+`names()` is the same as `colnames()` for data frames.
+
+```{r}
+names(mtcars) == colnames(mtcars)
+```
+
+The length of a data frame is the number of columns.
+
+```{r}
+length(mtcars) == ncol(mtcars)
+
+length(mtcars) != nrow(mtcars)
+```
+
+> [T]ibbles will only recycle vectors of length one
+
+> `tibble()` allows you to refer to variables created during construction
+
+Data frames can have list-columns.
+
+```{r}
+tibble(x = 1:3,
+       y = list(1:2, 1:3, 1:4))
+```
+
+Elements of a data frame can also be matrices, arrays, or other data frames!
+
+## NULL
+
+Two uses of `NULL`:
+
+> To represent an empty vector (a vector of length zero) of arbitrary type. For example, if you use `c()` but don’t include any arguments, you get `NULL`, and concatenating `NULL` to a vector will leave it unchanged.
+
+> To represent an absent vector. For example, `NULL` is often used as a default function argument, when the argument is optional but the default value requires some computation. Contrast this with NA which is used to indicate that an element of a vector is absent.
+
+
+
+

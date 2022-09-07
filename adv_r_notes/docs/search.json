@@ -1,0 +1,163 @@
+[
+  {
+    "objectID": "chapter_2.html",
+    "href": "chapter_2.html",
+    "title": "\n2  Names and values\n",
+    "section": "",
+    "text": "# This package lets us look at the representation of R objects\nlibrary(lobstr)\n\n# Allow inclusion of documentation in Quarto\nlibrary(printr)\n\n# Precise timing of functions\nlibrary(bench)\n\nlibrary(tidyverse)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=12,\n                                 font_family = \"Source Sans Pro\"))\nAn object is different than it’s name."
+  },
+  {
+    "objectID": "chapter_2.html#quiz",
+    "href": "chapter_2.html#quiz",
+    "title": "\n2  Names and values\n",
+    "section": "\n2.1 Quiz",
+    "text": "2.1 Quiz\n\n2.1.1 Q1\nGiven the following data frame, how do I create a new column called “3” that contains the sum of 1 and 2? You may only use $, not [[. What makes 1, 2, and 3 challenging as variable names?\n\ndf <- data.frame(runif(3), runif(3))\nnames(df) <- c(1, 2)\n\n\n2.1.2 Solution\nYou need to use backticks to specify non-standard column names.\n\ndf$`3` <- df$`1` + df$`2`\n\ndf\n\n\n\n1\n2\n3\n\n\n\n0.2784256\n0.4897584\n0.7681840\n\n\n0.5630199\n0.9345367\n1.4975566\n\n\n0.4917291\n0.2493742\n0.7411033\n\n\n\n\n\n\n2.1.3 Q2\nIn the following code, how much memory does y occupy?\n\nx <- runif(1e6)\ny <- list(x, x, x)\n\n\n2.1.4 Solution\nTBD\n\n2.1.5 Q3\nOn which line does a get copied in the following example?\n\na <- c(1, 5, 3, 2)\nb <- a\nb[[1]] <- 10\n\n\n2.1.6 Solution\nTBD"
+  },
+  {
+    "objectID": "chapter_2.html#chapter-notes",
+    "href": "chapter_2.html#chapter-notes",
+    "title": "\n2  Names and values\n",
+    "section": "\n2.2 Chapter Notes",
+    "text": "2.2 Chapter Notes\n\n2.2.1 Difference between names and values\nWhat happens when we create x?\n\nx <- c(1, 2, 3)\n\n\nA vector (1,2,3) is created.\nA name x is created, which points to the above vector.\n\nNow what if we assign x to a new variable?\n\ny <- x\n\nDoes the original vector get copied (i.e., are we now effectively storing 6 numbers)? No, we are still only storing 3 numbers because y and x are pointing to the same underlying object.\nHere’s how we can verify that this is true:\n\nlobstr::obj_addr(x) # Address of the object that x points to\n\n[1] \"0x7fc9fd1f0258\"\n\nlobstr::obj_addr(y) # Address of the object that y points to\n\n[1] \"0x7fc9fd1f0258\"\n\nlobstr::obj_addr(x) == lobstr::obj_addr(y) # See that they are equal\n\n[1] TRUE\n\n\n\n2.2.2 What are valid names?\n\nA syntactic name must consist of letters, digits, . and _ but can’t begin with _ or a digit. Additionally, you can’t use any of the reserved words like TRUE, NULL, if, and function (see the complete list in ?Reserved).\n\n\n\n\n\n\n\nExpand to read full rules on syntactic names\n\n\n\n\n\n\n?make.names\n\n\n\n\n\nmake.names\nR Documentation\n\nMake Syntactically Valid Names\n\nDescription\n\nMake syntactically valid names out of character vectors.\n\n\n\nUsage\n\nmake.names(names, unique = FALSE, allow_ = TRUE)\n\n\n\nArguments\n\n\n\nnames\n\ncharacter vector to be coerced to syntactically valid\nnames.  This is coerced to character if necessary.\n\n\n\nunique\n\nlogical; if TRUE, the resulting elements are\nunique.  This may be desired for, e.g., column names.\n\n\n\nallow_\n\nlogical.  For compatibility with R prior to 1.9.0.\n\n\n\nDetails\n\nA syntactically valid name consists of letters, numbers and the dot or\nunderline characters and starts with a letter or the dot not followed\nby a number.  Names such as \".2way\" are not valid, and neither\nare the reserved words.\n\nThe definition of a letter depends on the current locale, but\nonly ASCII digits are considered to be digits.\n\nThe character \"X\" is prepended if necessary.\nAll invalid characters are translated to \".\".  A missing value\nis translated to \"NA\".  Names which match R keywords have a dot\nappended to them.  Duplicated values are altered by\nmake.unique.\n\n\n\nValue\n\nA character vector of same length as names with each changed to\na syntactically valid name, in the current locale's encoding.\n\n\n\nWarning\n\nSome OSes, notably FreeBSD, report extremely incorrect information about\nwhich characters are alphabetic in some locales (typically, all\nmulti-byte locales including UTF-8 locales).  However, R provides\nsubstitutes on Windows, macOS and AIX.\n\n\n\nNote\n\nPrior to R version 1.9.0, underscores were not valid in variable names,\nand code that relies on them being converted to dots will no longer\nwork. Use allow_ = FALSE for back-compatibility.\n\nallow_ = FALSE is also useful when creating names for export to\napplications which do not allow underline in names (for example,\nS-PLUS and some DBMSes).\n\n\n\nSee Also\n\nmake.unique,\nnames,\ncharacter,\ndata.frame.\n\n\n\nExamples\n\nmake.names(c(\"a and b\", \"a-and-b\"), unique = TRUE)\n# \"a.and.b\"  \"a.and.b.1\"\nmake.names(c(\"a and b\", \"a_and_b\"), unique = TRUE)\n# \"a.and.b\"  \"a_and_b\"\nmake.names(c(\"a and b\", \"a_and_b\"), unique = TRUE, allow_ = FALSE)\n# \"a.and.b\"  \"a.and.b.1\"\nmake.names(c(\"\", \"X\"), unique = TRUE)\n# \"X.1\" \"X\" currently; R up to 3.0.2 gave \"X\" \"X.1\"\n\nstate.name[make.names(state.name) != state.name] # those 10 with a space\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExpand to read the Reserved documentation\n\n\n\n\n\n\n?Reserved\n\n\n\n\n\nReserved\nR Documentation\n\nReserved Words in R\n\nDescription\n\nThe reserved words in R's parser are\n\nif else repeat while\nfunction for in\nnext break\n\nTRUE FALSE NULL\nInf NaN\nNA NA_integer_ NA_real_\nNA_complex_ NA_character_\n\n... and ..1, ..2 etc, which are used to refer to\narguments passed down from a calling function, see ....\n\n\n\nDetails\n\nReserved words outside quotes are always parsed to be\nreferences to the objects linked to in the ‘Description’, and\nhence they are not allowed as syntactic names (see\nmake.names).  They are allowed as non-syntactic\nnames, e.g. inside backtick quotes.\n\n\n\n\n\n\n\n\n\nHowever, you can circumvent these rules by using backticks.\n\n# Note that this leaves the reserved keyword \"if\" untouched\n# since if and `if` are different\n`if` <- 10\n\n\n2.2.3 Copy-on-modify\nR objects are only copied when they need to be. This saves memory.\nFor example,\n\nx <- 17\ny <- x\n\n\n# x and y point to the same object\nlobstr::obj_addr(x) == lobstr::obj_addr(y)\n\n[1] TRUE\n\n\nAt first, x and y point to the same object. Now we modify x. When we do this, the object that holds the number 17 is copied so that x and y have seperate objects that they point to.\n\nx <- x*2\n\n\nx\n\n[1] 34\n\ny\n\n[1] 17\n\n# x and y point to the different objects now\nlobstr::obj_addr(x) == lobstr::obj_addr(y)\n\n[1] FALSE\n\n\n\n2.2.4 Columns vs Rows\nThe copy-on-modify behavior of R has implication for speed when operating on columns of a data frame vs. the rows.\n\nf1 <- function(){\n  df <-\n    runif(50*50) %>%\n    matrix(nrow=50, ncol=50) %>%\n    as.data.frame()\n  \n  for (i in 1:nrow(df)) {\n    df[i,] <- df[i,]*2\n  }\n}\n\nf2 <- function(){\n  df <-\n    runif(50*50) %>%\n    matrix(nrow=50, ncol=50) %>%\n    as.data.frame()\n  \n  for (i in 1:ncol(df)) {\n    df[,i] <- df[,i]*2\n  }\n}\n\n\nbench::mark(`Operate on rows` = f1(),\n            `Operate on columns` = f2(),\n            iterations = 1e4,\n            time_unit = \"ms\") %>%\n  mutate(expression = as.character(expression)) %>%\n  unnest_longer(time) %>%\n  mutate(time = as.numeric(time) * 1000) %>%\n  ggplot() +\n  aes(x=time) +\n  geom_histogram(bins=100, color=\"black\", fill=\"lightgray\") +\n  scale_x_log10() +\n  facet_wrap(~expression, nrow = 2) +\n  labs(x = \"Time (ms)\",\n       y = \"Trials\")"
+  },
+  {
+    "objectID": "chapter_3.html",
+    "href": "chapter_3.html",
+    "title": "\n3  Vectors\n",
+    "section": "",
+    "text": "library(tidyverse)"
+  },
+  {
+    "objectID": "chapter_3.html#attributes",
+    "href": "chapter_3.html#attributes",
+    "title": "\n3  Vectors\n",
+    "section": "\n3.1 Attributes",
+    "text": "3.1 Attributes\nSet an attribute with attr().\n\nx <- c(1,3,5)\n\n\nstr(x)\n\n num [1:3] 1 3 5\n\n\n\nattr(x, \"y\") <- \"hello\"\n\n\nx\n\n[1] 1 3 5\nattr(,\"y\")\n[1] \"hello\"\n\n\n\nstr(x)\n\n num [1:3] 1 3 5\n - attr(*, \"y\")= chr \"hello\"\n\n\nCreate an object with attributes using structure()\n\nmy_struc <-\n  structure(c(1,3,5),\n            color=\"red\",\n            name = \"max\")\n\n\nmy_struc\n\n[1] 1 3 5\nattr(,\"color\")\n[1] \"red\"\nattr(,\"name\")\n[1] \"max\"\n\n\nIf you give the dim attribute to a vector, it will become a matrix.\n\na <- 1:10\n\nprint(a)\n\n [1]  1  2  3  4  5  6  7  8  9 10\n\n\n\n# Give it 2 rows and 5 columns\ndim(a) <- c(2,5)\n\n\nprint(a)\n\n     [,1] [,2] [,3] [,4] [,5]\n[1,]    1    3    5    7    9\n[2,]    2    4    6    8   10\n\n\nA cool fact is that you can create “list-matrices” by passing the dim attribute to a list.\n\nl <- list(c(1L, 2L, 3L),\n          \"a\",\n          TRUE,\n          1.0)\n\nprint(l)\n\n[[1]]\n[1] 1 2 3\n\n[[2]]\n[1] \"a\"\n\n[[3]]\n[1] TRUE\n\n[[4]]\n[1] 1\n\n\n\ndim(l) <- c(2, 2)\n\nprint(l)\n\n     [,1]      [,2]\n[1,] integer,3 TRUE\n[2,] \"a\"       1"
+  },
+  {
+    "objectID": "chapter_3.html#factors",
+    "href": "chapter_3.html#factors",
+    "title": "\n3  Vectors\n",
+    "section": "\n3.2 Factors",
+    "text": "3.2 Factors\nYou can make a factor by specifying the proper attributes: class and levels. Note that this will only work on a vector of integers.\n\nx <- c(1L, 1L, 2L, 2L, 3L, 3L)\n\n# This won't work because these aren't integers.\n# x <- c(1,1,2,2,3,3)\n\n\nattributes(x) <- list(class=\"factor\",\n                      levels=c(\"a\", \"b\", \"c\"))\n\n\n# Now we have a factor!\nprint(x)\n\n[1] a a b b c c\nLevels: a b c"
+  },
+  {
+    "objectID": "chapter_3.html#data-frames",
+    "href": "chapter_3.html#data-frames",
+    "title": "\n3  Vectors\n",
+    "section": "\n3.3 Data Frames",
+    "text": "3.3 Data Frames\nImportant point:\n\nA data frame is a named list of vectors with attributes for (column) names, row.names, and its class, data.frame.\n\n\n[T]he length of each of its vectors must be the same\n\nnames() is the same as colnames() for data frames.\n\nnames(mtcars) == colnames(mtcars)\n\n [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE\n\n\nThe length of a data frame is the number of columns.\n\nlength(mtcars) == ncol(mtcars)\n\n[1] TRUE\n\nlength(mtcars) != nrow(mtcars)\n\n[1] TRUE\n\n\n\n[T]ibbles will only recycle vectors of length one\n\n\ntibble() allows you to refer to variables created during construction\n\nData frames can have list-columns.\n\ntibble(x = 1:3,\n       y = list(1:2, 1:3, 1:4))\n\n# A tibble: 3 × 2\n      x y        \n  <int> <list>   \n1     1 <int [2]>\n2     2 <int [3]>\n3     3 <int [4]>\n\n\nElements of a data frame can also be matrices, arrays, or other data frames!"
+  },
+  {
+    "objectID": "chapter_3.html#null",
+    "href": "chapter_3.html#null",
+    "title": "\n3  Vectors\n",
+    "section": "\n3.4 NULL",
+    "text": "3.4 NULL\nTwo uses of NULL:\n\nTo represent an empty vector (a vector of length zero) of arbitrary type. For example, if you use c() but don’t include any arguments, you get NULL, and concatenating NULL to a vector will leave it unchanged.\n\n\nTo represent an absent vector. For example, NULL is often used as a default function argument, when the argument is optional but the default value requires some computation. Contrast this with NA which is used to indicate that an element of a vector is absent."
+  },
+  {
+    "objectID": "chapter_4.html",
+    "href": "chapter_4.html",
+    "title": "\n4  Subsetting\n",
+    "section": "",
+    "text": "Note\n\n\n\nThe following rules works for atomic vectors and lists.\n\n\n\n# We'll use this vector as an example\nx <- c(2.1, 4.2, 3.3, 5.4)\n\n\nGet elements at specified positions\n\nx[c(3, 1)]\n\n[1] 3.3 2.1\n\n\nYou can duplicate indices.\n\nx[c(1, 1)]\n\n[1] 2.1 2.1\n\n\nDecimals are truncated if provided as indices.\n\nx[c(2.1, 2.9)]\n\n[1] 4.2 4.2\n\n\n\n\nx[c(-3, -1)]\n\n[1] 4.2 5.4\n\n\nYou can’t mix positive and negative integers.\n\nx[c(-3, 1)]\n\n\nNothing returns the original vector:\n\nx[]\n\n[1] 2.1 4.2 3.3 5.4\n\n\nZero returns a zero-length vector:\n\nx[0]\n\nnumeric(0)\n\n\nand is ignored when used with other values:\n\nx[c(0,3,1,0,0,0,2)]\n\n[1] 3.3 2.1 4.2\n\n\n\nIf a vector is named, you can subset with character vectors:\n\ny <- setNames(x, letters[1:4])\n\nprint(y)\n\n  a   b   c   d \n2.1 4.2 3.3 5.4 \n\ny[c(\"d\", \"c\", \"a\")]\n\n  d   c   a \n5.4 3.3 2.1 \n\ny[c(\"a\", \"a\", \"a\")]\n\n  a   a   a \n2.1 2.1 2.1 \n\n\nNames must be matched exactly:\n\nz <- c(abc = 1, def = 2)\n\nz[c(\"a\", \"d\")]\n\n<NA> <NA> \n  NA   NA \n\n\n\n\nb <- factor(\"b\")\n\nprint(b)\n\n[1] b\nLevels: b\n\n\n\nx <- c(a=1, b=2, c=3)\n\nNotice how the integer representation of the factor is used for subsetting, which gives a counterintuitive result.\n\nx[b]\n\na \n1 \n\n\n\nx[\"b\"]\n\nb \n2"
+  },
+  {
+    "objectID": "chapter_4.html#selecting-a-single-element",
+    "href": "chapter_4.html#selecting-a-single-element",
+    "title": "\n4  Subsetting\n",
+    "section": "\n4.2 Selecting a single element",
+    "text": "4.2 Selecting a single element\nUse [[ ]] when selected a single element.\n$ is a shortcut for [[ ]] that can also do partial matching.\n\nx <- list(abc = 1, def = 2, ghi = 3)\n\n\nx[[\"g\"]]\n\nNULL\n\n\n\n# Both of these work due to partial matching\n\nx$ghi\n\n[1] 3\n\nx$g\n\n[1] 3"
+  },
+  {
+    "objectID": "chapter_4.html#subsetting-and-assignment",
+    "href": "chapter_4.html#subsetting-and-assignment",
+    "title": "\n4  Subsetting\n",
+    "section": "\n4.3 Subsetting and assignment",
+    "text": "4.3 Subsetting and assignment\nYou can combine subsetting with assignment to modify objects in R.\n\nx <- list(1, 2, a = 3, \"abc\", 1:5)\n\n\nx[\"a\"] <- 15\n\nprint(x)\n\n[[1]]\n[1] 1\n\n[[2]]\n[1] 2\n\n$a\n[1] 15\n\n[[4]]\n[1] \"abc\"\n\n[[5]]\n[1] 1 2 3 4 5\n\n\nRemove an element by setting it to NULL\n\nx[\"a\"] <- NULL\n\nprint(x)\n\n[[1]]\n[1] 1\n\n[[2]]\n[1] 2\n\n[[3]]\n[1] \"abc\"\n\n[[4]]\n[1] 1 2 3 4 5"
+  },
+  {
+    "objectID": "chapter_5.html",
+    "href": "chapter_5.html",
+    "title": "\n5  Control Flow\n",
+    "section": "",
+    "text": "library(tidyverse)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=12,\n                                 font_family = \"Source Sans Pro\"))"
+  },
+  {
+    "objectID": "chapter_5.html#if-statements",
+    "href": "chapter_5.html#if-statements",
+    "title": "\n5  Control Flow\n",
+    "section": "\n5.1 if statements",
+    "text": "5.1 if statements\nif statement example:\n\ngrade <- function(x) {\n  if (x > 90) {\n    \"A\"\n  } else if (x > 80) {\n    \"B\"\n  } else if (x > 50) {\n    \"C\"\n  } else {\n    \"F\"\n  }\n}\n\nYou can assign the result of an if statement:\n\nx1 <- if (TRUE) 1 else 2\nx2 <- if (FALSE) 1 else 2\n\nc(x1, x2)\n\n[1] 1 2"
+  },
+  {
+    "objectID": "chapter_5.html#switch-statement",
+    "href": "chapter_5.html#switch-statement",
+    "title": "\n5  Control Flow\n",
+    "section": "\n5.2 switch() statement",
+    "text": "5.2 switch() statement\n\n\n\n\n\n\nWarning\n\n\n\nOnly use switch() with character inputs!\n\n\nYou can replace this:\n\nx_option <- function(x) {\n  if (x == \"a\") {\n    \"option 1\"\n  } else if (x == \"b\") {\n    \"option 2\" \n  } else if (x == \"c\") {\n    \"option 3\"\n  } else {\n    stop(\"Invalid `x` value\")\n  }\n}\n\nwith this more concise version using switch()\n\nx_option <- function(x) {\n  switch(x,\n    a = \"option 1\",\n    b = \"option 2\",\n    c = \"option 3\",\n    stop(\"Invalid `x` value\")\n  )\n}\n\nIf multiple outputs share a value, you can use this special syntax:\n\nlegs <- function(x) {\n  switch(x,\n    cow = ,\n    horse = ,\n    dog = 4,\n    human = ,\n    chicken = 2,\n    plant = 0,\n    stop(\"Unknown input\")\n  )\n}\n\nlegs(\"cow\")\n\n[1] 4"
+  },
+  {
+    "objectID": "chapter_5.html#for-loops",
+    "href": "chapter_5.html#for-loops",
+    "title": "\n5  Control Flow\n",
+    "section": "\n5.3 for loops",
+    "text": "5.3 for loops\n\nfor assigns the item to the current environment, overwriting any existing variable with the same name!\n\n\ni <- 100\nfor (i in 1:3) {}\n\nprint(i)\n\n[1] 3\n\n\n\nThere are two ways to terminate a for loop early:\n\n\nnext exits the current iteration.\n\nbreak exits the entire for loop.\n\n\n\n5.3.1 Pre-allocation\nRemember to pre-allocate space if assigning in a for loop. Here’s a demonstration of the speed difference.\n\n# Without pre-allocation\nf1 <- function(n=1e4) {\n  vec <- numeric(0)\n  for(i in 1:n) vec <- c(vec, i)\n}\n\n\n# With pre-allocation\nf2 <- function(n=1e4) {\n  \n  # Pre-allocate the memory\n  vec <- numeric(n)\n  \n  for(i in 1:n) vec[i] <- i\n}\n\n\nbench::mark(`Without pre-allocation` = f1(),\n            `With pre-allocation` = f2(),\n            iterations = 1e4) %>%\n  mutate(expression = as.character(expression)) %>%\n  unnest_longer(time) %>%\n  mutate(time = as.numeric(time) * 1000) %>%\n  ggplot() +\n  aes(x=time) +\n  geom_histogram(bins=100, color=\"black\", fill=\"lightgray\") +\n  scale_x_log10() +\n  facet_wrap(~expression, nrow = 2) +\n  labs(x = \"Time (ms)\",\n       y = \"Trials\")"
+  },
+  {
+    "objectID": "rstudio_shortcuts.html",
+    "href": "rstudio_shortcuts.html",
+    "title": "10  RStudio Shortcuts",
+    "section": "",
+    "text": "Here is a collection of my favorite RStudio shortcuts:"
+  },
+  {
+    "objectID": "rstudio_shortcuts.html#code",
+    "href": "rstudio_shortcuts.html#code",
+    "title": "10  RStudio Shortcuts",
+    "section": "10.1 Code",
+    "text": "10.1 Code\n\nShift-Enter: Run the current line\nCommand-Shift-Enter: Run the current cell\nShift-Option-Command-P: Run all cells above\nOption-Command-I: Insert a code cell\nControl-Option-X: Turn code into a function\nShift-Control-C: Comment / Uncomment code"
+  },
+  {
+    "objectID": "rstudio_shortcuts.html#formatting",
+    "href": "rstudio_shortcuts.html#formatting",
+    "title": "10  RStudio Shortcuts",
+    "section": "10.2 Formatting",
+    "text": "10.2 Formatting\n\nTab: Indent\nShift-Tab: Unindent"
+  },
+  {
+    "objectID": "rstudio_shortcuts.html#quarto",
+    "href": "rstudio_shortcuts.html#quarto",
+    "title": "10  RStudio Shortcuts",
+    "section": "10.3 Quarto",
+    "text": "10.3 Quarto\n\nShift-Option-K: Render the document\nF7: Spellcheck the document"
+  },
+  {
+    "objectID": "rstudio_shortcuts.html#my-code-snippets",
+    "href": "rstudio_shortcuts.html#my-code-snippets",
+    "title": "10  RStudio Shortcuts",
+    "section": "10.4 My code snippets",
+    "text": "10.4 My code snippets\n\n10.4.1 newgg\nCode for a new ggplot.\ndf %>%\n  ggplot() +\n  aes() +\n\n\n10.4.2 callout\nProvides the boilerplate code for a Quarto callout block.\n\n\n10.4.3 note\nSame as callout\n\n\n10.4.4 aside\nProvides the boilerplate code for a Quarto aside.\n[]{.aside}"
+  },
+  {
+    "objectID": "misc_notes.html",
+    "href": "misc_notes.html",
+    "title": "\n11  Other notes\n",
+    "section": "",
+    "text": "library(tidyverse)"
+  },
+  {
+    "objectID": "misc_notes.html#anonymous-function-syntax",
+    "href": "misc_notes.html#anonymous-function-syntax",
+    "title": "\n11  Other notes\n",
+    "section": "\n11.1 Anonymous function syntax",
+    "text": "11.1 Anonymous function syntax\nStandard purrr syntax\n\nmap_dbl(1:10, ~.x^2)\n\n [1]   1   4   9  16  25  36  49  64  81 100\n\n\nNew R anonymous function syntax\n\nmap_dbl(1:10, \\(x) x^2)\n\n [1]   1   4   9  16  25  36  49  64  81 100\n\n\nAnother example:\n\nf <- \\(x,y,z) x+y+z\n\nf(1,2,3)\n\n[1] 6\n\n\nEven shorter:\n\n(\\(x,y,z) x+y+z)(1,2,3)\n\n[1] 6"
+  },
+  {
+    "objectID": "chapter_6.html",
+    "href": "chapter_6.html",
+    "title": "\n6  Functions\n",
+    "section": "",
+    "text": "Arguments\nBody\nEnvironment\n\nFunctions are objects.\nLet’s use sd() as an example.\nformals() tells you about the arguments to a function.\n\nformals(sd)\n\n$x\n\n\n$na.rm\n[1] FALSE\n\n\nbody() gives you the code:\n\nbody(sd)\n\nsqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), \n    na.rm = na.rm))\n\n\nand environment() describes how to function finds the values associated with variables:\n\nenvironment(sd)\n\n<environment: namespace:stats>\n\n\n\n\n\n\n\n\nPrimative functions\n\n\n\n“Primitive functions are only found in the base package. While they have certain performance advantages, this benefit comes at a price: they are harder to write. For this reason, R-core generally avoids creating them unless there is no other option.”\n\n\n\n1+2\n\n[1] 3\n\n1+2\n\n[1] 3"
+  }
+]
