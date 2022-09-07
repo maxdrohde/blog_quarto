@@ -1,2 +1,2 @@
 # blog_quarto
-Personal blog (using quarto)
+Personal blog (using Quarto)
