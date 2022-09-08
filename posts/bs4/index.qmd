@@ -11,9 +11,9 @@ code-fold: show
 
 If you've been learning R through the amazing free resources made available by the R community, then you probably seen examples of the `bs4` bookdown theme in a few of these various sources:
 
-- R for Data Science: https://r4ds.had.co.nz
-- The ggplot2 book: https://ggplot2-book.org
-- Mastering Shiny: https://mastering-shiny.org
+- R for Data Science: [https://r4ds.had.co.nz](https://r4ds.had.co.nz)
+- The ggplot2 book: [https://ggplot2-book.org](https://ggplot2-book.org)
+- Mastering Shiny: [https://mastering-shiny.org](https://mastering-shiny.org)
 
 I think the `bs4` theme looks better, and is easier to navigate, than the older `gitbook` theme (example [here](https://moderndive.com)).
 
