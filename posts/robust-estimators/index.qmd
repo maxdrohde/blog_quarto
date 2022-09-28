@@ -5,32 +5,35 @@ author: Max Rohde
 date: 01/13/2021
 image: preview.png
 code-fold: show
+
+execute: 
+  cache: true
 ---
 
 ```{r}
 # Load packages
 library(tidyverse)
 
-# ggplot2 themes
-library(cowplot)
-
 # Formatting of HTML tables
 library(kableExtra)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=12,
+                                 font_family = "Source Sans Pro"))
 
 set.seed(7)
 ```
 
-
-The sample mean and sample median are commonly used estimators for the center of distribution. There is no such thing as a "best estimator" in all circumstances. However, estimators can definitely outperform other estimators in terms of desirable properties (e.g., unbiasedness, low variance, consistency) given a particular circumstance. We can use simulation and mathematical theory to evaluate to performance of estimators given a set of assumptions. Here we focus on using simulation, with the help of tools from the `tidyverse`.
+The sample mean and sample median are commonly used estimators for the center of distribution. There is no such thing as a "best estimator" in all circumstances. However, estimators can outperform other estimators in terms of desirable properties (e.g., unbiasedness, low variance, consistency) given a particular circumstance. We can use simulation and mathematical theory to evaluate the performance of estimators. Here we focus on using simulation, with the help of tools from the `tidyverse`.
 
 ## Scenario 1
 
 We begin with a simple example. The true data generating process is
 $$ X_1, X_2, \ldots X_n \stackrel{iid}{\sim} N(3,1) $$
 
-How will the mean and median perform as estimators of center? Let's use simulation to find out.
+How will the mean and median perform as estimators of the true mean, $\mu = 3$? Let's use simulation to find out.
 
-We will use a `tibble` to store all of our simulation results. First, let's decide what sample sizes to simulate, and how many trials to run. The more trials we run, the more accurate our simulation results will be -- the only cost being increased time to run the simulations.
+We will use a `tibble` to store all of our simulation results. First, let's decide what sample sizes to simulate, and how many trials to run. The more trials we run, the more accurate our simulation results will be -- the cost being increased time to run the simulations and memory to store the results.
 
 ```{r}
 size <- c(5,10,20,50,100,200)
@@ -43,26 +46,30 @@ Now we use `crossing()` to generate a `tibble` that contains every combination o
 df <- crossing(trial, size)
 ```
 
+We can look at the first 15 rows:
+
 ```{r}
 #| echo: false
-
-head(df, 50)
+df %>%
+  head(10) %>%
+  print()
 ```
 
-Now in each row, we want a unique sample of data with the sample size given by that row. We will use `purrr::map()` to do this.
+Now for each row, we want to add to our data frame a sample of data with the sample size given by that row. We will use `purrr::map()` to do this.
 
 ```{r}
 df$data <- map(df$size, ~rnorm(n=.x, mean = 3, sd=1))
 ```
 
-The first argument to `map` is the vector to iterate over, and the second argument is the function to apply. We use `.x` as a dummy variable to refer to the value in the current iteration. In words, we are mapping each sample size to a random sample of size $n$ from a normal distribution.
+The first argument to `map` is the vector to iterate over, and the second argument is the function to apply. We use `.x` as a dummy variable to refer to the value in the current iteration. We can interpret this as saying, for each of the $6 \times 10^5$ `size` records in our data, generate `size` observations from a N(3,1) distribution.
 
-The new column, `data`, is a vector of lists, where each list contains a unique sample of data. Let's see what this looks like.
+The new column, `data`, is a list of lists, where each list contains a sample of data. Let's see what this looks like.
 
 ```{r}
 #| echo: false
-
-head(df, 50)
+df %>%
+  head(10) %>%
+  print()
 ```
 
 Now that we have our data, we can compute the mean and median for each sample.
@@ -74,35 +81,43 @@ df$median <- map_dbl(df$data, ~median(.x))
 
 ```{r}
 #| echo: false
-
-head(df, 50)
+df %>%
+  head(10) %>%
+  print()
 ```
 
 The mean and median of each sample are now in separate columns. However, to get the data into tidy format, also known as long format, we want them in separate rows. Having the data in tidy format allows us to use `ggplot2` and other tidyverse functions more effectively. We use `pivot_longer` to do this.
 
 ```{r}
-df <- pivot_longer(df, cols=mean:median, names_to="Estimator", values_to="Estimate")
+df <- pivot_longer(df,
+                   cols=mean:median,
+                   names_to="Estimator",
+                   values_to="Estimate")
 ```
 
 ```{r}
 #| echo: false
-head(df, 50)
+df %>%
+  head(10) %>%
+  print()
 ```
 
 Now we are finally ready to analyze the results of our simulation. First, let's compute the bias and variance of our estimators for each sample size.
 
 ```{r}
+summary_df <-
 df %>%
   group_by(size, Estimator) %>%
   summarize(Bias = (mean(Estimate) - 3),
             Variance = var(Estimate)) %>%
-  pivot_longer(Bias:Variance) -> summary_df
+  pivot_longer(Bias:Variance)
 ```
 
 ```{r}
 #| echo: false
 
-summary_df
+summary_df %>%
+  print()
 ```
 
 Plotting the bias and variance as a function of sample size, we see that both the mean and median are unbiased estimators of the center of the true distribution, but the median has higher variance. Therefore, we would prefer the mean under these assumptions.
@@ -115,7 +130,6 @@ summary_df %>%
   geom_point(alpha=0.6) +
   facet_wrap(~name) +
   scale_color_brewer(palette = "Set1") +
-  cowplot::theme_cowplot(font_size = 12, font_family = "Lato") +
   theme(legend.position = c(0.8,0.8)) +
   labs(
     x = "Sample Size",
@@ -126,7 +140,6 @@ summary_df %>%
 Plotting the sampling distribution for each of the estimators shows that the median indeed has higher variance.
 
 ```{r}
-
 label_names <- as_labeller(c(`5` = "Sample Size: 5",
                              `10` = "Sample Size: 10",
                              `20` = "Sample Size: 20",
@@ -141,7 +154,6 @@ df %>%
   facet_wrap(~size, labeller=label_names) +
   geom_vline(aes(xintercept = 3), linetype=2, alpha=0.3) +
   coord_cartesian(xlim=c(1,5), ylim=c(0,6)) +
-  cowplot::theme_cowplot(font_family = "Lato", font_size=12) +
   scale_fill_brewer(palette = "Set1") +
   scale_color_brewer(palette = "Set1") +
   theme(legend.position = c(0.88,0.88)) +
@@ -159,8 +171,9 @@ df %>%
 Now let's take a look at a distribution with heavier tails than the normal. An example is a mixture of normal two distributions.
 
 The data-generating process is this:
-With probability 0.9, draw from the $N(3, 1)$ distribution.
-Otherwise, (with probability 0.1), draw from the $N(3, 10)$ distribution.
+
+- With probability 0.9, draw from the $N(3, 1)$ distribution.
+- Otherwise, (with probability 0.1), draw from the $N(3, 10)$ distribution.
 
 We can write a function to draw from this distribution.
 
@@ -191,7 +204,6 @@ tibble(normal = rnorm(1e5, mean=3),
   ggplot() +
   aes(x=value, color=Distribution) +
   geom_density(alpha=0.7)+
-  cowplot::theme_cowplot(font_family = "Source Sans Pro", font_size=12) +
   scale_color_brewer(palette = "Set1") +
   theme(legend.position = c(0.88,0.90)) +
   labs(
@@ -231,7 +243,6 @@ summary_df %>%
   geom_point(alpha=0.6) +
   facet_wrap(~name) +
   scale_color_brewer(palette = "Set1") +
-  cowplot::theme_cowplot(font_size = 12, font_family = "Lato") +
   theme(legend.position = c(0.8,0.8)) +
   labs(
     x = "Sample Size",
@@ -252,7 +263,6 @@ df %>%
   facet_wrap(~size, labeller=label_names) +
   geom_vline(aes(xintercept = 3), linetype=2, alpha=0.3) +
   coord_cartesian(xlim=c(1,5), ylim=c(0,6)) +
-  cowplot::theme_cowplot(font_family = "Lato", font_size=12) +
   scale_fill_brewer(palette = "Set1") +
   scale_color_brewer(palette = "Set1") +
   theme(legend.position = c(0.88,0.88)) +
