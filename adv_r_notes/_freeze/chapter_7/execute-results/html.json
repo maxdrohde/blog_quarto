@@ -1,0 +1,14 @@
+{
+  "hash": "63328d9cc2be367fd2e7d70f1d623401",
+  "result": {
+    "markdown": "# Environments\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(rlang)\nlibrary(tidyverse)\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

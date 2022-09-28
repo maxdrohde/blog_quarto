@@ -1,5 +1,12 @@
 # Functions
 
+```{r}
+library(tidyverse)
+library(bench)
+```
+
+## Parts of functions
+
 Functions have three parts:
 
 - Arguments
@@ -22,28 +29,71 @@ formals(sd)
 body(sd)
 ```
 
-and `environment()` describes how to function finds the values associated with variables:
+and `environment()` describes how the function finds the values associated with variables:
 
 ```{r}
 environment(sd)
 ```
 
+Functions can also have attributes just like other objects.
+
+```{r}
+str(sd)
+```
+
+```{r}
+attr(sd, "greeting") <- "hello"
+```
+
+```{r}
+str(sd)
+```
 
 :::{.callout-note}
-## Primative functions
+## A note about primative functions
 
 "Primitive functions are only found in the base package. While they have certain performance advantages, this benefit comes at a price: they are harder to write. For this reason, R-core generally avoids creating them unless there is no other option."
 :::
 
+## Creating functions
+
+You can create anonymous functions a few ways:
+
 ```{r}
-
-1+2
-
-1+2
-
+(function(x) x^2)(5)
 ```
 
-> To detect this problem, use codetools::findGlobals(). This function lists all the external dependencies (unbound symbols) within a function:
+```{r}
+# New shorthand way of creating anonymous functions
+(\(x) x^2)(5)
+```
+
+Functions can be put in a list:
+
+```{r}
+my_funcs <-
+  list(
+    \(x) x^2,
+    \(x) x^3,
+    \(x) x^4
+  )
+
+for (f in my_funcs) {
+  print(f(2))
+}
+```
+
+When you run a function, the arguments can be put into a list and evaluated with the `do.call` function:
+
+```{r}
+args <- list(1:10, na.rm = TRUE)
+
+do.call(mean, args)
+```
+
+## Function environments
+
+If an object is used in a function, but is not defined within that function, R will look in the environments "above" it.
 
 ```{r}
 g12 <- function() x + 1
@@ -55,6 +105,8 @@ x <- 20
 g12()
 ```
 
+This can lead to unintended consequences. We can use `codetools::findGlobals()` to list external variables within a function.
+
 ```{r}
 codetools::findGlobals(g12)
 ```
@@ -63,12 +115,67 @@ This is an interesting piece of code to reason about function environments:
 
 ```{r}
 y <- 10
-h02 <- function(x) {
+f <- function(x) {
   y <- 100
   x + 1
 }
 
-h02(y)
+f(y)
 ```
+
+This piece of code is interesting to puzzle over:
+
+```{r}
+(\(x) x+1)(y <- 1000)
+
+y
+```
+
+## Lazy evaluation
+
+Functions in R are lazily evaluated.
+
+```{r}
+# This code doesn't raise an error because `x` is not used
+
+f <- function(x) {
+  10
+}
+f(stop("This is an error!"))
+```
+
+```{r}
+#| eval: false
+
+# This code does raise an error
+
+f <- function(x) {
+  x
+}
+f(stop("This is an error!"))
+```
+
+You can define default values in terms of other arguments or even variables defined in the function (not recommended).
+
+```{r}
+f <- function(x = 1, y = x * 2, z = a + b) {
+  a <- 10
+  b <- 100
+  
+  c(x, y, z)
+}
+
+f()
+```
+
+
+## ... (dot-dot-dot)
+
+## Function forms
+
+- prefix
+- infix
+- replacement
+- special
 
 

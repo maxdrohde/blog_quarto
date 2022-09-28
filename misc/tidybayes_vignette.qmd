@@ -1,0 +1,75 @@
+---
+title: "tidybayes Vignette"
+author: "Max Rohde"
+date: 9/23/2022
+code-fold: show
+---
+
+Working through the vignette here: https://mjskay.github.io/tidybayes/articles/tidy-brms.html
+
+```{r}
+library(tidyverse)
+library(brms)
+library(tidybayes)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=12,
+                                 font_family = "Source Sans Pro"))
+```
+
+```{r}
+# Create example dataset
+
+set.seed(5)
+n <- 10
+n_condition <- 5
+
+ABC <-
+  tibble(condition = rep(c("A","B","C","D","E"), n), 
+         response = rnorm(n * 5, mean = c(0,1,2,1,-1), sd = 0.5))
+```
+
+```{r}
+# Look at the data
+
+ABC %>%
+  ggplot(aes(y = condition, x = response)) +
+  geom_point()
+```
+
+```{r}
+# Fit a model
+
+priors <-
+  c(
+    prior(normal(0, 1), class = Intercept),
+    prior(student_t(3, 0, 1), class = sd),
+    prior(student_t(3, 0, 1), class = sigma)
+    )
+
+m <-
+  brm(response ~ (1|condition), 
+      data = ABC, 
+      prior = priors,
+      control = list(adapt_delta = .99),
+      cores = 12,
+      backend = "cmdstanr")
+```
+
+```{r}
+summary(m)
+```
+
+
+```{r}
+get_variables(m)
+```
+
+```{r}
+m %>%
+  spread_draws(r_condition[condition,term]) %>%
+  ggplot() +
+  aes(x = r_condition, color = condition) +
+  geom_density()
+```
+

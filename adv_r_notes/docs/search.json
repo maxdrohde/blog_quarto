@@ -158,6 +158,69 @@
     "href": "chapter_6.html",
     "title": "\n6  Functions\n",
     "section": "",
-    "text": "Arguments\nBody\nEnvironment\n\nFunctions are objects.\nLet’s use sd() as an example.\nformals() tells you about the arguments to a function.\n\nformals(sd)\n\n$x\n\n\n$na.rm\n[1] FALSE\n\n\nbody() gives you the code:\n\nbody(sd)\n\nsqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), \n    na.rm = na.rm))\n\n\nand environment() describes how to function finds the values associated with variables:\n\nenvironment(sd)\n\n<environment: namespace:stats>\n\n\n\n\n\n\n\n\nPrimative functions\n\n\n\n“Primitive functions are only found in the base package. While they have certain performance advantages, this benefit comes at a price: they are harder to write. For this reason, R-core generally avoids creating them unless there is no other option.”\n\n\n\n1+2\n\n[1] 3\n\n1+2\n\n[1] 3"
+    "text": "library(tidyverse)\nlibrary(bench)"
+  },
+  {
+    "objectID": "chapter_1.html",
+    "href": "chapter_1.html",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "Reading source code – especially of the functions you use often.\nA scientific mindset: develop hypotheses and design experiment to make conclusions."
+  },
+  {
+    "objectID": "chapter_6.html#parts-of-functions",
+    "href": "chapter_6.html#parts-of-functions",
+    "title": "\n6  Functions\n",
+    "section": "\n6.1 Parts of functions",
+    "text": "6.1 Parts of functions\nFunctions have three parts:\n\nArguments\nBody\nEnvironment\n\nFunctions are objects.\nLet’s use sd() as an example.\nformals() tells you about the arguments to a function.\n\nformals(sd)\n\n$x\n\n\n$na.rm\n[1] FALSE\n\n\nbody() gives you the code:\n\nbody(sd)\n\nsqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), \n    na.rm = na.rm))\n\n\nand environment() describes how the function finds the values associated with variables:\n\nenvironment(sd)\n\n<environment: namespace:stats>\n\n\nFunctions can also have attributes just like other objects.\n\nstr(sd)\n\nfunction (x, na.rm = FALSE)  \n\n\n\nattr(sd, \"greeting\") <- \"hello\"\n\n\nstr(sd)\n\nfunction (x, na.rm = FALSE)  \n - attr(*, \"greeting\")= chr \"hello\"\n\n\n\n\n\n\n\n\nA note about primative functions\n\n\n\n“Primitive functions are only found in the base package. While they have certain performance advantages, this benefit comes at a price: they are harder to write. For this reason, R-core generally avoids creating them unless there is no other option.”"
+  },
+  {
+    "objectID": "chapter_6.html#primative-functions",
+    "href": "chapter_6.html#primative-functions",
+    "title": "\n6  Functions\n",
+    "section": "\n6.2 Primative functions",
+    "text": "6.2 Primative functions\n\n\n\n\n\n\nA note about primative functions\n\n\n\n“Primitive functions are only found in the base package. While they have certain performance advantages, this benefit comes at a price: they are harder to write. For this reason, R-core generally avoids creating them unless there is no other option.”"
+  },
+  {
+    "objectID": "chapter_6.html#lazy-evaluation",
+    "href": "chapter_6.html#lazy-evaluation",
+    "title": "\n6  Functions\n",
+    "section": "\n6.4 Lazy evaluation",
+    "text": "6.4 Lazy evaluation\nFunctions in R are lazily evaluated.\n\n# This code doesn't raise an error because `x` is not used\n\nf <- function(x) {\n  10\n}\nf(stop(\"This is an error!\"))\n\n[1] 10\n\n\n\n# This code does raise an error\n\nf <- function(x) {\n  x\n}\nf(stop(\"This is an error!\"))\n\nYou can define default values in terms of other arguments or even variables defined in the function (not recommended).\n\nf <- function(x = 1, y = x * 2, z = a + b) {\n  a <- 10\n  b <- 100\n  \n  c(x, y, z)\n}\n\nf()\n\n[1]   1   2 110"
+  },
+  {
+    "objectID": "chapter_6.html#function-environments",
+    "href": "chapter_6.html#function-environments",
+    "title": "\n6  Functions\n",
+    "section": "\n6.3 Function environments",
+    "text": "6.3 Function environments\nIf an object is used in a function, but is not defined within that function, R will look in the environments “above” it.\n\ng12 <- function() x + 1\n\nx <- 15\ng12()\n\n[1] 16\n\nx <- 20\ng12()\n\n[1] 21\n\n\nThis can lead to unintended consequences. We can use codetools::findGlobals() to list external variables within a function.\n\ncodetools::findGlobals(g12)\n\n[1] \"+\" \"x\"\n\n\nThis is an interesting piece of code to reason about function environments:\n\ny <- 10\nf <- function(x) {\n  y <- 100\n  x + 1\n}\n\nf(y)\n\n[1] 11\n\n\nThis piece of code is interesting to puzzle over:\n\n(\\(x) x+1)(y <- 1000)\n\n[1] 1001\n\ny\n\n[1] 1000"
+  },
+  {
+    "objectID": "chapter_6.html#creating-functions",
+    "href": "chapter_6.html#creating-functions",
+    "title": "\n6  Functions\n",
+    "section": "\n6.2 Creating functions",
+    "text": "6.2 Creating functions\nYou can create anonymous functions a few ways:\n\n(function(x) x^2)(5)\n\n[1] 25\n\n\n\n# New shorthand way of creating anonymous functions\n(\\(x) x^2)(5)\n\n[1] 25\n\n\nFunctions can be put in a list:\n\nmy_funcs <-\n  list(\n    \\(x) x^2,\n    \\(x) x^3,\n    \\(x) x^4\n  )\n\nfor (f in my_funcs) {\n  print(f(2))\n}\n\n[1] 4\n[1] 8\n[1] 16\n\n\nWhen you run a function, the arguments can be put into a list and evaluated with the do.call function:\n\nargs <- list(1:10, na.rm = TRUE)\n\ndo.call(mean, args)\n\n[1] 5.5"
+  },
+  {
+    "objectID": "chapter_6.html#function-forms",
+    "href": "chapter_6.html#function-forms",
+    "title": "\n6  Functions\n",
+    "section": "\n6.6 Function forms",
+    "text": "6.6 Function forms\n\nprefix\ninfix\nreplacement\nspecial"
+  },
+  {
+    "objectID": "chapter_6.html#dot-dot-dot",
+    "href": "chapter_6.html#dot-dot-dot",
+    "title": "\n6  Functions\n",
+    "section": "\n6.5 … (dot-dot-dot)",
+    "text": "6.5 … (dot-dot-dot)"
+  },
+  {
+    "objectID": "chapter_7.html",
+    "href": "chapter_7.html",
+    "title": "\n7  Environments\n",
+    "section": "",
+    "text": "library(rlang)\nlibrary(tidyverse)"
   }
 ]

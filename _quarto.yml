@@ -47,5 +47,9 @@ format:
     fig-height: 6
     freeze: auto
 
+knitr:
+  opts_chunk: 
+    dev: "ragg_png"
+
 
 
