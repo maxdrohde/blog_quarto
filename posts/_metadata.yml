@@ -6,8 +6,7 @@ comments:
 
 # Enable banner style title blocks
 title-block-banner: true
-title-block-banner: "#f1f3f5"
-title-block-banner-color: black
+title-block-banner-color: "#f1f3f5"
 format:
   html:
     toc: true

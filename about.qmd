@@ -1,5 +1,6 @@
 ---
 title: "Max Rohde"
+title-block-banner: false
 about:
   id: hero-heading
   template: trestles

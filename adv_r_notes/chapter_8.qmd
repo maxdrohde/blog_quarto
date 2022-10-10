@@ -1,1 +1,37 @@
-# TBD
+# Conditions
+
+```{r}
+library(tidyverse)
+library(rlang)
+```
+
+## Overview
+
+The **condition** system has two parts.
+
+First there are signals:
+
+- `stop()`
+- `warning()`
+- `message()`
+
+and handlers:
+
+- `tryCatch()`
+- `withCallingHandlers()`
+
+> Like R’s approach to object-oriented programming, it is rather different to currently popular programming languages so it is easy to misunderstand, and there has been relatively little written about how to use it effectively.
+
+## Conditions
+
+There are three conditions in R:
+
+- Errors -- uses `stop()` or `rlang::abort()`
+- Warnings -- uses `warning()` or `rlang::warn()`
+- Messages -- uses `message()`
+
+## Ignoring conditions
+
+Use `try()` to ignore errors and `tryCatch()` to execute a certain action when an error occurs.
+
+

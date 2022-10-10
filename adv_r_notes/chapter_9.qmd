@@ -1,1 +1,12 @@
-# TBD
+# Functionals
+
+```{r}
+library(tidyverse)
+```
+
+> A **functional** is a function that takes a function as an input and returns a vector as output.
+
+
+
+
+

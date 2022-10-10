@@ -222,5 +222,47 @@
     "title": "\n7  Environments\n",
     "section": "",
     "text": "library(rlang)\nlibrary(tidyverse)"
+  },
+  {
+    "objectID": "chapter_8.html",
+    "href": "chapter_8.html",
+    "title": "\n8  Conditions\n",
+    "section": "",
+    "text": "library(tidyverse)\nlibrary(rlang)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Advanced R 2nd Ed Notes",
+    "section": "",
+    "text": "A collection of notes of Advanced R 2nd Edition, by Hadley Wickam.\nSolutions to the book exercises can be found here."
+  },
+  {
+    "objectID": "chapter_8.html#overview",
+    "href": "chapter_8.html#overview",
+    "title": "\n8  Conditions\n",
+    "section": "\n8.1 Overview",
+    "text": "8.1 Overview\nThe condition system has two parts.\nFirst there are signals:\n\nstop()\nwarning()\nmessage()\n\nand handlers:\n\ntryCatch()\nwithCallingHandlers()\n\n\nLike R’s approach to object-oriented programming, it is rather different to currently popular programming languages so it is easy to misunderstand, and there has been relatively little written about how to use it effectively."
+  },
+  {
+    "objectID": "chapter_8.html#conditions",
+    "href": "chapter_8.html#conditions",
+    "title": "\n8  Conditions\n",
+    "section": "\n8.2 Conditions",
+    "text": "8.2 Conditions\nThere are three conditions in R:\n\nErrors – uses stop() or rlang::abort()\n\nWarnings – uses warning() or rlang::warn()\n\nMessages – uses message()"
+  },
+  {
+    "objectID": "chapter_8.html#ignoring-conditions",
+    "href": "chapter_8.html#ignoring-conditions",
+    "title": "\n8  Conditions\n",
+    "section": "\n8.3 Ignoring conditions",
+    "text": "8.3 Ignoring conditions\nUse try() to ignore errors and tryCatch() to execute a certain action when an error occurs."
+  },
+  {
+    "objectID": "chapter_9.html",
+    "href": "chapter_9.html",
+    "title": "\n9  Functionals\n",
+    "section": "",
+    "text": "A functional is a function that takes a function as an input and returns a vector as output.\n\n\nmap(1:10, \\(x) x^2)\n\n[[1]]\n[1] 1\n\n[[2]]\n[1] 4\n\n[[3]]\n[1] 9\n\n[[4]]\n[1] 16\n\n[[5]]\n[1] 25\n\n[[6]]\n[1] 36\n\n[[7]]\n[1] 49\n\n[[8]]\n[1] 64\n\n[[9]]\n[1] 81\n\n[[10]]\n[1] 100\n\nlapply(1:10, \\(x) x^2)\n\n[[1]]\n[1] 1\n\n[[2]]\n[1] 4\n\n[[3]]\n[1] 9\n\n[[4]]\n[1] 16\n\n[[5]]\n[1] 25\n\n[[6]]\n[1] 36\n\n[[7]]\n[1] 49\n\n[[8]]\n[1] 64\n\n[[9]]\n[1] 81\n\n[[10]]\n[1] 100"
   }
 ]

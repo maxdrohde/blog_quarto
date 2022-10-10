@@ -1,0 +1,16 @@
+{
+  "hash": "90b802c86e3833cea868051608efd87f",
+  "result": {
+    "markdown": "---\ntitle: \"`group_split` + `map` vs `summarize`\"\nauthor: Max Rohde\ndate: 10/10/2022\n# image: preview.png\ncode-fold: show\n---\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load packages\nlibrary(tidyverse)\nlibrary(bench)\nlibrary(glue)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=14,\n                                 font_family = \"Source Sans Pro\"))\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ndf <- nycflights13::flights\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nf1 <-\n  function(){\n    x <- \n    df |>\n      group_by(carrier) |>\n      group_split()\n    \n    x <- map_dfr(x, ~tibble(carrier = .x$carrier[[1]], mean = mean(.x$distance)))\n    \n    return(x)\n}\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nf2 <-\n  function(){\n    x <- \n    df |>\n      group_by(carrier) |>\n      summarize(mean = mean(distance))\n    \n    return(x)\n}\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nbenchmark_results <-\n  bench::mark(`group_split() + map()` = f1(),\n              `summarise()` = f2(),\n              iterations = 1e2,\n              memory = TRUE,\n              check = TRUE)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# Munge data\nbenchmark_results <-\nbenchmark_results |>\n  mutate(expression = as.character(expression)) |>\n  unnest_longer(time) |>\n  mutate(time = as.numeric(time))\n\n# Sort results by group mean\nfac_order <- \nbenchmark_results |>\n  group_by(expression) |>\n  summarise(mean = mean(time)) |>\n  arrange(mean) |>\n  pull(expression)\n\nbenchmark_results$expression <-\n  factor(benchmark_results$expression) |>\n  fct_relevel(fac_order)\n\n# Create plot\nbenchmark_results |>\n  ggplot() +\n  aes(x=time, y=expression) +\n  geom_point(alpha=0.8) +\n  expand_limits(x=0) +\n  labs(x = \"Time (seconds)\",\n       y = \"\")\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-6-1.png){width=768}\n:::\n:::\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

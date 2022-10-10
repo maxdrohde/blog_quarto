@@ -1,0 +1,89 @@
+---
+title: "`group_split` + `map` vs `summarize`"
+author: Max Rohde
+date: 10/10/2022
+# image: preview.png
+code-fold: show
+---
+
+```{r}
+# Load packages
+library(tidyverse)
+library(bench)
+library(glue)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=14,
+                                 font_family = "Source Sans Pro"))
+```
+
+```{r}
+df <- nycflights13::flights
+```
+
+```{r}
+f1 <-
+  function(){
+    x <- 
+    df |>
+      group_by(carrier) |>
+      group_split()
+    
+    x <- map_dfr(x, ~tibble(carrier = .x$carrier[[1]], mean = mean(.x$distance)))
+    
+    return(x)
+}
+```
+
+```{r}
+f2 <-
+  function(){
+    x <- 
+    df |>
+      group_by(carrier) |>
+      summarize(mean = mean(distance))
+    
+    return(x)
+}
+```
+
+```{r}
+benchmark_results <-
+  bench::mark(`group_split() + map()` = f1(),
+              `summarise()` = f2(),
+              iterations = 1e2,
+              memory = TRUE,
+              check = TRUE)
+```
+
+
+```{r}
+# Munge data
+benchmark_results <-
+benchmark_results |>
+  mutate(expression = as.character(expression)) |>
+  unnest_longer(time) |>
+  mutate(time = as.numeric(time))
+
+# Sort results by group mean
+fac_order <- 
+benchmark_results |>
+  group_by(expression) |>
+  summarise(mean = mean(time)) |>
+  arrange(mean) |>
+  pull(expression)
+
+benchmark_results$expression <-
+  factor(benchmark_results$expression) |>
+  fct_relevel(fac_order)
+
+# Create plot
+benchmark_results |>
+  ggplot() +
+  aes(x=time, y=expression) +
+  geom_point(alpha=0.8) +
+  expand_limits(x=0) +
+  labs(x = "Time (seconds)",
+       y = "")
+```
+

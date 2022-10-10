@@ -1,9 +1,7 @@
 ---
 title: "R Shiny Apps"
 description: ""
-toc: true
 toc-depth: 4
-title-block-banner: true
 title-block-banner: "#f1f3f5"
 title-block-banner-color: black
 ---

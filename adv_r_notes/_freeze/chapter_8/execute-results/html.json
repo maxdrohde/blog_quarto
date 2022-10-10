@@ -1,0 +1,14 @@
+{
+  "hash": "8edcc7cb313a6b64104b8658669c260f",
+  "result": {
+    "markdown": "# Conditions\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\nlibrary(rlang)\n```\n:::\n\n\n## Overview\n\nThe **condition** system has two parts.\n\nFirst there are signals:\n\n- `stop()`\n- `warning()`\n- `message()`\n\nand handlers:\n\n- `tryCatch()`\n- `withCallingHandlers()`\n\n> Like R’s approach to object-oriented programming, it is rather different to currently popular programming languages so it is easy to misunderstand, and there has been relatively little written about how to use it effectively.\n\n## Conditions\n\nThere are three conditions in R:\n\n- Errors -- uses `stop()` or `rlang::abort()`\n- Warnings -- uses `warning()` or `rlang::warn()`\n- Messages -- uses `message()`\n\n## Ignoring conditions\n\nUse `try()` to ignore errors and `tryCatch()` to execute a certain action when an error occurs.\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

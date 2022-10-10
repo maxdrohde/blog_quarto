@@ -46,6 +46,8 @@ format:
     fig-width: 8
     fig-height: 6
     freeze: auto
+    title-block-banner: "#f1f3f5"
+    title-block-banner-color: black
 
 knitr:
   opts_chunk: 
