@@ -1,0 +1,16 @@
+{
+  "hash": "f87560ff43fb9b31ab0996a6216b9275",
+  "result": {
+    "markdown": "---\ntitle: \"The importance of profiling and benchmarking your code (if speed is important)\"\nauthor: Max Rohde\ndate: 10/10/2022\n# image: preview.png\ncode-fold: show\n---\n\n\nExpand this into a blog article showing how \n\n- short functions may be more readable, but may not be faster if speed is critical\n- benchmarking is essential\n- profiling your code can explain why some functions are slower than others\n- these things can often being counterintuitive -- hard to reason about where the bottlenecks are\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load packages\nlibrary(tidyverse)\nlibrary(bench)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=14,\n                                 font_family = \"Source Sans Pro\"))\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# Set up data\nm <- matrix(runif(9), nrow=sqrt(9))\nm <- map(1:5000, ~m)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nf1 <- function(){\n  \n  n <- length(m)\n  l <- vector(mode = \"list\", length = n)\n  \n  l[[1]] <- m[[1]]\n  \n  for (i in 2:n) {\n    l[[i]] <- l[[i-1]] %*% m[[i]]\n  }\n  \n  return(l)\n}\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nf2 <- function(){\n  accumulate(m, `%*%`)\n}\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nbenchmark_results <-\n  bench::mark(`for-loop` = f1(),\n              `accumulate()` = f2(),\n              iterations = 1000)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nbenchmark_results\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n# A tibble: 2 × 6\n  expression        min   median `itr/sec` mem_alloc `gc/sec`\n  <bch:expr>   <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>\n1 for-loop       1.65ms   2.04ms     483.     83.1KB     12.4\n2 accumulate()  10.05ms  12.81ms      77.1   303.5KB     17.8\n```\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# Munge data\nbenchmark_results <-\nbenchmark_results |>\n  mutate(expression = as.character(expression)) |>\n  unnest_longer(time) |>\n  mutate(time = as.numeric(time))\n\n# Sort results by group mean\nfac_order <- \nbenchmark_results |>\n  group_by(expression) |>\n  summarise(mean = mean(time)) |>\n  arrange(mean) |>\n  pull(expression)\n\nbenchmark_results$expression <-\n  factor(benchmark_results$expression) |>\n  fct_relevel(fac_order)\n\n# Create plot\nbenchmark_results |>\n  ggplot() +\n  aes(x=time, y=expression) +\n  geom_point(alpha=0.8) +\n  expand_limits(x=0) +\n  labs(x = \"Time (seconds)\",\n       y = \"\")\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-7-1.png){width=768}\n:::\n:::\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

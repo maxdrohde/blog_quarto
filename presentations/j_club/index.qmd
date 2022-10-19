@@ -1,0 +1,160 @@
+---
+title: "Building a blog with Quarto"
+subtitle: "Journal Club 10/19/2022"
+author: "Max Rohde"
+knitr: true
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    theme: [default, custom.scss]
+---
+
+## Why Quarto
+
+```{r}
+#| echo: false
+
+# Tell reticulate where to find the right conda env
+reticulate::use_miniconda("/Users/max/opt/miniconda3/envs/datasci/bin/python")
+```
+
+- Easy to transition from R markdown
+- Supports more languages like Python and Julia
+- More features included like presentations, books and websites
+- You can make a blog!
+
+# <https://quarto.org/>
+
+## Downloading Quarto
+
+![](3.png)
+
+# This is a Quarto document 😮
+
+## Code Animations {auto-animate="true"}
+
+``` r
+starwars |>
+  group_by(species) |>
+```
+
+## Code Animations {auto-animate="true"}
+
+``` r
+starwars |>
+  group_by(species) |>
+  summarise(
+    n = n(),
+    mass = mean(mass, na.rm = TRUE)
+  ) |>
+  filter(
+    n > 1,
+    mass > 50
+  )
+```
+
+## Execute Python Code
+
+```{python}
+#| echo: true
+#| output-location: slide
+import altair as alt
+from vega_datasets import data
+
+source = data.cars()
+
+brush = alt.selection(type='interval')
+
+points = alt.Chart(source).mark_point().encode(
+    x='Horsepower:Q',
+    y='Miles_per_Gallon:Q',
+    color=alt.condition(brush, 'Origin:N', alt.value('lightgray'))
+).add_selection(
+    brush
+)
+
+bars = alt.Chart(source).mark_bar().encode(
+    y='Origin:N',
+    color='Origin:N',
+    x='count(Origin):Q'
+).transform_filter(
+    brush
+)
+
+points | bars
+```
+
+
+## Tabsets
+
+::: {.panel-tabset}
+
+### Horsepower
+
+```{r}
+#| echo: true
+hist(mtcars$hp, breaks = 20)
+```
+
+
+### Miles per gallon
+
+```{r}
+#| echo: true
+hist(mtcars$mpg, breaks = 20)
+```
+
+### Weight
+
+```{r}
+#| echo: true
+hist(mtcars$wt, breaks = 20)
+```
+
+:::
+
+# Journals
+
+## {}
+
+![](1.png)
+
+## {}
+
+![](2.png)
+
+## YAML
+
+````yaml
+---
+title: "Building a blog with Quarto"
+subtitle: "Journal Club 10/19/2022"
+author: "Max Rohde"
+knitr: true
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    theme: [default, custom.scss]
+---
+````
+
+## YAML in code chunks
+
+````
+```{{r}}
+#| eval: false
+#| echo: false
+#| cache: true
+#| fig-width: 7
+
+plot(mtcars)
+```
+````
+
+# Let's make a blog!
+
+

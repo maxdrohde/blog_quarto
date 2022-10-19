@@ -1,0 +1,14 @@
+{
+  "hash": "cbc964ee84ece1495aec93f3a671e633",
+  "result": {
+    "markdown": "---\ntitle: \"XXXXXXX\"\nsubtitle: \"XXXXXXXX\"\nauthor: \"Max Rohde\"\ndate: \"2022-10-19\"\ntoc: true\ntoc-depth: 4\ntoc-location: left\ncache: false\nknitr:\n  opts_chunk: \n    dev: \"ragg_png\"\nformat:\n  html:\n    code-tools: true\n    code-fold: true\n    code-link: true\n    self-contained: true\n    code-block-bg: \"#f1f3f5\"\n    code-block-border-left: \"#31BAE9\"\n    mainfont: Source Sans Pro\n    theme: journal\n    fontsize: 16px\n    fig-format: retina\n    fig-cap-location: margin\n    tbl-cap-location: top\n    reference-location: margin\n    citation-location: margin\n    fig-width: 8\n    fig-height: 6\n  \nexecute:\n  warning: false\n  message: false\n---\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\n\n# Set global ggplot theme\ntheme_set(cowplot::theme_cowplot(font_size=12,\n                                 font_family = \"Source Sans Pro\"))\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

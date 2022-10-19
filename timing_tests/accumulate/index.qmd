@@ -1,0 +1,94 @@
+---
+title: "The importance of profiling and benchmarking your code (if speed is important)"
+author: Max Rohde
+date: 10/10/2022
+# image: preview.png
+code-fold: show
+---
+
+Expand this into a blog article showing how 
+
+- short functions may be more readable, but may not be faster if speed is critical
+- benchmarking is essential
+- profiling your code can explain why some functions are slower than others
+- these things can often being counterintuitive -- hard to reason about where the bottlenecks are
+
+```{r}
+# Load packages
+library(tidyverse)
+library(bench)
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=14,
+                                 font_family = "Source Sans Pro"))
+```
+
+```{r}
+# Set up data
+m <- matrix(runif(9), nrow=sqrt(9))
+m <- map(1:5000, ~m)
+```
+
+```{r}
+f1 <- function(){
+  
+  n <- length(m)
+  l <- vector(mode = "list", length = n)
+  
+  l[[1]] <- m[[1]]
+  
+  for (i in 2:n) {
+    l[[i]] <- l[[i-1]] %*% m[[i]]
+  }
+  
+  return(l)
+}
+```
+
+```{r}
+f2 <- function(){
+  accumulate(m, `%*%`)
+}
+```
+
+```{r}
+benchmark_results <-
+  bench::mark(`for-loop` = f1(),
+              `accumulate()` = f2(),
+              iterations = 1000)
+```
+
+```{r}
+benchmark_results
+```
+
+```{r}
+# Munge data
+benchmark_results <-
+benchmark_results |>
+  mutate(expression = as.character(expression)) |>
+  unnest_longer(time) |>
+  mutate(time = as.numeric(time))
+
+# Sort results by group mean
+fac_order <- 
+benchmark_results |>
+  group_by(expression) |>
+  summarise(mean = mean(time)) |>
+  arrange(mean) |>
+  pull(expression)
+
+benchmark_results$expression <-
+  factor(benchmark_results$expression) |>
+  fct_relevel(fac_order)
+
+# Create plot
+benchmark_results |>
+  ggplot() +
+  aes(x=time, y=expression) +
+  geom_point(alpha=0.8) +
+  expand_limits(x=0) +
+  labs(x = "Time (seconds)",
+       y = "")
+```
+

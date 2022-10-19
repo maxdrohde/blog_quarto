@@ -1,0 +1,10 @@
+---
+title: Notes on using `data.table`
+description: My notes on using `data.table`. Mainly for personal reference, but hope others may find it useful!
+author: Max Rohde
+date: 10/11/2022
+code-fold: false
+---
+
+https://youtu.be/EdPKcy1WKD0
+
