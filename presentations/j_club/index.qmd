@@ -86,6 +86,15 @@ bars = alt.Chart(source).mark_bar().encode(
 points | bars
 ```
 
+## Interactive HTML
+
+```{r}
+#| echo: true
+library(leaflet)
+leaflet() |>
+  addTiles() |>  # Add default OpenStreetMap map tiles
+  addMarkers(lng=-86.808460, lat=36.145780, popup="You are here!")
+```
 
 ## Tabsets
 
