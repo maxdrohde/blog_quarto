@@ -1,0 +1,295 @@
+---
+title: "`blomm`"
+subtitle: "Bayesian Longitudinal Ordinal Markov Models with R"
+author: "Max Rohde"
+#standalone: true
+#embed-resources: true
+knitr: true
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    theme: [default, custom.scss]
+---
+
+## What is `blomm`?
+
+```{r}
+#| echo: false
+library(blomm)
+library(tidyverse)
+library(mustashe)
+
+# Load example data and adjust data types
+df <- as_tibble(simlongord500)
+df$y <- as.integer(df$y)
+df$yprev <-
+  as.integer(df$yprev) |>
+  as.factor()
+
+# Set global ggplot theme
+theme_set(cowplot::theme_cowplot(font_size=12,
+                                 font_family = "Source Sans Pro"))
+```
+
+- Fit longitudinal ordinal Markov models in a Bayesian framework
+- Built on `brms`, which uses Stan as a backend
+- Inspired by the `rmsb` package with the `blrm()` function but more specialized to longitudinal ordinal Markov models
+- Still in early stages of development!
+
+## Motivation
+
+- Inherits many features from `brms`
+    - Many S3 methods already work with `brms`
+    - Compatibility with other packages such as `loo` for LOO-CV
+    - Ability to use `cmdstanr` for faster model fitting
+    - Support for within-chain parallelization
+- Built-in support for visualizing data and fitted models
+- Functions to compute and plot derived estimands: days benefit and mean time unwell
+
+# Features
+
+## Visualizing the dataset {auto-animate="true"}
+
+```{r}
+#| echo: true
+blomm::plot_empirical_SOPs(df,
+                           y_variable = "y",
+                           time_variable = "time",
+                           y_previous = "yprev",
+                           group = tx,
+                           type = "bar")
+```
+
+## Visualizing the dataset {auto-animate="true"}
+
+```{r}
+#| echo: true
+blomm::plot_empirical_SOPs(df,
+                           y_variable = "y",
+                           time_variable = "time",
+                           y_previous = "yprev",
+                           group = tx,
+                           type = "line")
+```
+
+## Fitting a model {auto-animate="true"}
+
+```r
+mod <-
+  blomm::blomm(
+    formula = y ~ yprev + time + tx + age,
+    data = df,
+    time_variable = "time",
+    y_previous = "yprev"
+  )
+```
+
+## Fitting a model {auto-animate="true"}
+
+```r
+mod <-
+  blomm::blomm(
+    formula = y ~ yprev + time + tx + cs(age),
+    data = df,
+    time_variable = "time",
+    y_previous = "yprev"
+  )
+```
+
+## Fitting a model {auto-animate="true"}
+
+``` r
+mod <-
+  blomm::blomm(
+    formula = y ~ yprev + time + tx + cs(age),
+    data = df,
+    time_variable = "time",
+    y_previous = "yprev",
+    link = "probit",
+    iter = 4000,
+    cores = 12,
+    threads = brms::threading(3)
+  )
+```
+
+```{r}
+#| echo: false
+stash("mod", depends_on = "df", {
+
+mod <-
+  blomm::blomm(formula = y ~ yprev + time + tx + age,
+        data = df,
+        time_variable = "time",
+        y_previous = "yprev",
+        backend = "cmdstanr",
+        cores = 12,
+        threads = brms::threading(3),
+        iter = 2000)
+})
+```
+
+## `summary()`
+
+```{r}
+#| echo: true
+summary(mod)
+```
+
+## `priors()`
+
+```{r}
+#| echo: true
+blomm::priors(mod)
+```
+
+## `plot()`
+
+```{r}
+#| echo: false
+#| output: false
+p <- plot(mod)
+```
+
+```r
+plot(mod)
+```
+
+```{r}
+p[[1]]
+```
+
+## `plot()`
+
+```{r}
+p[[2]]
+```
+
+## State Occupancy Probabilities (SOPs)
+
+```{r}
+#| echo: true
+# As a matrix
+sop <-
+  mod |>
+  blomm::calculate_SOPs(covariate_list = list(tx = 0, age = 50),
+                 initial_state = 3,
+                 absorb = TRUE,
+                 format = "matrix")
+```
+
+```{r}
+print(sop[1:3])
+```
+
+## State Occupancy Probabilities (SOPs)
+
+```{r}
+#| echo: true
+# As a data frame
+sop <-
+  mod |>
+  blomm::calculate_SOPs(covariate_list = list(tx = 0, age = 50),
+                 initial_state = 3,
+                 absorb = TRUE,
+                 format = "tidy")
+```
+
+```{r}
+print(head(sop, 20))
+```
+
+## Plot SOPs
+
+```{r}
+#| echo: true
+blomm::plot_SOP(sop)
+```
+
+## Plot SOPs
+
+```{r}
+#| echo: true
+blomm::plot_SOP(sop, anim=TRUE)
+```
+
+## Estimands: Days Benefit
+
+```{r}
+#| echo: true
+
+# TX = 0
+sop1 <-
+  mod |>
+  calculate_SOPs(covariate_list = list(tx = 0, age = 50),
+                 initial_state = 2,
+                 absorb=TRUE)
+
+# TX = 1
+sop2 <-
+  mod |>
+  calculate_SOPs(covariate_list = list(tx = 1, age = 50),
+                 initial_state = 2,
+                 absorb=TRUE)
+```
+
+## Estimands: Days Benefit
+
+```{r}
+#| echo: true
+diff_in_days_benefit <-
+  calculate_days_benefit(sop1,
+                         sop2)
+```
+
+```{r}
+diff_in_days_benefit
+```
+
+## Estimands: Days Benefit
+
+```{r}
+#| echo: true
+hist(diff_in_days_benefit, breaks = 100)
+```
+
+## Estimands: Mean Time Unwell
+
+```{r}
+#| echo: true
+diff_in_mean_time_unwell <-
+  calculate_mean_time_unwell(sop1,
+                             sop2,
+                             threshold = 2)
+```
+
+```{r}
+diff_in_mean_time_unwell
+```
+
+## Estimands: Mean Time Unwell
+
+```{r}
+#| echo: true
+hist(diff_in_mean_time_unwell, breaks = 100)
+```
+
+## Timing comparisons
+
+![Comparison of `rmsb` and `blomm` time to fit model](timing.png)
+
+## Future work
+
+- Add second order Markov structure
+- Add functionality to specify a constrained partial proportional odds model
+
+## Acknowledgements
+
+- Frank Harrell
+- Thomas Stewart
+- Paul-Christian Bürkner (author of `brms`)
+
+
+
+

@@ -1,0 +1,31 @@
+/*-- scss:defaults --*/
+
+@import url(https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap);
+
+// fonts
+$font-family-sans-serif: "Fira Sans", sans-serif !default;
+$font-family-monospace: "Source Code Pro", monospace !default;
+
+// colors
+$body-bg: #fdf6e3 !default;
+$body-color: #657b83 !default;
+$link-color: #268bd2 !default;
+$selection-bg: #d33682 !default;
+
+// headings
+$presentation-heading-font: "Jost", sans-serif !default;
+
+$presentation-font-size-root: 35px;
+$presentation-h1-font-size: 2.2em;
+
+$presentation-heading-color: #586e75 !default;
+
+// code blocks
+$code-block-border-color: #93a1a1 !default;
+
+/*-- scss:rules --*/
+
+html * {
+	color-profile: sRGB;
+	rendering-intent: auto;
+}
