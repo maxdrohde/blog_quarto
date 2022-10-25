@@ -2,8 +2,6 @@
 title: "`blomm`"
 subtitle: "Bayesian Longitudinal Ordinal Markov Models with R"
 author: "Max Rohde"
-#standalone: true
-#embed-resources: true
 knitr: true
 
 format:
@@ -22,7 +20,11 @@ library(tidyverse)
 library(mustashe)
 
 # Load example data and adjust data types
-df <- as_tibble(simlongord500)
+df <-
+  as_tibble(simlongord500) |>
+  select(id, time, yprev, y, age, tx)
+
+
 df$y <- as.integer(df$y)
 df$yprev <-
   as.integer(df$yprev) |>
@@ -33,7 +35,7 @@ theme_set(cowplot::theme_cowplot(font_size=12,
                                  font_family = "Source Sans Pro"))
 ```
 
-- Fit longitudinal ordinal Markov models in a Bayesian framework
+- R package for fitting longitudinal ordinal Markov models in a Bayesian framework
 - Built on `brms`, which uses Stan as a backend
 - Inspired by the `rmsb` package with the `blrm()` function but more specialized to longitudinal ordinal Markov models
 - Still in early stages of development!
@@ -50,28 +52,41 @@ theme_set(cowplot::theme_cowplot(font_size=12,
 
 # Features
 
-## Visualizing the dataset {auto-animate="true"}
+## Example dataset
+
+Simulated data from the VIOLET study
 
 ```{r}
 #| echo: true
-blomm::plot_empirical_SOPs(df,
-                           y_variable = "y",
-                           time_variable = "time",
-                           y_previous = "yprev",
-                           group = tx,
-                           type = "bar")
+head(df, 10)
 ```
 
 ## Visualizing the dataset {auto-animate="true"}
 
 ```{r}
 #| echo: true
-blomm::plot_empirical_SOPs(df,
-                           y_variable = "y",
-                           time_variable = "time",
-                           y_previous = "yprev",
-                           group = tx,
-                           type = "line")
+df |>
+  blomm::plot_empirical_SOPs(
+    y_variable = "y",
+    time_variable = "time",
+    y_previous = "yprev",
+    group = tx,
+    type = "bar"
+  )
+```
+
+## Visualizing the dataset {auto-animate="true"}
+
+```{r}
+#| echo: true
+df |>
+  blomm::plot_empirical_SOPs(
+    y_variable = "y",
+    time_variable = "time",
+    y_previous = "yprev",
+    group = tx,
+    type = "line"
+  )
 ```
 
 ## Fitting a model {auto-animate="true"}
@@ -251,7 +266,11 @@ diff_in_days_benefit
 
 ```{r}
 #| echo: true
-hist(diff_in_days_benefit, breaks = 100)
+hist(diff_in_days_benefit,
+     breaks = 100,
+     main = "Posterior for difference in days benefit",
+     xlab = "Difference in days benefit",
+     ylab = "Count")
 ```
 
 ## Estimands: Mean Time Unwell
@@ -272,17 +291,25 @@ diff_in_mean_time_unwell
 
 ```{r}
 #| echo: true
-hist(diff_in_mean_time_unwell, breaks = 100)
+hist(diff_in_mean_time_unwell,
+     breaks = 100,
+     main = "Posterior for difference in mean time unwell",
+     xlab = "Difference in mean time unwell",
+     ylab = "Count")
 ```
 
 ## Timing comparisons
 
-![Comparison of `rmsb` and `blomm` time to fit model](timing.png)
+Comparison of `rmsb` and `blomm` time to fit model
+
+![](timing.png)
 
 ## Future work
 
 - Add second order Markov structure
 - Add functionality to specify a constrained partial proportional odds model
+- Expand code testing coverage
+- Submit to `CRAN`
 
 ## Acknowledgements
 
