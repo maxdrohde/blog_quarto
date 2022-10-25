@@ -4,9 +4,6 @@ comments:
     repo: maxdrohde/blog_quarto
     theme: github-light
 
-# Enable banner style title blocks
-title-block-banner: true
-title-block-banner-color: "#f1f3f5"
 format:
   html:
     toc: true
