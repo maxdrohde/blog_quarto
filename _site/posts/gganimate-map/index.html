@@ -2882,9 +2882,9 @@ background: #f1f3f5;
 </section></section><section id="creating-the-animation" class="level2 page-columns page-full"><h2 class="anchored" data-anchor-id="creating-the-animation">Creating the Animation</h2>
 <p>Now that we’ve cleaned and explored the data, let’s create an animation with <code>gganimate</code> and <code>ggmap</code>. I would like to visualize the development of Nashville’s parks by year.</p>
 <p>First, let’s try to just plot the locations of all the parks. Luckily, the (latitude, longitude) coordinates are provided.</p>
-<p>We start with the <code>qmplot()</code> function from <code>ggmap</code>, which is a shortcut for plotting on maps, just like <code><a href="https://ggplot2.tidyverse.org/reference/qplot.html">qplot()</a></code> in <code>ggplot2</code>. We pass in the latitude and longitude coordinates and the data frame. The argument <code>maptype = "toner-lite"</code> indicates the type of basemap to use as the background. We also specify <code>alpha=0.5</code> so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by <code>aes(size=acres)</code>. Then we add the extra theming using the <code>cowplot</code> package.</p>
+<p>We start with the <code><a href="https://rdrr.io/pkg/ggmap/man/qmplot.html">qmplot()</a></code> function from <code>ggmap</code>, which is a shortcut for plotting on maps, just like <code><a href="https://ggplot2.tidyverse.org/reference/qplot.html">qplot()</a></code> in <code>ggplot2</code>. We pass in the latitude and longitude coordinates and the data frame. The argument <code>maptype = "toner-lite"</code> indicates the type of basemap to use as the background. We also specify <code>alpha=0.5</code> so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by <code>aes(size=acres)</code>. Then we add the extra theming using the <code>cowplot</code> package.</p>
 <div class="cell page-columns page-full">
-<details open=""><summary>Code</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">qmplot</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span>, maptype<span class="op">=</span><span class="st">"toner-lite"</span>, alpha<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> </span>
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/qmplot.html">qmplot</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span>, maptype<span class="op">=</span><span class="st">"toner-lite"</span>, alpha<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>size<span class="op">=</span><span class="va">acres</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Nashville Parks"</span>,</span>
@@ -2901,7 +2901,7 @@ background: #f1f3f5;
 <p>Looks pretty good already. Now let’s make this into an animation!</p>
 <p>We will add the <code><a href="https://gganimate.com/reference/transition_states.html">transition_states()</a></code> function from <code>gganimate</code> and specify that each state of the animation is determined by <code>year_established</code>. We also set <code>subtitle = "Year: {closest_state}"</code> to display the year of the current frame.</p>
 <div class="cell page-columns page-full">
-<details open=""><summary>Code</summary><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">qmplot</span><span class="op">(</span>x<span class="op">=</span><span class="va">long</span>, y<span class="op">=</span><span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span><span class="op">)</span> <span class="op">+</span> </span>
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/qmplot.html">qmplot</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">long</span>, y<span class="op">=</span><span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>size<span class="op">=</span><span class="va">acres</span>, group<span class="op">=</span><span class="va">year_established</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Nashville Parks"</span>,</span>
@@ -2933,7 +2933,7 @@ background: #f1f3f5;
 </div>
 <p>Now that we’ve made those changes, let’s try again.</p>
 <div class="cell page-columns page-full">
-<details open=""><summary>Code</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">qmplot</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span>,</span>
+<details open=""><summary>Code</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/qmplot.html">qmplot</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>       maptype <span class="op">=</span> <span class="st">"toner-lite"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"red"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>size<span class="op">=</span><span class="va">acres</span>, group<span class="op">=</span><span class="va">year_established</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
@@ -2955,7 +2955,7 @@ background: #f1f3f5;
 <p>Let’s fix this by saving the animation to a variable, and then using the <code><a href="https://gganimate.com/reference/animate.html">animate()</a></code> function to increase the number of frames.</p>
 <div class="cell page-columns page-full">
 <details open=""><summary>Code</summary><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">parks_anim</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">qmplot</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/qmplot.html">qmplot</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>       maptype <span class="op">=</span> <span class="st">"toner-lite"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"red"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>size<span class="op">=</span><span class="va">acres</span>, group<span class="op">=</span><span class="va">year_established</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
@@ -2984,7 +2984,7 @@ background: #f1f3f5;
 <p>Be warned that this may take a bit of time to animate. Here’s the final result!</p>
 <div class="cell page-columns page-full">
 <details open=""><summary>Code</summary><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">parks_anim</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">qmplot</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/qmplot.html">qmplot</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span>, data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>       maptype <span class="op">=</span> <span class="st">"toner-lite"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"red"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>size<span class="op">=</span><span class="va">acres</span>, group<span class="op">=</span><span class="va">year_established</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
@@ -3283,359 +3283,361 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 01/06/2021</span></span>
 <span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> preview.jpg</span></span>
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="an">code-fold:</span><span class="co"> show</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE}</span></span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot2 themes</span></span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Formatting of HTML tables</span></span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
-<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>Animating your <span class="in">`ggplot2`</span> visualizations is easy using the <span class="in">`gganimate`</span> package. But did you also know that <span class="in">`gganimate`</span> can be used with the <span class="in">`ggmap`</span> package to animate geographic data? Using data from <span class="co">[</span><span class="ot">Nashville Open Data</span><span class="co">](https://www.nashville.gov/services/open-data.aspx)</span>, we'll create an animation to visualize the development of parks in Nashville over time.</span>
-<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data cleaning and exploration</span></span>
-<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>First, let's load in the data.</span>
-<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
-<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
-<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(<span class="st">"Parks_Property_2016.csv"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(lat, <span class="at">long =</span> lon, <span class="at">year_established =</span> year_estab, acres, <span class="at">park_name =</span>  common_nam)</span>
-<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
-<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">height=</span><span class="st">"500px"</span>)</span>
-<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a>Before we create the animations, let's do some data cleaning.</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">  freeze: true</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE}</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot2 themes</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Formatting of HTML tables</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>Animating your <span class="in">`ggplot2`</span> visualizations is easy using the <span class="in">`gganimate`</span> package. But did you also know that <span class="in">`gganimate`</span> can be used with the <span class="in">`ggmap`</span> package to animate geographic data? Using data from <span class="co">[</span><span class="ot">Nashville Open Data</span><span class="co">](https://www.nashville.gov/services/open-data.aspx)</span>, we'll create an animation to visualize the development of parks in Nashville over time.</span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data cleaning and exploration</span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>First, let's load in the data.</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(<span class="st">"Parks_Property_2016.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(lat, <span class="at">long =</span> lon, <span class="at">year_established =</span> year_estab, acres, <span class="at">park_name =</span>  common_nam)</span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">height=</span><span class="st">"500px"</span>)</span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Are parks duplicated?</span></span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>Before we create the animations, let's do some data cleaning.</span>
 <span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-54"><a href="#cb36-54" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-55"><a href="#cb36-55" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
-<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">duplicated</span>(park_name)) <span class="sc">%&gt;%</span></span>
-<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">height=</span><span class="st">"300px"</span>)</span>
-<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a>These look like errors so we will remove them.</span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Are parks duplicated?</span></span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
+<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">duplicated</span>(park_name)) <span class="sc">%&gt;%</span></span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">height=</span><span class="st">"300px"</span>)</span>
+<span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-64"><a href="#cb36-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
-<span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(lat <span class="sc">==</span> <span class="dv">0</span>),</span>
-<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(long <span class="sc">==</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(park_name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-75"><a href="#cb36-75" aria-hidden="true" tabindex="-1"></a>We also need to remove unreasonable lat/long values.</span>
+<span id="cb36-65"><a href="#cb36-65" aria-hidden="true" tabindex="-1"></a>These look like errors so we will remove them.</span>
+<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
+<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(lat <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(long <span class="sc">==</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(park_name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb36-75"><a href="#cb36-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-76"><a href="#cb36-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-79"><a href="#cb36-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-80"><a href="#cb36-80" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
-<span id="cb36-81"><a href="#cb36-81" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb36-82"><a href="#cb36-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(<span class="fu">abs</span>(lat) <span class="sc">&gt;=</span> <span class="dv">180</span>),</span>
-<span id="cb36-83"><a href="#cb36-83" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(<span class="fu">abs</span>(long) <span class="sc">&gt;=</span> <span class="dv">180</span>))</span>
-<span id="cb36-84"><a href="#cb36-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-85"><a href="#cb36-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-88"><a href="#cb36-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-89"><a href="#cb36-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert all long values to negative because of an error</span></span>
-<span id="cb36-90"><a href="#cb36-90" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>long <span class="ot">&lt;-</span> <span class="fu">abs</span>(df<span class="sc">$</span>long) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span></span>
-<span id="cb36-91"><a href="#cb36-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-92"><a href="#cb36-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-93"><a href="#cb36-93" aria-hidden="true" tabindex="-1"></a><span class="fu">#### How many parks are there?</span></span>
+<span id="cb36-77"><a href="#cb36-77" aria-hidden="true" tabindex="-1"></a>We also need to remove unreasonable lat/long values.</span>
+<span id="cb36-78"><a href="#cb36-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-81"><a href="#cb36-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-82"><a href="#cb36-82" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
+<span id="cb36-83"><a href="#cb36-83" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb36-84"><a href="#cb36-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(<span class="fu">abs</span>(lat) <span class="sc">&gt;=</span> <span class="dv">180</span>),</span>
+<span id="cb36-85"><a href="#cb36-85" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(<span class="fu">abs</span>(long) <span class="sc">&gt;=</span> <span class="dv">180</span>))</span>
+<span id="cb36-86"><a href="#cb36-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-87"><a href="#cb36-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-90"><a href="#cb36-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-91"><a href="#cb36-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert all long values to negative because of an error</span></span>
+<span id="cb36-92"><a href="#cb36-92" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>long <span class="ot">&lt;-</span> <span class="fu">abs</span>(df<span class="sc">$</span>long) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb36-93"><a href="#cb36-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-94"><a href="#cb36-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-97"><a href="#cb36-97" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-98"><a href="#cb36-98" aria-hidden="true" tabindex="-1"></a>(num_parks <span class="ot">&lt;-</span><span class="fu">nrow</span>(df))</span>
-<span id="cb36-99"><a href="#cb36-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-100"><a href="#cb36-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-101"><a href="#cb36-101" aria-hidden="true" tabindex="-1"></a><span class="in">`r num_parks`</span> parks in Nashville -- not bad!</span>
+<span id="cb36-95"><a href="#cb36-95" aria-hidden="true" tabindex="-1"></a><span class="fu">#### How many parks are there?</span></span>
+<span id="cb36-96"><a href="#cb36-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-99"><a href="#cb36-99" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-100"><a href="#cb36-100" aria-hidden="true" tabindex="-1"></a>(num_parks <span class="ot">&lt;-</span><span class="fu">nrow</span>(df))</span>
+<span id="cb36-101"><a href="#cb36-101" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-102"><a href="#cb36-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-103"><a href="#cb36-103" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Which years are represented in the data?</span></span>
+<span id="cb36-103"><a href="#cb36-103" aria-hidden="true" tabindex="-1"></a><span class="in">`r num_parks`</span> parks in Nashville -- not bad!</span>
 <span id="cb36-104"><a href="#cb36-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-107"><a href="#cb36-107" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-108"><a href="#cb36-108" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(df<span class="sc">$</span>year_established)</span>
-<span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a>Strange, it looks like the oldest park was established in year "0". This must be a mistake.</span>
+<span id="cb36-105"><a href="#cb36-105" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Which years are represented in the data?</span></span>
+<span id="cb36-106"><a href="#cb36-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(df<span class="sc">$</span>year_established)</span>
+<span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-115"><a href="#cb36-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-116"><a href="#cb36-116" aria-hidden="true" tabindex="-1"></a><span class="co"># Newest 5 parks</span></span>
-<span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(df<span class="sc">$</span>year_established) <span class="sc">%&gt;%</span> <span class="fu">tail</span>()</span>
-<span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Oldest 5 parks</span></span>
-<span id="cb36-120"><a href="#cb36-120" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(df<span class="sc">$</span>year_established) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
-<span id="cb36-121"><a href="#cb36-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-123"><a href="#cb36-123" aria-hidden="true" tabindex="-1"></a>The true range of the data is 1901 - 2015. It looks like the park recorded as being established in year zero was a mistake. Let's remove it from the dataset.</span>
+<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a>Strange, it looks like the oldest park was established in year "0". This must be a mistake.</span>
+<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a><span class="co"># Newest 5 parks</span></span>
+<span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(df<span class="sc">$</span>year_established) <span class="sc">%&gt;%</span> <span class="fu">tail</span>()</span>
+<span id="cb36-120"><a href="#cb36-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-121"><a href="#cb36-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Oldest 5 parks</span></span>
+<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(df<span class="sc">$</span>year_established) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb36-123"><a href="#cb36-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-124"><a href="#cb36-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-127"><a href="#cb36-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-128"><a href="#cb36-128" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
-<span id="cb36-129"><a href="#cb36-129" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span></span>
-<span id="cb36-130"><a href="#cb36-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year_established <span class="sc">!=</span> <span class="dv">0</span>)</span>
-<span id="cb36-131"><a href="#cb36-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-132"><a href="#cb36-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-133"><a href="#cb36-133" aria-hidden="true" tabindex="-1"></a>Now let's take a look at the distribution of the years when parks were established. First, we'll make a histogram.</span>
+<span id="cb36-125"><a href="#cb36-125" aria-hidden="true" tabindex="-1"></a>The true range of the data is 1901 - 2015. It looks like the park recorded as being established in year zero was a mistake. Let's remove it from the dataset.</span>
+<span id="cb36-126"><a href="#cb36-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-129"><a href="#cb36-129" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-130"><a href="#cb36-130" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
+<span id="cb36-131"><a href="#cb36-131" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span></span>
+<span id="cb36-132"><a href="#cb36-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year_established <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb36-133"><a href="#cb36-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-134"><a href="#cb36-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-137"><a href="#cb36-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-138"><a href="#cb36-138" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb36-139"><a href="#cb36-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb36-140"><a href="#cb36-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(year_established) <span class="sc">+</span></span>
-<span id="cb36-141"><a href="#cb36-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">30</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb36-142"><a href="#cb36-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb36-143"><a href="#cb36-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of parks established in Nashville per year"</span>,</span>
-<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">""</span>,</span>
-<span id="cb36-145"><a href="#cb36-145" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Year Established"</span>,</span>
-<span id="cb36-146"><a href="#cb36-146" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
-<span id="cb36-147"><a href="#cb36-147" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
-<span id="cb36-148"><a href="#cb36-148" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>)</span>
-<span id="cb36-149"><a href="#cb36-149" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-151"><a href="#cb36-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-152"><a href="#cb36-152" aria-hidden="true" tabindex="-1"></a>The rate of new park development looks to be increasing over time. An ECDF plot supports this observation.</span>
+<span id="cb36-135"><a href="#cb36-135" aria-hidden="true" tabindex="-1"></a>Now let's take a look at the distribution of the years when parks were established. First, we'll make a histogram.</span>
+<span id="cb36-136"><a href="#cb36-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-139"><a href="#cb36-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-140"><a href="#cb36-140" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb36-141"><a href="#cb36-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb36-142"><a href="#cb36-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(year_established) <span class="sc">+</span></span>
+<span id="cb36-143"><a href="#cb36-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">30</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-145"><a href="#cb36-145" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of parks established in Nashville per year"</span>,</span>
+<span id="cb36-146"><a href="#cb36-146" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">""</span>,</span>
+<span id="cb36-147"><a href="#cb36-147" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Year Established"</span>,</span>
+<span id="cb36-148"><a href="#cb36-148" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb36-149"><a href="#cb36-149" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
+<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>)</span>
+<span id="cb36-151"><a href="#cb36-151" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb36-152"><a href="#cb36-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-153"><a href="#cb36-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-156"><a href="#cb36-156" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-157"><a href="#cb36-157" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb36-158"><a href="#cb36-158" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>()<span class="sc">+</span></span>
-<span id="cb36-159"><a href="#cb36-159" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(year_established) <span class="sc">+</span></span>
-<span id="cb36-160"><a href="#cb36-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>() <span class="sc">+</span></span>
-<span id="cb36-161"><a href="#cb36-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb36-162"><a href="#cb36-162" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Cumulative distribution of Nashville parks over time"</span>,</span>
-<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">""</span>,</span>
-<span id="cb36-164"><a href="#cb36-164" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Year Established"</span>,</span>
-<span id="cb36-165"><a href="#cb36-165" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"ECDF"</span>) <span class="sc">+</span></span>
-<span id="cb36-166"><a href="#cb36-166" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
-<span id="cb36-167"><a href="#cb36-167" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>)</span>
-<span id="cb36-168"><a href="#cb36-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-169"><a href="#cb36-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a><span class="fu">## Creating the Animation</span></span>
+<span id="cb36-154"><a href="#cb36-154" aria-hidden="true" tabindex="-1"></a>The rate of new park development looks to be increasing over time. An ECDF plot supports this observation.</span>
+<span id="cb36-155"><a href="#cb36-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-158"><a href="#cb36-158" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-159"><a href="#cb36-159" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb36-160"><a href="#cb36-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb36-161"><a href="#cb36-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(year_established) <span class="sc">+</span></span>
+<span id="cb36-162"><a href="#cb36-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>() <span class="sc">+</span></span>
+<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-164"><a href="#cb36-164" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Cumulative distribution of Nashville parks over time"</span>,</span>
+<span id="cb36-165"><a href="#cb36-165" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">""</span>,</span>
+<span id="cb36-166"><a href="#cb36-166" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Year Established"</span>,</span>
+<span id="cb36-167"><a href="#cb36-167" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"ECDF"</span>) <span class="sc">+</span></span>
+<span id="cb36-168"><a href="#cb36-168" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
+<span id="cb36-169"><a href="#cb36-169" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>)</span>
+<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-171"><a href="#cb36-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-172"><a href="#cb36-172" aria-hidden="true" tabindex="-1"></a>Now that we've cleaned and explored the data, let's create an animation with <span class="in">`gganimate`</span> and <span class="in">`ggmap`</span>. I would like to visualize the development of Nashville's parks by year.</span>
+<span id="cb36-172"><a href="#cb36-172" aria-hidden="true" tabindex="-1"></a><span class="fu">## Creating the Animation</span></span>
 <span id="cb36-173"><a href="#cb36-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a>First, let's try to just plot the locations of all the parks. Luckily, the (latitude, longitude) coordinates are provided.</span>
+<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a>Now that we've cleaned and explored the data, let's create an animation with <span class="in">`gganimate`</span> and <span class="in">`ggmap`</span>. I would like to visualize the development of Nashville's parks by year.</span>
 <span id="cb36-175"><a href="#cb36-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-176"><a href="#cb36-176" aria-hidden="true" tabindex="-1"></a>We start with the <span class="in">`qmplot()`</span> function from <span class="in">`ggmap`</span>, which is a shortcut for plotting on maps, just like <span class="in">`qplot()`</span> in <span class="in">`ggplot2`</span>. We pass in the latitude and longitude coordinates and the data frame. The argument <span class="in">`maptype = "toner-lite"`</span> indicates the type of basemap to use as the background. We also specify <span class="in">`alpha=0.5`</span> so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by <span class="in">`aes(size=acres)`</span>. Then we add the extra theming using the <span class="in">`cowplot`</span> package.</span>
+<span id="cb36-176"><a href="#cb36-176" aria-hidden="true" tabindex="-1"></a>First, let's try to just plot the locations of all the parks. Luckily, the (latitude, longitude) coordinates are provided.</span>
 <span id="cb36-177"><a href="#cb36-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-180"><a href="#cb36-180" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-181"><a href="#cb36-181" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
-<span id="cb36-182"><a href="#cb36-182" aria-hidden="true" tabindex="-1"></a><span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df, <span class="at">maptype=</span><span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span> </span>
-<span id="cb36-183"><a href="#cb36-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres) <span class="sc">+</span></span>
-<span id="cb36-184"><a href="#cb36-184" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb36-185"><a href="#cb36-185" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
-<span id="cb36-186"><a href="#cb36-186" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
-<span id="cb36-187"><a href="#cb36-187" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
-<span id="cb36-188"><a href="#cb36-188" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
-<span id="cb36-189"><a href="#cb36-189" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
-<span id="cb36-190"><a href="#cb36-190" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb36-191"><a href="#cb36-191" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
-<span id="cb36-192"><a href="#cb36-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-193"><a href="#cb36-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-194"><a href="#cb36-194" aria-hidden="true" tabindex="-1"></a>Looks pretty good already. Now let's make this into an animation!</span>
+<span id="cb36-178"><a href="#cb36-178" aria-hidden="true" tabindex="-1"></a>We start with the <span class="in">`qmplot()`</span> function from <span class="in">`ggmap`</span>, which is a shortcut for plotting on maps, just like <span class="in">`qplot()`</span> in <span class="in">`ggplot2`</span>. We pass in the latitude and longitude coordinates and the data frame. The argument <span class="in">`maptype = "toner-lite"`</span> indicates the type of basemap to use as the background. We also specify <span class="in">`alpha=0.5`</span> so we can see when the points overlap. I would like larger parks to be represented by larger circles, so we can map size to acreage by <span class="in">`aes(size=acres)`</span>. Then we add the extra theming using the <span class="in">`cowplot`</span> package.</span>
+<span id="cb36-179"><a href="#cb36-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-182"><a href="#cb36-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-183"><a href="#cb36-183" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
+<span id="cb36-184"><a href="#cb36-184" aria-hidden="true" tabindex="-1"></a><span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df, <span class="at">maptype=</span><span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb36-185"><a href="#cb36-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres) <span class="sc">+</span></span>
+<span id="cb36-186"><a href="#cb36-186" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-187"><a href="#cb36-187" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
+<span id="cb36-188"><a href="#cb36-188" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
+<span id="cb36-189"><a href="#cb36-189" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
+<span id="cb36-190"><a href="#cb36-190" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
+<span id="cb36-191"><a href="#cb36-191" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
+<span id="cb36-192"><a href="#cb36-192" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb36-193"><a href="#cb36-193" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb36-194"><a href="#cb36-194" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-195"><a href="#cb36-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-196"><a href="#cb36-196" aria-hidden="true" tabindex="-1"></a>We will add the <span class="in">`transition_states()`</span> function from <span class="in">`gganimate`</span> and specify that each state of the animation is determined by <span class="in">`year_established`</span>. We also set <span class="in">`subtitle = "Year: {closest_state}"`</span> to display the year of the current frame.</span>
+<span id="cb36-196"><a href="#cb36-196" aria-hidden="true" tabindex="-1"></a>Looks pretty good already. Now let's make this into an animation!</span>
 <span id="cb36-197"><a href="#cb36-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-200"><a href="#cb36-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-201"><a href="#cb36-201" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
-<span id="cb36-202"><a href="#cb36-202" aria-hidden="true" tabindex="-1"></a><span class="fu">qmplot</span>(<span class="at">x=</span>long, <span class="at">y=</span>lat, <span class="at">data =</span> df) <span class="sc">+</span> </span>
-<span id="cb36-203"><a href="#cb36-203" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres, <span class="at">group=</span>year_established) <span class="sc">+</span></span>
-<span id="cb36-204"><a href="#cb36-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb36-205"><a href="#cb36-205" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
-<span id="cb36-206"><a href="#cb36-206" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year: {closest_state}"</span>,</span>
-<span id="cb36-207"><a href="#cb36-207" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
-<span id="cb36-208"><a href="#cb36-208" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
-<span id="cb36-209"><a href="#cb36-209" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
-<span id="cb36-210"><a href="#cb36-210" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
-<span id="cb36-211"><a href="#cb36-211" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb36-212"><a href="#cb36-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb36-213"><a href="#cb36-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_established)</span>
-<span id="cb36-214"><a href="#cb36-214" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-215"><a href="#cb36-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-216"><a href="#cb36-216" aria-hidden="true" tabindex="-1"></a>It's animated now, but there are two problems.</span>
+<span id="cb36-198"><a href="#cb36-198" aria-hidden="true" tabindex="-1"></a>We will add the <span class="in">`transition_states()`</span> function from <span class="in">`gganimate`</span> and specify that each state of the animation is determined by <span class="in">`year_established`</span>. We also set <span class="in">`subtitle = "Year: {closest_state}"`</span> to display the year of the current frame.</span>
+<span id="cb36-199"><a href="#cb36-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-202"><a href="#cb36-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-203"><a href="#cb36-203" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
+<span id="cb36-204"><a href="#cb36-204" aria-hidden="true" tabindex="-1"></a><span class="fu">qmplot</span>(<span class="at">x=</span>long, <span class="at">y=</span>lat, <span class="at">data =</span> df) <span class="sc">+</span> </span>
+<span id="cb36-205"><a href="#cb36-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres, <span class="at">group=</span>year_established) <span class="sc">+</span></span>
+<span id="cb36-206"><a href="#cb36-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-207"><a href="#cb36-207" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
+<span id="cb36-208"><a href="#cb36-208" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year: {closest_state}"</span>,</span>
+<span id="cb36-209"><a href="#cb36-209" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
+<span id="cb36-210"><a href="#cb36-210" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
+<span id="cb36-211"><a href="#cb36-211" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
+<span id="cb36-212"><a href="#cb36-212" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
+<span id="cb36-213"><a href="#cb36-213" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb36-214"><a href="#cb36-214" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb36-215"><a href="#cb36-215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_established)</span>
+<span id="cb36-216"><a href="#cb36-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-217"><a href="#cb36-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-218"><a href="#cb36-218" aria-hidden="true" tabindex="-1"></a>First, the points are disappearing after each year. We can add <span class="in">`shadow_mark(color="black")`</span> to have the points stay on the plot. We specify that the old points are colored black so that we can color the current points red, to highlight which points were just displayed.</span>
+<span id="cb36-218"><a href="#cb36-218" aria-hidden="true" tabindex="-1"></a>It's animated now, but there are two problems.</span>
 <span id="cb36-219"><a href="#cb36-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-220"><a href="#cb36-220" aria-hidden="true" tabindex="-1"></a>Second, the passage of time is not constant. We want to have each frame change in increments of one year. In our current animation, the years are skipping between the years present in the data. To fix this, we convert <span class="in">`year_established`</span> to a factor, and fill in the missing years.</span>
+<span id="cb36-220"><a href="#cb36-220" aria-hidden="true" tabindex="-1"></a>First, the points are disappearing after each year. We can add <span class="in">`shadow_mark(color="black")`</span> to have the points stay on the plot. We specify that the old points are colored black so that we can color the current points red, to highlight which points were just displayed.</span>
 <span id="cb36-221"><a href="#cb36-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-224"><a href="#cb36-224" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-225"><a href="#cb36-225" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year_established <span class="ot">&lt;-</span></span>
-<span id="cb36-226"><a href="#cb36-226" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>year_established <span class="sc">%&gt;%</span></span>
-<span id="cb36-227"><a href="#cb36-227" aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert to factor</span></span>
-<span id="cb36-228"><a href="#cb36-228" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.factor</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb36-229"><a href="#cb36-229" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add extra years</span></span>
-<span id="cb36-230"><a href="#cb36-230" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_expand</span>(<span class="dv">1900</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">%&gt;%</span> as.character) <span class="sc">%&gt;%</span></span>
-<span id="cb36-231"><a href="#cb36-231" aria-hidden="true" tabindex="-1"></a>  <span class="co"># sort years</span></span>
-<span id="cb36-232"><a href="#cb36-232" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_relevel</span>(<span class="dv">1900</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">%&gt;%</span> as.character)</span>
-<span id="cb36-233"><a href="#cb36-233" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-234"><a href="#cb36-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-235"><a href="#cb36-235" aria-hidden="true" tabindex="-1"></a>Now that we've made those changes, let's try again.</span>
+<span id="cb36-222"><a href="#cb36-222" aria-hidden="true" tabindex="-1"></a>Second, the passage of time is not constant. We want to have each frame change in increments of one year. In our current animation, the years are skipping between the years present in the data. To fix this, we convert <span class="in">`year_established`</span> to a factor, and fill in the missing years.</span>
+<span id="cb36-223"><a href="#cb36-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-226"><a href="#cb36-226" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-227"><a href="#cb36-227" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year_established <span class="ot">&lt;-</span></span>
+<span id="cb36-228"><a href="#cb36-228" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>year_established <span class="sc">%&gt;%</span></span>
+<span id="cb36-229"><a href="#cb36-229" aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert to factor</span></span>
+<span id="cb36-230"><a href="#cb36-230" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.factor</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb36-231"><a href="#cb36-231" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add extra years</span></span>
+<span id="cb36-232"><a href="#cb36-232" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_expand</span>(<span class="dv">1900</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">%&gt;%</span> as.character) <span class="sc">%&gt;%</span></span>
+<span id="cb36-233"><a href="#cb36-233" aria-hidden="true" tabindex="-1"></a>  <span class="co"># sort years</span></span>
+<span id="cb36-234"><a href="#cb36-234" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_relevel</span>(<span class="dv">1900</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">%&gt;%</span> as.character)</span>
+<span id="cb36-235"><a href="#cb36-235" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-236"><a href="#cb36-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-239"><a href="#cb36-239" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-240"><a href="#cb36-240" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
-<span id="cb36-241"><a href="#cb36-241" aria-hidden="true" tabindex="-1"></a><span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df,</span>
-<span id="cb36-242"><a href="#cb36-242" aria-hidden="true" tabindex="-1"></a>       <span class="at">maptype =</span> <span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span> </span>
-<span id="cb36-243"><a href="#cb36-243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres, <span class="at">group=</span>year_established) <span class="sc">+</span></span>
-<span id="cb36-244"><a href="#cb36-244" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb36-245"><a href="#cb36-245" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
-<span id="cb36-246"><a href="#cb36-246" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year: {closest_state}"</span>,</span>
-<span id="cb36-247"><a href="#cb36-247" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
-<span id="cb36-248"><a href="#cb36-248" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
-<span id="cb36-249"><a href="#cb36-249" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
-<span id="cb36-250"><a href="#cb36-250" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
-<span id="cb36-251"><a href="#cb36-251" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb36-252"><a href="#cb36-252" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb36-253"><a href="#cb36-253" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_established) <span class="sc">+</span></span>
-<span id="cb36-254"><a href="#cb36-254" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">color=</span><span class="st">"black"</span>)</span>
-<span id="cb36-255"><a href="#cb36-255" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-256"><a href="#cb36-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-257"><a href="#cb36-257" aria-hidden="true" tabindex="-1"></a>Looks good! But wait a second... the animation only goes to 1950. Wasn't it supposed to go to 2015? This is a little quirk of <span class="in">`gganimate`</span>. By default, the animation is capped at 100 frames. For the <span class="in">`transition_states()`</span> animation, by default a single frame is allocated for each state, and another frame is allocated for transitions between states. So 100 frames can represent 50 years of data. The animation is cut short because we have more than 50 years of data.</span>
+<span id="cb36-237"><a href="#cb36-237" aria-hidden="true" tabindex="-1"></a>Now that we've made those changes, let's try again.</span>
+<span id="cb36-238"><a href="#cb36-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-241"><a href="#cb36-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-242"><a href="#cb36-242" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
+<span id="cb36-243"><a href="#cb36-243" aria-hidden="true" tabindex="-1"></a><span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df,</span>
+<span id="cb36-244"><a href="#cb36-244" aria-hidden="true" tabindex="-1"></a>       <span class="at">maptype =</span> <span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span> </span>
+<span id="cb36-245"><a href="#cb36-245" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres, <span class="at">group=</span>year_established) <span class="sc">+</span></span>
+<span id="cb36-246"><a href="#cb36-246" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-247"><a href="#cb36-247" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
+<span id="cb36-248"><a href="#cb36-248" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year: {closest_state}"</span>,</span>
+<span id="cb36-249"><a href="#cb36-249" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
+<span id="cb36-250"><a href="#cb36-250" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
+<span id="cb36-251"><a href="#cb36-251" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
+<span id="cb36-252"><a href="#cb36-252" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
+<span id="cb36-253"><a href="#cb36-253" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb36-254"><a href="#cb36-254" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb36-255"><a href="#cb36-255" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_established) <span class="sc">+</span></span>
+<span id="cb36-256"><a href="#cb36-256" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">color=</span><span class="st">"black"</span>)</span>
+<span id="cb36-257"><a href="#cb36-257" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-258"><a href="#cb36-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-259"><a href="#cb36-259" aria-hidden="true" tabindex="-1"></a>Let's fix this by saving the animation to a variable, and then using the <span class="in">`animate()`</span> function to increase the number of frames.</span>
+<span id="cb36-259"><a href="#cb36-259" aria-hidden="true" tabindex="-1"></a>Looks good! But wait a second... the animation only goes to 1950. Wasn't it supposed to go to 2015? This is a little quirk of <span class="in">`gganimate`</span>. By default, the animation is capped at 100 frames. For the <span class="in">`transition_states()`</span> animation, by default a single frame is allocated for each state, and another frame is allocated for transitions between states. So 100 frames can represent 50 years of data. The animation is cut short because we have more than 50 years of data.</span>
 <span id="cb36-260"><a href="#cb36-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-263"><a href="#cb36-263" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-264"><a href="#cb36-264" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
-<span id="cb36-265"><a href="#cb36-265" aria-hidden="true" tabindex="-1"></a>parks_anim <span class="ot">&lt;-</span> </span>
-<span id="cb36-266"><a href="#cb36-266" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df,</span>
-<span id="cb36-267"><a href="#cb36-267" aria-hidden="true" tabindex="-1"></a>       <span class="at">maptype =</span> <span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span> </span>
-<span id="cb36-268"><a href="#cb36-268" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres, <span class="at">group=</span>year_established) <span class="sc">+</span></span>
-<span id="cb36-269"><a href="#cb36-269" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb36-270"><a href="#cb36-270" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
-<span id="cb36-271"><a href="#cb36-271" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year: {closest_state}"</span>,</span>
-<span id="cb36-272"><a href="#cb36-272" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
-<span id="cb36-273"><a href="#cb36-273" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
-<span id="cb36-274"><a href="#cb36-274" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
-<span id="cb36-275"><a href="#cb36-275" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
-<span id="cb36-276"><a href="#cb36-276" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb36-277"><a href="#cb36-277" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb36-278"><a href="#cb36-278" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_established) <span class="sc">+</span></span>
-<span id="cb36-279"><a href="#cb36-279" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">color=</span><span class="st">"black"</span>)</span>
-<span id="cb36-280"><a href="#cb36-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-281"><a href="#cb36-281" aria-hidden="true" tabindex="-1"></a><span class="fu">animate</span>(</span>
-<span id="cb36-282"><a href="#cb36-282" aria-hidden="true" tabindex="-1"></a>  parks_anim,</span>
-<span id="cb36-283"><a href="#cb36-283" aria-hidden="true" tabindex="-1"></a>  <span class="at">nframes=</span><span class="dv">300</span>, <span class="co"># number of frames to compute</span></span>
-<span id="cb36-284"><a href="#cb36-284" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb36-285"><a href="#cb36-285" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-286"><a href="#cb36-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-287"><a href="#cb36-287" aria-hidden="true" tabindex="-1"></a>My preferred method of rendering the animation is to use <span class="in">`ffmpeg`</span>, instead of the default GIF renderer, because it creates videos (.mp4) rather than GIFs. You will need to <span class="co">[</span><span class="ot">install ffpmeg</span><span class="co">](https://ffmpeg.org)</span> on your computer separately. Using ffmpeg also allows for finer control over the frame rate of the animation and creates smaller files. I'll show how to use it below.</span>
+<span id="cb36-261"><a href="#cb36-261" aria-hidden="true" tabindex="-1"></a>Let's fix this by saving the animation to a variable, and then using the <span class="in">`animate()`</span> function to increase the number of frames.</span>
+<span id="cb36-262"><a href="#cb36-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-265"><a href="#cb36-265" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-266"><a href="#cb36-266" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
+<span id="cb36-267"><a href="#cb36-267" aria-hidden="true" tabindex="-1"></a>parks_anim <span class="ot">&lt;-</span> </span>
+<span id="cb36-268"><a href="#cb36-268" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df,</span>
+<span id="cb36-269"><a href="#cb36-269" aria-hidden="true" tabindex="-1"></a>       <span class="at">maptype =</span> <span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span> </span>
+<span id="cb36-270"><a href="#cb36-270" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres, <span class="at">group=</span>year_established) <span class="sc">+</span></span>
+<span id="cb36-271"><a href="#cb36-271" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-272"><a href="#cb36-272" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
+<span id="cb36-273"><a href="#cb36-273" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year: {closest_state}"</span>,</span>
+<span id="cb36-274"><a href="#cb36-274" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
+<span id="cb36-275"><a href="#cb36-275" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
+<span id="cb36-276"><a href="#cb36-276" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
+<span id="cb36-277"><a href="#cb36-277" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
+<span id="cb36-278"><a href="#cb36-278" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb36-279"><a href="#cb36-279" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb36-280"><a href="#cb36-280" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_established) <span class="sc">+</span></span>
+<span id="cb36-281"><a href="#cb36-281" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">color=</span><span class="st">"black"</span>)</span>
+<span id="cb36-282"><a href="#cb36-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-283"><a href="#cb36-283" aria-hidden="true" tabindex="-1"></a><span class="fu">animate</span>(</span>
+<span id="cb36-284"><a href="#cb36-284" aria-hidden="true" tabindex="-1"></a>  parks_anim,</span>
+<span id="cb36-285"><a href="#cb36-285" aria-hidden="true" tabindex="-1"></a>  <span class="at">nframes=</span><span class="dv">300</span>, <span class="co"># number of frames to compute</span></span>
+<span id="cb36-286"><a href="#cb36-286" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-287"><a href="#cb36-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-288"><a href="#cb36-288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-289"><a href="#cb36-289" aria-hidden="true" tabindex="-1"></a>The <span class="in">`animate()`</span> function has parameters for <span class="in">`duration`</span> (total duration in seconds), <span class="in">`fps`</span> (frames per second), and <span class="in">`nframes`</span> (total number of frames). You can specify any two. For our case, we give the duration and number of frames, and <span class="in">`gganimate`</span> figures out the proper frame rate to fit the specified number of frames into the specified number of seconds.</span>
+<span id="cb36-289"><a href="#cb36-289" aria-hidden="true" tabindex="-1"></a>My preferred method of rendering the animation is to use <span class="in">`ffmpeg`</span>, instead of the default GIF renderer, because it creates videos (.mp4) rather than GIFs. You will need to <span class="co">[</span><span class="ot">install ffpmeg</span><span class="co">](https://ffmpeg.org)</span> on your computer separately. Using ffmpeg also allows for finer control over the frame rate of the animation and creates smaller files. I'll show how to use it below.</span>
 <span id="cb36-290"><a href="#cb36-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-291"><a href="#cb36-291" aria-hidden="true" tabindex="-1"></a>We also set <span class="in">`res=300`</span> to increase the resolution. This has the side effect of making the font appear larger, so we decrease the font size in the call to <span class="in">`theme_cowplot()`</span>.</span>
+<span id="cb36-291"><a href="#cb36-291" aria-hidden="true" tabindex="-1"></a>The <span class="in">`animate()`</span> function has parameters for <span class="in">`duration`</span> (total duration in seconds), <span class="in">`fps`</span> (frames per second), and <span class="in">`nframes`</span> (total number of frames). You can specify any two. For our case, we give the duration and number of frames, and <span class="in">`gganimate`</span> figures out the proper frame rate to fit the specified number of frames into the specified number of seconds.</span>
 <span id="cb36-292"><a href="#cb36-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-293"><a href="#cb36-293" aria-hidden="true" tabindex="-1"></a>Be warned that this may take a bit of time to animate. Here's the final result!</span>
+<span id="cb36-293"><a href="#cb36-293" aria-hidden="true" tabindex="-1"></a>We also set <span class="in">`res=300`</span> to increase the resolution. This has the side effect of making the font appear larger, so we decrease the font size in the call to <span class="in">`theme_cowplot()`</span>.</span>
 <span id="cb36-294"><a href="#cb36-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-297"><a href="#cb36-297" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-298"><a href="#cb36-298" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
-<span id="cb36-299"><a href="#cb36-299" aria-hidden="true" tabindex="-1"></a>parks_anim <span class="ot">&lt;-</span> </span>
-<span id="cb36-300"><a href="#cb36-300" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df,</span>
-<span id="cb36-301"><a href="#cb36-301" aria-hidden="true" tabindex="-1"></a>       <span class="at">maptype =</span> <span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span> </span>
-<span id="cb36-302"><a href="#cb36-302" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres, <span class="at">group=</span>year_established) <span class="sc">+</span></span>
-<span id="cb36-303"><a href="#cb36-303" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb36-304"><a href="#cb36-304" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
-<span id="cb36-305"><a href="#cb36-305" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year: {closest_state}"</span>,</span>
-<span id="cb36-306"><a href="#cb36-306" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
-<span id="cb36-307"><a href="#cb36-307" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
-<span id="cb36-308"><a href="#cb36-308" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
-<span id="cb36-309"><a href="#cb36-309" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
-<span id="cb36-310"><a href="#cb36-310" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
-<span id="cb36-311"><a href="#cb36-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb36-312"><a href="#cb36-312" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_established) <span class="sc">+</span></span>
-<span id="cb36-313"><a href="#cb36-313" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">color=</span><span class="st">"black"</span>)</span>
-<span id="cb36-314"><a href="#cb36-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-315"><a href="#cb36-315" aria-hidden="true" tabindex="-1"></a><span class="fu">animate</span>(</span>
-<span id="cb36-316"><a href="#cb36-316" aria-hidden="true" tabindex="-1"></a>  parks_anim,</span>
-<span id="cb36-317"><a href="#cb36-317" aria-hidden="true" tabindex="-1"></a>  <span class="at">duration=</span><span class="dv">15</span>, <span class="co"># duration of the animation in seconds</span></span>
-<span id="cb36-318"><a href="#cb36-318" aria-hidden="true" tabindex="-1"></a>  <span class="at">nframes=</span><span class="dv">768</span>, <span class="co"># number of frames to compute</span></span>
-<span id="cb36-319"><a href="#cb36-319" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">6</span>,</span>
-<span id="cb36-320"><a href="#cb36-320" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
-<span id="cb36-321"><a href="#cb36-321" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
-<span id="cb36-322"><a href="#cb36-322" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> <span class="dv">300</span>, <span class="co"># resolution of the output</span></span>
-<span id="cb36-323"><a href="#cb36-323" aria-hidden="true" tabindex="-1"></a>  <span class="at">renderer =</span> <span class="fu">ffmpeg_renderer</span>() <span class="co"># render to video with ffmpeg</span></span>
-<span id="cb36-324"><a href="#cb36-324" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb36-325"><a href="#cb36-325" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-326"><a href="#cb36-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-327"><a href="#cb36-327" aria-hidden="true" tabindex="-1"></a><span class="fu"># Update (June 13th 2022)</span></span>
+<span id="cb36-295"><a href="#cb36-295" aria-hidden="true" tabindex="-1"></a>Be warned that this may take a bit of time to animate. Here's the final result!</span>
+<span id="cb36-296"><a href="#cb36-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-299"><a href="#cb36-299" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-300"><a href="#cb36-300" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page-right</span></span>
+<span id="cb36-301"><a href="#cb36-301" aria-hidden="true" tabindex="-1"></a>parks_anim <span class="ot">&lt;-</span> </span>
+<span id="cb36-302"><a href="#cb36-302" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qmplot</span>(long, lat, <span class="at">data =</span> df,</span>
+<span id="cb36-303"><a href="#cb36-303" aria-hidden="true" tabindex="-1"></a>       <span class="at">maptype =</span> <span class="st">"toner-lite"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span> </span>
+<span id="cb36-304"><a href="#cb36-304" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">size=</span>acres, <span class="at">group=</span>year_established) <span class="sc">+</span></span>
+<span id="cb36-305"><a href="#cb36-305" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-306"><a href="#cb36-306" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nashville Parks"</span>,</span>
+<span id="cb36-307"><a href="#cb36-307" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year: {closest_state}"</span>,</span>
+<span id="cb36-308"><a href="#cb36-308" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span> <span class="st">"Longitude"</span>,</span>
+<span id="cb36-309"><a href="#cb36-309" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span> <span class="st">"Latitude"</span>,</span>
+<span id="cb36-310"><a href="#cb36-310" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Area corresponds to acreage </span><span class="sc">\n</span><span class="st"> Data available from Nashville Open Data"</span>) <span class="sc">+</span></span>
+<span id="cb36-311"><a href="#cb36-311" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>,</span>
+<span id="cb36-312"><a href="#cb36-312" aria-hidden="true" tabindex="-1"></a>                         <span class="at">font_size =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb36-313"><a href="#cb36-313" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb36-314"><a href="#cb36-314" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_established) <span class="sc">+</span></span>
+<span id="cb36-315"><a href="#cb36-315" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">color=</span><span class="st">"black"</span>)</span>
+<span id="cb36-316"><a href="#cb36-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-317"><a href="#cb36-317" aria-hidden="true" tabindex="-1"></a><span class="fu">animate</span>(</span>
+<span id="cb36-318"><a href="#cb36-318" aria-hidden="true" tabindex="-1"></a>  parks_anim,</span>
+<span id="cb36-319"><a href="#cb36-319" aria-hidden="true" tabindex="-1"></a>  <span class="at">duration=</span><span class="dv">15</span>, <span class="co"># duration of the animation in seconds</span></span>
+<span id="cb36-320"><a href="#cb36-320" aria-hidden="true" tabindex="-1"></a>  <span class="at">nframes=</span><span class="dv">768</span>, <span class="co"># number of frames to compute</span></span>
+<span id="cb36-321"><a href="#cb36-321" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">6</span>,</span>
+<span id="cb36-322"><a href="#cb36-322" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
+<span id="cb36-323"><a href="#cb36-323" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
+<span id="cb36-324"><a href="#cb36-324" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> <span class="dv">300</span>, <span class="co"># resolution of the output</span></span>
+<span id="cb36-325"><a href="#cb36-325" aria-hidden="true" tabindex="-1"></a>  <span class="at">renderer =</span> <span class="fu">ffmpeg_renderer</span>() <span class="co"># render to video with ffmpeg</span></span>
+<span id="cb36-326"><a href="#cb36-326" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-327"><a href="#cb36-327" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-328"><a href="#cb36-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-329"><a href="#cb36-329" aria-hidden="true" tabindex="-1"></a>After learning more about geographic visualization in R (mainly thanks to <span class="co">[</span><span class="ot">Geocomputation with R</span><span class="co">](https://geocompr.robinlovelace.net/)</span>), here is an updated version that incorporates the full shape of each park.</span>
+<span id="cb36-329"><a href="#cb36-329" aria-hidden="true" tabindex="-1"></a><span class="fu"># Update (June 13th 2022)</span></span>
 <span id="cb36-330"><a href="#cb36-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-333"><a href="#cb36-333" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-334"><a href="#cb36-334" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb36-335"><a href="#cb36-335" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-336"><a href="#cb36-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-339"><a href="#cb36-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-340"><a href="#cb36-340" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="st">"parks.geojson"</span>)</span>
-<span id="cb36-341"><a href="#cb36-341" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-342"><a href="#cb36-342" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year_estab <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>year_estab)</span>
-<span id="cb36-343"><a href="#cb36-343" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-344"><a href="#cb36-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-347"><a href="#cb36-347" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-348"><a href="#cb36-348" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
-<span id="cb36-349"><a href="#cb36-349" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span></span>
-<span id="cb36-350"><a href="#cb36-350" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year_estab <span class="sc">!=</span> <span class="dv">0</span>)</span>
-<span id="cb36-351"><a href="#cb36-351" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-352"><a href="#cb36-352" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-355"><a href="#cb36-355" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-356"><a href="#cb36-356" aria-hidden="true" tabindex="-1"></a>(min_year <span class="ot">&lt;-</span> <span class="fu">min</span>(df<span class="sc">$</span>year_estab))</span>
-<span id="cb36-357"><a href="#cb36-357" aria-hidden="true" tabindex="-1"></a>(max_year <span class="ot">&lt;-</span> <span class="fu">max</span>(df<span class="sc">$</span>year_estab))</span>
-<span id="cb36-358"><a href="#cb36-358" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-359"><a href="#cb36-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-362"><a href="#cb36-362" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-363"><a href="#cb36-363" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year_estab <span class="ot">&lt;-</span></span>
-<span id="cb36-364"><a href="#cb36-364" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>year_estab <span class="sc">%&gt;%</span></span>
-<span id="cb36-365"><a href="#cb36-365" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.factor</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb36-366"><a href="#cb36-366" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_expand</span>(<span class="dv">1900</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">%&gt;%</span> as.character) <span class="sc">%&gt;%</span></span>
-<span id="cb36-367"><a href="#cb36-367" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_relevel</span>(<span class="dv">1900</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">%&gt;%</span> as.character)</span>
-<span id="cb36-368"><a href="#cb36-368" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-369"><a href="#cb36-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-372"><a href="#cb36-372" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-373"><a href="#cb36-373" aria-hidden="true" tabindex="-1"></a>anim <span class="ot">&lt;-</span></span>
-<span id="cb36-374"><a href="#cb36-374" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb36-375"><a href="#cb36-375" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb36-376"><a href="#cb36-376" aria-hidden="true" tabindex="-1"></a>  basemapR<span class="sc">::</span><span class="fu">base_map</span>(<span class="fu">st_bbox</span>(df), <span class="at">basemap =</span> <span class="st">"voyager"</span>, <span class="at">increase_zoom =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb36-377"><a href="#cb36-377" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill=</span><span class="st">"#BF616A"</span>, <span class="at">color=</span><span class="st">"#BF616A"</span>) <span class="sc">+</span></span>
-<span id="cb36-378"><a href="#cb36-378" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_map</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>, <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb36-379"><a href="#cb36-379" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb36-380"><a href="#cb36-380" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Development of Nashville Parks"</span>,</span>
-<span id="cb36-381"><a href="#cb36-381" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year Established: {closest_state}"</span>,</span>
-<span id="cb36-382"><a href="#cb36-382" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Data available from Nashville Open Data</span><span class="sc">\n</span><span class="st">Basemap from OpenStreetMap"</span>) <span class="sc">+</span></span>
-<span id="cb36-383"><a href="#cb36-383" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_estab) <span class="sc">+</span></span>
-<span id="cb36-384"><a href="#cb36-384" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">fill=</span><span class="st">"#2E3440"</span>, <span class="at">color=</span><span class="st">"#2E3440"</span>)</span>
-<span id="cb36-385"><a href="#cb36-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-386"><a href="#cb36-386" aria-hidden="true" tabindex="-1"></a>anim <span class="ot">&lt;-</span></span>
-<span id="cb36-387"><a href="#cb36-387" aria-hidden="true" tabindex="-1"></a><span class="fu">animate</span>(</span>
-<span id="cb36-388"><a href="#cb36-388" aria-hidden="true" tabindex="-1"></a>  anim,</span>
-<span id="cb36-389"><a href="#cb36-389" aria-hidden="true" tabindex="-1"></a>  <span class="at">duration=</span><span class="dv">12</span>,</span>
-<span id="cb36-390"><a href="#cb36-390" aria-hidden="true" tabindex="-1"></a>  <span class="at">fps=</span><span class="dv">30</span>,</span>
-<span id="cb36-391"><a href="#cb36-391" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">5</span>,</span>
-<span id="cb36-392"><a href="#cb36-392" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">5</span>,</span>
-<span id="cb36-393"><a href="#cb36-393" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
-<span id="cb36-394"><a href="#cb36-394" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> <span class="dv">500</span>, </span>
-<span id="cb36-395"><a href="#cb36-395" aria-hidden="true" tabindex="-1"></a>  <span class="at">renderer =</span> <span class="fu">ffmpeg_renderer</span>()</span>
-<span id="cb36-396"><a href="#cb36-396" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb36-397"><a href="#cb36-397" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-398"><a href="#cb36-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-401"><a href="#cb36-401" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-402"><a href="#cb36-402" aria-hidden="true" tabindex="-1"></a>anim</span>
-<span id="cb36-403"><a href="#cb36-403" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-404"><a href="#cb36-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-407"><a href="#cb36-407" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb36-408"><a href="#cb36-408" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="at">animation =</span> anim,</span>
-<span id="cb36-409"><a href="#cb36-409" aria-hidden="true" tabindex="-1"></a>      <span class="at">filename =</span> <span class="st">"nashville_parks.mp4"</span>)</span>
-<span id="cb36-410"><a href="#cb36-410" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb36-411"><a href="#cb36-411" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-412"><a href="#cb36-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-331"><a href="#cb36-331" aria-hidden="true" tabindex="-1"></a>After learning more about geographic visualization in R (mainly thanks to <span class="co">[</span><span class="ot">Geocomputation with R</span><span class="co">](https://geocompr.robinlovelace.net/)</span>), here is an updated version that incorporates the full shape of each park.</span>
+<span id="cb36-332"><a href="#cb36-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-335"><a href="#cb36-335" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-336"><a href="#cb36-336" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb36-337"><a href="#cb36-337" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-338"><a href="#cb36-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-341"><a href="#cb36-341" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-342"><a href="#cb36-342" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="st">"parks.geojson"</span>)</span>
+<span id="cb36-343"><a href="#cb36-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-344"><a href="#cb36-344" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year_estab <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>year_estab)</span>
+<span id="cb36-345"><a href="#cb36-345" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-346"><a href="#cb36-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-349"><a href="#cb36-349" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-350"><a href="#cb36-350" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span></span>
+<span id="cb36-351"><a href="#cb36-351" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span></span>
+<span id="cb36-352"><a href="#cb36-352" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year_estab <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb36-353"><a href="#cb36-353" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-354"><a href="#cb36-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-357"><a href="#cb36-357" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-358"><a href="#cb36-358" aria-hidden="true" tabindex="-1"></a>(min_year <span class="ot">&lt;-</span> <span class="fu">min</span>(df<span class="sc">$</span>year_estab))</span>
+<span id="cb36-359"><a href="#cb36-359" aria-hidden="true" tabindex="-1"></a>(max_year <span class="ot">&lt;-</span> <span class="fu">max</span>(df<span class="sc">$</span>year_estab))</span>
+<span id="cb36-360"><a href="#cb36-360" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-361"><a href="#cb36-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-364"><a href="#cb36-364" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-365"><a href="#cb36-365" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year_estab <span class="ot">&lt;-</span></span>
+<span id="cb36-366"><a href="#cb36-366" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>year_estab <span class="sc">%&gt;%</span></span>
+<span id="cb36-367"><a href="#cb36-367" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.factor</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb36-368"><a href="#cb36-368" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_expand</span>(<span class="dv">1900</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">%&gt;%</span> as.character) <span class="sc">%&gt;%</span></span>
+<span id="cb36-369"><a href="#cb36-369" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_relevel</span>(<span class="dv">1900</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">%&gt;%</span> as.character)</span>
+<span id="cb36-370"><a href="#cb36-370" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-371"><a href="#cb36-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-374"><a href="#cb36-374" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-375"><a href="#cb36-375" aria-hidden="true" tabindex="-1"></a>anim <span class="ot">&lt;-</span></span>
+<span id="cb36-376"><a href="#cb36-376" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb36-377"><a href="#cb36-377" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb36-378"><a href="#cb36-378" aria-hidden="true" tabindex="-1"></a>  basemapR<span class="sc">::</span><span class="fu">base_map</span>(<span class="fu">st_bbox</span>(df), <span class="at">basemap =</span> <span class="st">"voyager"</span>, <span class="at">increase_zoom =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb36-379"><a href="#cb36-379" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill=</span><span class="st">"#BF616A"</span>, <span class="at">color=</span><span class="st">"#BF616A"</span>) <span class="sc">+</span></span>
+<span id="cb36-380"><a href="#cb36-380" aria-hidden="true" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_map</span>(<span class="at">font_family =</span> <span class="st">"Source Sans Pro"</span>, <span class="at">font_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb36-381"><a href="#cb36-381" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-382"><a href="#cb36-382" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Development of Nashville Parks"</span>,</span>
+<span id="cb36-383"><a href="#cb36-383" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year Established: {closest_state}"</span>,</span>
+<span id="cb36-384"><a href="#cb36-384" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Data available from Nashville Open Data</span><span class="sc">\n</span><span class="st">Basemap from OpenStreetMap"</span>) <span class="sc">+</span></span>
+<span id="cb36-385"><a href="#cb36-385" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(year_estab) <span class="sc">+</span></span>
+<span id="cb36-386"><a href="#cb36-386" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">fill=</span><span class="st">"#2E3440"</span>, <span class="at">color=</span><span class="st">"#2E3440"</span>)</span>
+<span id="cb36-387"><a href="#cb36-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-388"><a href="#cb36-388" aria-hidden="true" tabindex="-1"></a>anim <span class="ot">&lt;-</span></span>
+<span id="cb36-389"><a href="#cb36-389" aria-hidden="true" tabindex="-1"></a><span class="fu">animate</span>(</span>
+<span id="cb36-390"><a href="#cb36-390" aria-hidden="true" tabindex="-1"></a>  anim,</span>
+<span id="cb36-391"><a href="#cb36-391" aria-hidden="true" tabindex="-1"></a>  <span class="at">duration=</span><span class="dv">12</span>,</span>
+<span id="cb36-392"><a href="#cb36-392" aria-hidden="true" tabindex="-1"></a>  <span class="at">fps=</span><span class="dv">30</span>,</span>
+<span id="cb36-393"><a href="#cb36-393" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">5</span>,</span>
+<span id="cb36-394"><a href="#cb36-394" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">5</span>,</span>
+<span id="cb36-395"><a href="#cb36-395" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
+<span id="cb36-396"><a href="#cb36-396" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> <span class="dv">500</span>, </span>
+<span id="cb36-397"><a href="#cb36-397" aria-hidden="true" tabindex="-1"></a>  <span class="at">renderer =</span> <span class="fu">ffmpeg_renderer</span>()</span>
+<span id="cb36-398"><a href="#cb36-398" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-399"><a href="#cb36-399" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-400"><a href="#cb36-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-403"><a href="#cb36-403" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-404"><a href="#cb36-404" aria-hidden="true" tabindex="-1"></a>anim</span>
+<span id="cb36-405"><a href="#cb36-405" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-406"><a href="#cb36-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-409"><a href="#cb36-409" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-410"><a href="#cb36-410" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="at">animation =</span> anim,</span>
+<span id="cb36-411"><a href="#cb36-411" aria-hidden="true" tabindex="-1"></a>      <span class="at">filename =</span> <span class="st">"nashville_parks.mp4"</span>)</span>
+<span id="cb36-412"><a href="#cb36-412" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-413"><a href="#cb36-413" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-414"><a href="#cb36-414" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
