@@ -1,0 +1,23 @@
+# options specified here will apply to all posts in this folder
+comments: 
+  utterances:
+    repo: maxdrohde/blog_quarto
+    theme: github-light
+
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 4
+    code-tools: true
+    code-fold: true
+    code-link: true
+    fig-cap-location: margin
+    reference-location: margin
+    citation-location: margin
+
+freeze: auto
+
+execute:
+  warning: false
+  message: false

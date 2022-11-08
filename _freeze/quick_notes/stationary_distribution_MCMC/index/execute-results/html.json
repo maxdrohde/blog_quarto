@@ -1,0 +1,14 @@
+{
+  "hash": "5a2319022ca26584a7d2c7b536f34fa0",
+  "result": {
+    "markdown": "---\ntitle: The stationary distribution of a Markov Chain\nauthor: Max Rohde\ndate: 11/01/2022\ncode-fold: show\n---\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# Create the transition matrix\nm <- matrix(c(0.8, 0.2,\n              0.6, 0.4),\n            byrow = TRUE,\n            nrow=2,\n            ncol=2)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nchain_length <- 1e5\n\n# Sample from the Markov chain\ninitial_state <- 1\nchain <- numeric(chain_length)\nchain[1] <- initial_state\nfor (i in 2:chain_length) {\n  prev_state <- chain[i-1]\n  chain[i] <- sample(c(1,2),\n                     size=1,\n                     prob = c(m[prev_state, 1], m[prev_state ,2]))\n}\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# Look at long-run probabilities of being in each state\ntable(chain) / chain_length\n```\n\n::: {.cell-output .cell-output-stdout}\n```\nchain\n      1       2 \n0.74888 0.25112 \n```\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

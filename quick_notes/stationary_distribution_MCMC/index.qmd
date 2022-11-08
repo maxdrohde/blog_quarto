@@ -1,0 +1,42 @@
+---
+title: The stationary distribution of a Markov Chain
+author: Max Rohde
+date: 11/01/2022
+code-fold: show
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+# Create the transition matrix
+m <- matrix(c(0.8, 0.2,
+              0.6, 0.4),
+            byrow = TRUE,
+            nrow=2,
+            ncol=2)
+```
+
+```{r}
+chain_length <- 1e5
+
+# Sample from the Markov chain
+initial_state <- 1
+chain <- numeric(chain_length)
+chain[1] <- initial_state
+for (i in 2:chain_length) {
+  prev_state <- chain[i-1]
+  chain[i] <- sample(c(1,2),
+                     size=1,
+                     prob = c(m[prev_state, 1], m[prev_state ,2]))
+}
+```
+
+```{r}
+# Look at long-run probabilities of being in each state
+table(chain) / chain_length
+```
+
+
