@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/code-breaking-with-metropolis/index.html",
       "/posts/logistic-regresstion-by-hand/index.html",
       "/posts/linear-algebra/index.html",
       "/posts/tmerge/index.html",

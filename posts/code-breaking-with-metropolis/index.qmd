@@ -1,0 +1,456 @@
+---
+title: Code-breaking with Markov Chain Monte Carlo (MCMC)
+description: Using cryptography to demonstrate the power of MCMC techniques in computational statistics
+author: Max Rohde
+date: 11/10/2022
+image: preview.png
+code-fold: false
+---
+
+```{r}
+#| include: false
+set.seed(777)
+```
+
+## Overview
+
+In this post we will show how a common method in computational statistics, Markov Chain Monte Carlo (implemented using the Metropolis algorithm), can be used to decode hidden messages encoded using a substitution cipher^[From Merriam-Webster, a cipher is defined as "a method of transforming a text in order to conceal its meaning"].
+
+To cut to the chase, here's a video of the algorithm in action running on my laptop:
+
+![](demo.mp4){fig-width=100%}
+
+We see that within a few hundred iterations of the algorithm, the true text is revealed. This post will explain the theory of how this works and will describe the computational details using R. Many of the details were inspired by an example given by Persi Diaconis in his paper "The Markov Chain Monte Carlo Revolution"^[<https://math.uchicago.edu/~shmuel/Network-course-readings/MCMCRev.pdf>].
+
+## The substitution cipher
+
+The substitution cipher is one of the simplest cryptographic methods. It works by swapping each letter in the alphabet with another.
+
+One simple type of substitution cipher is a shift cipher, where we shift the alphabet by a certain number of units. So a shift cipher with a shift of 3 would yield:
+
+```
+Original Alpabet:  abcdefghijklmnopqrstuvwxyz
+Cipher Alphabet:   defghijklmnopqrstuvwxyzabc
+```
+
+With this cipher, the word `hello` would map to:
+
+- `h -> k`
+- `e -> h`
+- `l -> o`
+- `l -> o`
+- `o -> r`
+
+resulting in the ciphertext `khoor`.
+
+:::{.callout-note collapse="false"}
+## Terminology
+**Plaintext** refers to the text you input to the cipher ("hello") and **ciphertext** refers to the output of the cipher ("khoor").
+:::
+
+We can do this in R using the built-in `chartr()` function, which encodes a given string from one alphabet to another.
+
+```{r}
+chartr(
+  x = "hello",
+  old = "abcdefghijklmnopqrstuvwxyz",
+  new = "defghijklmnopqrstuvwxyzabc"
+)
+```
+
+More generally, we can create an arbitrary substitution cipher by permuting the letter of the alphabet.
+
+[`letters` is a built-in R object that contains the 26 letters of the English alphabet.]{.aside}
+
+[`paste(collapse = "")` is used to turn a vector of characters into a single string.]{.aside}
+
+```{r}
+letters |> paste(collapse = "")
+```
+```{r}
+sample(letters) |> paste(collapse = "")
+```
+
+We can use the above code to create three functions which
+
+1) Generate a random cipher
+2) Encode plaintext with a given cipher
+3) Decode ciphertext with a given cipher
+
+```{r}
+# Generate a new cipher by permuting the letters of the alphabet
+generate_cipher <- function() sample(letters,
+                                     replace = FALSE)
+
+# Encode a text using a cipher
+encode_text <- function(text, cipher) {
+  chartr(
+    x = text,
+    old = paste(letters, collapse = ""),
+    new = paste(cipher, collapse = "")
+  )
+}
+
+# Decode a text given a cipher
+decode_text <- function(ciphered_text, cipher) {
+  chartr(
+    x = ciphered_text,
+    old = paste(cipher, collapse = ""),
+    new = paste(letters, collapse = "")
+  )
+}
+```
+
+Let's test these functions to make sure they're working correctly:
+
+```{r}
+plaintext <- "to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"
+
+# Create and store the cipher
+true_cipher <- generate_cipher()
+print(true_cipher)
+```
+
+Here's what the ciphertext looks like:
+
+```{r}
+# Encode the plaintext
+ciphertext <- encode_text(plaintext, true_cipher)
+print(ciphertext)
+```
+
+And we see when we decode it with the true cipher, we recover the plaintext:
+
+```{r}
+# Decode the ciphertext
+decoded_text <- decode_text(ciphertext, true_cipher)
+print(decoded_text)
+```
+
+## Overview of the Metropolis algorithm
+
+### Why not use brute force?
+
+Suppose we intercept the ciphertext above, but we didn't know the true cipher. How could we decode the hidden message?
+
+A brute force idea would be trying all possible ciphers until we find the correct one. Let's estimate how long it would take to try all possible combinations. There are $26!$ possible ciphers, because they are formed from permutations of the alphabet.
+
+```{r}
+factorial(26)
+```
+
+That's a very big number! Just for argument sake, let's assume that we have access to the fastest supercomputer in the world^[<https://arstechnica.com/information-technology/2022/05/1-1-quintillion-operations-per-second-us-has-worlds-fastest-supercomputer/>] and it can compute 1.1 quintillion operations ($1.1 \times 10^{18}$) per second. Although checking a cipher would take more than a single operation let's assume that we can check a cipher in a single operation (since we are seeing if this is even feasible).
+
+```{r}
+factorial(26) / (1.1 * 10^18)
+```
+
+$$
+(4.03 \times 10^{26}) \text{ ciphers} \times \left(\frac{1 \text{ second}}{1.1 \times 10^{18} \text{ciphers}}\right) \approx 366 \text{ million seconds} \approx 11.6 \text{ years} 
+$$
+
+So even with the fastest computer in the world, and with some very generous assumptions about how many operations it takes to check a cipher, it would still take 11.6 years to test all of them. Let's learn a much faster way that we can implement on a laptop computer.
+
+### The Metropolis algorithm
+
+So, how can we beat the brute force method? The idea is to use an algorithm that "seeks out" the likely ciphers, and ignores the ciphers that are unlikely to be correct. This is what the Metropolis algorithm does.
+
+The Metropolis algorithm is a Markov Chain Monte Carlo algorithm, which means that it is used to generate Markov Chains that converge to a desirable stationary distribution^[For a review of Markov chains, see <https://setosa.io/ev/markov-chains/> and <https://youtu.be/i3AkTO9HLXo>]. In the framework of our problem, the states our Markov Chain is traveling between is the $26!$ possible ciphers, and we want to the Markov chain to travel to the ciphers that are more "likely to be correct" and stay away from the ciphers that are "unlikely to be correct". We can define "likely to be correct" as ciphers that produce text that looks similar to English.
+
+Let $\text{sim}(\text{cipher})$ be a function that returns a score from 0 and 1 indicating how similar the text that a cipher produces is to English. With the $\text{sim}(\text{cipher})$ function defined, the Metropolis algorithm works like this. First, start with a randomly chosen cipher as the initial state. Then repeat the following steps until the code is cracked:
+
+1) Choose a new (but closely related) cipher by swapping two letters in the current cipher at random. This is called the **proposal cipher**.
+2) Compute the quantity $\frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$. If the proposal cipher produces text more similar to English than the current cipher, this ratio will always be greater than 1. If the current cipher produces text more similar to English than the proposal cipher, this ratio will be between 0 and 1.
+3) If the ratio in the previous step is greater than 1, set the current cipher to the proposed cipher. This is called **accepting the proposal**.
+4) If the ratio is less than 1, accept the proposal with probability equal to $\frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$ and reject it (i.e., stay at the current cipher) with probability $1 - \frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$.
+
+In other words, if the proposal cipher produces text more similar to English than the current cipher, we always accept it; and if the current cipher produces text more similar to English than the proposal cipher, we accept or reject it with probability given by the ratio of their scores. The worse a proposal performs, the less likely it will be accepted. The intuition behind this method is that it will travel towards ciphers that produce text more similar to English and ignore ciphers that don't.
+
+:::{.callout-note collapse="false"}
+## The Metropolis algorithm and Bayesian statistics
+Technically, the Metropolis algorithm is designed to travel to states in proportion to the probability of each state. So by running the Metropolis algorithm on the space of ciphers, we are approximately sampling from the probability distribution of ciphers given the ciphertext, a concept that will be very familiar to those who use Bayesian statistics. Indeed, the Metropolis algorithm is used to perform Bayesian statistics in a variety of settings where an analytical approach is not feasible.
+
+We are using the Metropolis algorithm here for optimization rather than sampling, a nice side-effect of the property that when sampling according to each state's probability, high probability states are visited frequently.
+:::
+
+To implement this algorithm, we need for formalize our notion of an "English-similarity score". This will be the topic of the next section.
+
+## Defining an "English-similarity score"
+
+We need some way of measuring how similar to English an arbitrary text looks. Even a non-native speaker could likely tell that
+
+```{r}
+#| echo: false
+ciphertext
+```
+
+does not look like English. For example, most words don't have any vowels!
+
+A rough heuristic to see how similar a text is to English is to compute the two letter frequencies and see how similar they are to those in English. Here's an example. `hello there` has the following 2-letter combinations: `"he" "el" "ll" "lo" "o " " t" "th" "he" "er" "re"`. You can picture this as a sliding window of width 2.
+
+We could then compare how close the frequencies in this text align with the frequencies in English. Let $\text{freq}(x)$ be the frequency of two-letter combination $x$ in English (we'll see how to compute this soon). Then the "English-similarity" score for `hello there` could be computed as
+$$
+\text{freq}(\text{he}) \times \text{freq}(\text{el}) \times \text{freq}(\text{ll}) \times \ldots \times \text{freq}(\text{re})
+$$
+
+### Estimating frequencies based on a sample text
+
+Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the true two-letter frequencies could be to find a very long English text and use the frequencies in it by assuming that it is representative of the English language. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <www.gutenberg.org>.
+
+```{r}
+war_and_peace <- readr::read_file("https://www.gutenberg.org/cache/epub/2600/pg2600.txt")
+```
+
+We'll process the text a bit by:
+
+- Converting all letters to lowercase
+- Removing all not alphabetical characters (numbers, symbols, etc...)
+- Removing all accent characters (like é)
+
+so that in the end, the text only contains the 26 lowercase letters and the space character.
+
+```{r}
+war_and_peace <-
+  war_and_peace |>
+  stringr::str_to_lower() |>
+  gsub(pattern = "[^[:alpha:]]+", replacement = "", x=_) |>
+  stringi::stri_trans_general(id = "Latin-ASCII")
+```
+
+### Obtaining two-character frequencies
+
+Now let's design a function to break the text into two-character chunks. We can use the very fast `stringi::stri_sub()` function which, given a starting and ending index, extracts the substrings in between. Since our window has length two, we'll offset the starting and ending indices by one.
+
+We can test this approach on a short phrase to make sure it works.
+
+```{r}
+test_string <- "hello there"
+
+starting_indices <- 1 : (nchar(test_string) - 1)
+ending_indices <- starting_indices + 1
+```
+
+```{r}
+starting_indices
+```
+
+```{r}
+ending_indices
+```
+
+```{r}
+stringi::stri_sub(test_string,
+                  from = starting_indices,
+                  to = ending_indices)
+```
+
+Now that we see our code works, let's put it into a function.
+
+```{r}
+break_into_two_chars <- function(text){
+  starting_indices <- 1 : (nchar(text) - 1)
+  ending_indices <- starting_indices + 1
+  return(stringi::stri_sub(text,
+                           from = starting_indices,
+                           to = ending_indices))
+}
+```
+
+We can now break *War and Peace* into two-character chunks.
+
+```{r}
+war_and_peace_2_characters <- break_into_two_chars(war_and_peace)
+```
+
+```{r}
+head(war_and_peace_2_characters)
+```
+
+### Estimated frequencies from *War and Peace*
+
+We can calculate the empirical probability of any two-letter combination by dividing the number of times it occurs by the total number of two-character chunks.
+
+```{r}
+# Ten most common two-character combinations
+probability_table <-
+  table(war_and_peace_2_characters) / length(war_and_peace_2_characters)
+```
+
+```{r}
+probability_table |> head(20)
+```
+
+Here are the 10 most common combinations.
+
+```{r}
+probability_table |>
+  sort(decreasing = TRUE) |>
+  head(10)
+```
+
+We can also see the probability of any combination we choose:
+
+```{r}
+# Get the probability of "ou"
+probability_table["ou"]
+```
+
+However, there are some two-character combinations that do not occur in *War and Peace*. Instead of estimating the probability of these combinations to be zero, we instead approximate the probability by assuming each of them occurred once in the book. To implement this approximation, we use the below function, which returns the empirical probability of any two-character combination.
+
+```{r}
+get_prob_two_char <- function(two_char){
+  prob_from_table <- probability_table[two_char]
+  
+  if (is.na(prob_from_table)) {
+    return(1 / length(war_and_peace_2_characters))
+  } else{
+    return(prob_from_table)
+  }
+}
+```
+
+We can try our function for a combination in *War and Peace* and a combination that is not:
+
+```{r}
+# Try a combination in War and Peace
+get_prob_two_char("ou")
+probability_table["ou"]
+
+# Try a combination not in War and Peace
+get_prob_two_char("qq")
+probability_table["qq"]
+```
+
+### Getting the probability of a new text
+
+Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach might be to break the new text into two character chunks, compute the probability of each, and multiply them together.
+
+[`map_dbl()` is a function from the `purrr` package that iterates over each element of an input vector or list, and applies a function to each element. The `_dbl` in the function name means that the expected output is numeric. We need to use `map_dbl()` because our `get_prob_two_char()` function isn't vectorized.]{.aside}
+
+```{r}
+sample_text <- "this is a text"
+sample_text_two_char <- break_into_two_chars(sample_text)
+
+score <- 
+  purrr::map_dbl(sample_text_two_char, get_prob_two_char) |>
+  prod()
+
+score
+```
+
+However, we see that the score is an extremely small number, about $10^{-55}$. Therefore, for better numerical precision, we should work on the log scale, and then transform back when we need probabilities. Remember, on the log scale we express product as sums. Below is a function to implement this approach:
+
+1) Break the text into two character chunks
+2) Compute the probability of each chunk using our representative English text (*War and Peace*)
+3) Take the log of each probability
+4) Sum the probabilities to get a log-likelihood for the text
+
+```{r}
+get_log_lik_text <- function(text){
+  text |>
+  break_into_two_chars() |>
+  purrr::map_dbl(get_prob_two_char) |>
+  log() |>
+  sum()
+}
+```
+
+Let's see if our score can differentiate English and non-English: a comparison of English words with me hitting random keys.
+
+```{r}
+get_log_lik_text("This is English text")
+
+get_log_lik_text("fghr gh wghdfrf etfs")
+```
+
+As expected the log-likelihood for the English text is higher than for the non-English text.
+
+## Implementing the Metropolis Algorithm
+
+Now we are finally ready to implement our code-breaking algorithm! One helper function we need is a function to swap two elements of a vector. As discussed above, we'll use this to propose a new cipher given the current cipher.
+
+```{r}
+swap <- function(x){
+  # Select two distinct indices
+  rand_indices <- sample(1:length(x), size = 2, replace=FALSE)
+  element_1 <- x[rand_indices[1]]
+  element_2 <- x[rand_indices[2]]
+  
+  x[rand_indices[1]] <- element_2
+  x[rand_indices[2]] <- element_1
+  
+  return(x)
+}
+```
+
+Below is the full algorithm, the same one I ran to create the video at the beginning of this post. The steps correspond to the description I gave above, now substituting the functions we have created. Try running it for yourself. A few tips:
+
+- The algorithm make take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.
+- Since this is a relatively short text, it many take more iterations to decode. Long texts contain more information, and so are decoded more easily.
+- If the chain doesn't seem to be converging, try a new random seed.
+
+```{r}
+#| eval: false
+
+plaintext <- "to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"
+
+# Generate a random cipher to be the true cipher
+true_cipher <- generate_cipher()
+
+# Encode the plaintext
+ciphered_text <- encode_text(text = plaintext,
+                             cipher = true_cipher)
+
+# Create another random cipher to be the starting cipher for the Markov Chain
+current_cipher <- generate_cipher()
+
+# A counter to track how many decoded texts have been accepted
+i <- 0
+
+for (iter in 1:50000) {
+  
+  # Propose a new cipher by swapping two letters in the current cipher
+  proposed_cipher <- swap(current_cipher)
+  
+  # Text decoded from the proposal cipher
+  decoded_text_proposed <- decode_text(ciphered_text,
+                              cipher = proposed_cipher)
+  
+  # Text decoded from the current cipher
+  decoded_text_current <- decode_text(ciphered_text,
+                              cipher = current_cipher)
+  
+  # Log-likelihood of the decoded text from the proposal cipher
+  proposed_log_lik <- get_log_lik_text(decoded_text_proposed)
+  
+  # Log-likelihood of the decoded text from the current cipher
+  current_log_lik <- get_log_lik_text(decoded_text_current)
+  
+  # Acceptance probability of the proposal, defined by the Metropolis algorithm
+  # Remember that subtraction on the log-scale is division on the probability
+  # scale. We exponentiate to get back to the probability scale.
+  acceptance_probability <- min(1, exp(proposed_log_lik - current_log_lik))
+  
+  # Accept or not with probability given by `acceptance_probability`
+  accept <- sample(c(TRUE, FALSE),
+                   size=1,
+                   prob = c(acceptance_probability,
+                            1-acceptance_probability))
+  
+  # IF we accept the proposal, set the proposal cipher as the current cipher
+  # ELSE, go on to the next iteration
+  if (accept) {
+    current_cipher <- proposed_cipher
+    
+    # Print the text as decoded by the current cipher
+    print(glue::glue("Iteration {i}: {decoded_text_proposed}"))
+    
+    # Increment the counter so that we can keep track of acceptances
+    # This is just for printing the output
+    i <- i + 1
+  }
+}
+```
+
+
+
