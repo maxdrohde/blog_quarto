@@ -338,7 +338,7 @@ score <-
 score
 ```
 
-However, we see that the score is an extremely small number, about $10^{-55}$. Therefore, for better numerical precision, we should work on the log scale, and then transform back when we need probabilities. Remember, on the log scale we express product as sums. Below is a function to implement this approach:
+However, we see that the score is an extremely small number, about $10^{-55}$. Therefore, for better numerical precision, we should work on the log scale, and then transform back when we need probabilities. Remember, on the log scale we express products as sums. Below is a function to implement this approach:
 
 1) Break the text into two character chunks
 2) Compute the probability of each chunk using our representative English text (*War and Peace*)
@@ -447,6 +447,48 @@ for (iter in 1:50000) {
     
     # Increment the counter so that we can keep track of acceptances
     # This is just for printing the output
+    i <- i + 1
+  }
+}
+```
+
+For clarity, here's the same code without comments.
+
+```{r}
+#| eval: false
+
+plaintext <- "to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"
+
+true_cipher <- generate_cipher()
+ciphered_text <- encode_text(text = plaintext,
+                             cipher = true_cipher)
+
+current_cipher <- generate_cipher()
+
+i <- 0
+
+for (iter in 1:50000) {
+  
+  proposed_cipher <- swap(current_cipher)
+  
+  decoded_text_proposed <- decode_text(ciphered_text,
+                              cipher = proposed_cipher)
+  decoded_text_current <- decode_text(ciphered_text,
+                              cipher = current_cipher)
+  
+  proposed_log_lik <- get_log_lik_text(decoded_text_proposed)
+  current_log_lik <- get_log_lik_text(decoded_text_current)
+  
+  acceptance_probability <- min(1, exp(proposed_log_lik - current_log_lik))
+  
+  accept <- sample(c(TRUE, FALSE),
+                   size=1,
+                   prob = c(acceptance_probability,
+                            1-acceptance_probability))
+  
+  if (accept) {
+    current_cipher <- proposed_cipher
+    print(glue::glue("Iteration {i}: {decoded_text_proposed}"))
     i <- i + 1
   }
 }
