@@ -58,7 +58,7 @@ chartr(
 )
 ```
 
-More generally, we can create an arbitrary substitution cipher by permuting the letter of the alphabet.
+More generally, we can create an arbitrary substitution cipher by permuting the letters of the alphabet.
 
 [`letters` is a built-in R object that contains the 26 letters of the English alphabet.]{.aside}
 
@@ -119,7 +119,7 @@ ciphertext <- encode_text(plaintext, true_cipher)
 print(ciphertext)
 ```
 
-And we see when we decode it with the true cipher, we recover the plaintext:
+And we see that decoding it with the true cipher recovers the plaintext:
 
 ```{r}
 # Decode the ciphertext
@@ -133,13 +133,13 @@ print(decoded_text)
 
 Suppose we intercept the ciphertext above, but we didn't know the true cipher. How could we decode the hidden message?
 
-A brute force idea would be trying all possible ciphers until we find the correct one. Let's estimate how long it would take to try all possible combinations. There are $26!$ possible ciphers, because they are formed from permutations of the alphabet.
+A brute force idea would be to try all possible ciphers until we find the correct one. How long would it take to try all possible ciphers? There are $26!$ ciphers to check because they are formed from permutations of the alphabet.
 
 ```{r}
 factorial(26)
 ```
 
-That's a very big number! Just for argument sake, let's assume that we have access to the fastest supercomputer in the world^[<https://arstechnica.com/information-technology/2022/05/1-1-quintillion-operations-per-second-us-has-worlds-fastest-supercomputer/>] and it can compute 1.1 quintillion operations ($1.1 \times 10^{18}$) per second. Although checking a cipher would take more than a single operation let's assume that we can check a cipher in a single operation (since we are seeing if this is even feasible).
+That's a very big number! Just for argument sake, let's assume that we have access to the fastest supercomputer in the world^[<https://arstechnica.com/information-technology/2022/05/1-1-quintillion-operations-per-second-us-has-worlds-fastest-supercomputer/>]. It's reported that it can compute 1.1 quintillion operations ($1.1 \times 10^{18}$) per second. Although checking a cipher would take more than a single operation, let's assume that we can check a cipher in a single operation (since we are seeing if this is even feasible).
 
 ```{r}
 factorial(26) / (1.1 * 10^18)
@@ -149,13 +149,13 @@ $$
 (4.03 \times 10^{26}) \text{ ciphers} \times \left(\frac{1 \text{ second}}{1.1 \times 10^{18} \text{ciphers}}\right) \approx 366 \text{ million seconds} \approx 11.6 \text{ years} 
 $$
 
-So even with the fastest computer in the world, and with some very generous assumptions about how many operations it takes to check a cipher, it would still take 11.6 years to test all of them. Let's learn a much faster way that we can implement on a laptop computer.
+So even with the fastest computer in the world, and with some very generous assumptions about how many operations it takes to check a cipher, it would still take 11.6 years to test all of them. Let's learn a much faster way to solve this problem. We don't even need a supercomputer; a laptop will do just fine.
 
 ### The Metropolis algorithm
 
-So, how can we beat the brute force method? The idea is to use an algorithm that "seeks out" the likely ciphers, and ignores the ciphers that are unlikely to be correct. This is what the Metropolis algorithm does.
+So, how can we beat the brute force method? The idea is to use an algorithm that seeks out the likely ciphers, and ignores the ciphers that are unlikely to be correct. This is what the Metropolis algorithm does.
 
-The Metropolis algorithm is a Markov Chain Monte Carlo algorithm, which means that it is used to generate Markov Chains that converge to a desirable stationary distribution^[For a review of Markov chains, see <https://setosa.io/ev/markov-chains/> and <https://youtu.be/i3AkTO9HLXo>]. In the framework of our problem, the states our Markov Chain is traveling between is the $26!$ possible ciphers, and we want to the Markov chain to travel to the ciphers that are more "likely to be correct" and stay away from the ciphers that are "unlikely to be correct". We can define "likely to be correct" as ciphers that produce text that looks similar to English.
+The Metropolis algorithm is a Markov Chain Monte Carlo algorithm, which means that it is used to generate Markov Chains that converge to a desirable stationary distribution^[For a review of Markov chains, see <https://setosa.io/ev/markov-chains/> and <https://youtu.be/i3AkTO9HLXo>]. Markov chains are defined on a state space, where the chain is traveling from state to state. In the framework of our problem, the states our Markov Chain is traveling between are the $26!$ possible ciphers. We want to the Markov chain to travel to the ciphers that are more "likely to be correct" and stay away from the ciphers that are "unlikely to be correct". While we will elaborate on this later, we can tentatively define "likely to be correct" ciphers as those that produce text that looks similar to English.
 
 Let $\text{sim}(\text{cipher})$ be a function that returns a score from 0 and 1 indicating how similar the text that a cipher produces is to English. With the $\text{sim}(\text{cipher})$ function defined, the Metropolis algorithm works like this. First, start with a randomly chosen cipher as the initial state. Then repeat the following steps until the code is cracked:
 
