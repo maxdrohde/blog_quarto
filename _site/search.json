@@ -39,7 +39,14 @@
     "href": "posts/bs4/index.html",
     "title": "Creating a bookdown book with the bs4 theme",
     "section": "",
-    "text": "If you’ve been learning R through the amazing free resources made available by the R community, then you probably seen examples of the bs4 bookdown theme in a few of these various sources:\n\nR for Data Science: https://r4ds.had.co.nz\n\nThe ggplot2 book: https://ggplot2-book.org\n\nMastering Shiny: https://mastering-shiny.org\n\n\nI think the bs4 theme looks better, and is easier to navigate, than the older gitbook theme (example here).\nThis is a quick guide on how to get started. For comprehensive details, look at the official guide by Yihui Xie, the author of bookdown."
+    "text": "Use Quarto instead\n\n\n\n\n\nI’m leaving this post up for anyone using bookdown, but I recommend using Quarto instead for future projects."
+  },
+  {
+    "objectID": "posts/bs4/index.html#what-is-the-bs4-theme",
+    "href": "posts/bs4/index.html#what-is-the-bs4-theme",
+    "title": "Creating a bookdown book with the bs4 theme",
+    "section": "What is the bs4 theme?",
+    "text": "What is the bs4 theme?\nIf you’ve been learning R through the amazing free resources made available by the R community, then you probably seen examples of the bs4 bookdown theme in a few of these various sources:\n\nR for Data Science: https://r4ds.had.co.nz\n\nThe ggplot2 book: https://ggplot2-book.org\n\nMastering Shiny: https://mastering-shiny.org\n\n\nI think the bs4 theme looks better, and is easier to navigate, than the older gitbook theme (example here).\nThis is a quick guide on how to get started. For comprehensive details, look at the official guide by Yihui Xie, the author of bookdown."
   },
   {
     "objectID": "posts/bs4/index.html#how-do-you-use-the-bs4-theme",

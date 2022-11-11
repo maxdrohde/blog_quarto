@@ -42,7 +42,7 @@ decode_text <- function(ciphered_text, cipher) {
 
 
 ## -----------------------------------------------------------------------------------------------------------------------
-plaintext <- "to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"
+plaintext <- "do dee at ale ang of ale aoscme atvnsc t ahng of alhee iaegi roys ale gtdtae ao atg ta alhee os ale aeeal do dee at ile yti do gdtns do ns ale wohsnsc iatsrnsc fomh feea aes ns ose iopv ile yti dodt ns idtpvi ile yti roddu ta iplood ile yti rodohei os ale roaaer dnse bma ns wu thwi ile yti tdytui dodnat rnr ile ltke t ghepmhioh ile rnr nsreer ile rnr ns gonsa of ftpa alehe wncla ltke bees so dodnat ta tdd ltr n soa doker ose imwweh ts nsnantd cnhd plndr ns t ghnsperow bu ale iet ol yles tboma ti wtsu uethi befohe dodnat yti bohs ti wu tce yti alta imwweh uom pts tdytui pomsa os t wmhreheh foh t ftspu ghoie iaude dtrnei tsr cesadewes of ale qmhu ejlnbna smwbeh ose ni ylta ale iehtgli ale wninsfohwer inwgde sobde ynscer iehtgli eskner doov ta alni atscde of alohsi"
 
 # Create and store the cipher
 true_cipher <- generate_cipher()
@@ -208,7 +208,7 @@ swap <- function(x){
 }
 
 ## -----------------------------------------------------------------------------------------------------------------------
-plaintext <- "to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"
+plaintext <- "do dee at ale ang of ale aoscme atvnsc t ahng of alhee iaegi roys ale gtdtae ao atg ta alhee os ale aeeal do dee at ile yti do gdtns do ns ale wohsnsc iatsrnsc fomh feea aes ns ose iopv ile yti dodt ns idtpvi ile yti roddu ta iplood ile yti rodohei os ale roaaer dnse bma ns wu thwi ile yti tdytui dodnat rnr ile ltke t ghepmhioh ile rnr nsreer ile rnr ns gonsa of ftpa alehe wncla ltke bees so dodnat ta tdd ltr n soa doker ose imwweh ts nsnantd cnhd plndr ns t ghnsperow bu ale iet ol yles tboma ti wtsu uethi befohe dodnat yti bohs ti wu tce yti alta imwweh uom pts tdytui pomsa os t wmhreheh foh t ftspu ghoie iaude dtrnei tsr cesadewes of ale qmhu ejlnbna smwbeh ose ni ylta ale iehtgli ale wninsfohwer inwgde sobde ynscer iehtgli eskner doov ta alni atscde of alohsi"
 
 # Generate a random cipher to be the true cipher
 true_cipher <- generate_cipher()

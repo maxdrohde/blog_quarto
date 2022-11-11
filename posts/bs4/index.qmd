@@ -1,11 +1,17 @@
 ---
-title: Creating a bookdown book with the bs4 theme
-description: A short guide to creating a bookdown book using the bs4 theme
+title: Creating a bookdown book with the `bs4` theme
+description: A short guide to creating a bookdown book using the `bs4` theme
 author: Max Rohde
 date: 08/10/2021
 image: preview.png
 code-fold: show
 ---
+
+:::{.callout-warning collapse="false"}
+## Use Quarto instead
+I'm leaving this post up for anyone using `bookdown`, but I recommend using Quarto instead for future projects.
+:::
+  
 
 ## What is the bs4 theme?
 
