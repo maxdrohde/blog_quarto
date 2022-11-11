@@ -24,7 +24,7 @@ decode_text <- function(ciphered_text, cipher){
 
 
 ## ----------------------------------------------------------------------------------------------------------------------
-plaintext <- "to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"
+plaintext <- "AV AL T QWVS AJRWGKOJV XJ OHOZS GTLXJ VX LWIIXZV T KZXVPOZ'L RPTZTRVOZ AJ PAL TKLOJRO OYWTNNS TL VPXWDP PO EOZO IZOLOJV; JXV VX ZOHANO PAG KOPAJQ PAL KTRU JXZ LWMMOZ AV VX KO QXJO KS XVPOZL, EAVPXWV WLAJD OHOZS JOROLLTZS TVVOGIV VX IZOHOJV AV"
 
 # Create and store the cipher
 true_cipher <- generate_cipher()
@@ -47,7 +47,7 @@ war_and_peace <- readr::read_file("https://www.gutenberg.org/cache/epub/2600/pg2
 war_and_peace <-
   war_and_peace |>
   stringr::str_to_lower() |>
-  gsub(pattern = "[^[:alpha:]]+", replacement = "", x=_) |>
+  gsub(pattern = "[^A-Za-z ]+", replacement = "", x=_) |>
   stringi::stri_trans_general(id = "Latin-ASCII")
 
 
@@ -143,13 +143,17 @@ swap <- function(x){
   return(x)
 }
 
+print(war_and_peace)
+
 
 ## ----------------------------------------------------------------------------------------------------------------------
-true_text <- "to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"
-true_cipher <- generate_cipher()
+ciphered_text <- "AV AL T QWVS AJRWGKOJV XJ OHOZS GTLXJ VX LWIIXZV T KZXVPOZ'L RPTZTRVOZ AJ PAL TKLOJRO OYWTNNS TL VPXWDP PO EOZO IZOLOJV; JXV VX ZOHANO PAG KOPAJQ PAL KTRU JXZ LWMMOZ AV VX KO QXJO KS XVPOZL, EAVPXWV WLAJD OHOZS JOROLLTZS TVVOGIV VX IZOHOJV AV"
 
-ciphered_text <- encode_text(text = true_text,
-                             cipher = true_cipher)
+ciphered_text <-
+  ciphered_text |>
+  stringr::str_to_lower() |>
+  gsub(pattern = "[^A-Za-z ]+", replacement = "", x=_) |>
+  stringi::stri_trans_general(id = "Latin-ASCII")
 
 current_cipher <- generate_cipher()
 

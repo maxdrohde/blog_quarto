@@ -204,7 +204,7 @@ war_and_peace <- readr::read_file("https://www.gutenberg.org/cache/epub/2600/pg2
 We'll process the text a bit by:
 
 - Converting all letters to lowercase
-- Removing all not alphabetical characters (numbers, symbols, etc...)
+- Removing all non-alphabetical characters (numbers, symbols, etc...) but keep spaces
 - Removing all accent characters (like é)
 
 so that in the end, the text only contains the 26 lowercase letters and the space character.
@@ -213,7 +213,7 @@ so that in the end, the text only contains the 26 lowercase letters and the spac
 war_and_peace <-
   war_and_peace |>
   stringr::str_to_lower() |>
-  gsub(pattern = "[^[:alpha:]]+", replacement = "", x=_) |>
+  gsub(pattern = "[^A-Za-z ]+", replacement = "", x=_) |>
   stringi::stri_trans_general(id = "Latin-ASCII")
 ```
 

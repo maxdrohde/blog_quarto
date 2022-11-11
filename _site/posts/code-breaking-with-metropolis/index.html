@@ -427,7 +427,7 @@ The Metropolis algorithm and Bayesian statistics
 <p>We’ll process the text a bit by:</p>
 <ul>
 <li>Converting all letters to lowercase</li>
-<li>Removing all not alphabetical characters (numbers, symbols, etc…)</li>
+<li>Removing all non-alphabetical characters (numbers, symbols, etc…) but keep spaces</li>
 <li>Removing all accent characters (like é)</li>
 </ul>
 <p>so that in the end, the text only contains the 26 lowercase letters and the space character.</p>
@@ -435,7 +435,7 @@ The Metropolis algorithm and Bayesian statistics
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">war_and_peace</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">war_and_peace</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html">str_to_lower</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"[^[:alpha:]]+"</span>, replacement <span class="op">=</span> <span class="st">""</span>, x<span class="op">=</span><span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"[^A-Za-z ]+"</span>, replacement <span class="op">=</span> <span class="st">""</span>, x<span class="op">=</span><span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_trans_general.html">stri_trans_general</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"Latin-ASCII"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="obtaining-two-character-frequencies" class="level3"><h3 class="anchored" data-anchor-id="obtaining-two-character-frequencies">Obtaining two-character frequencies</h3>
@@ -484,7 +484,7 @@ The Metropolis algorithm and Bayesian statistics
 <div class="cell">
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">war_and_peace_2_characters</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "th" "he" "ep" "pr" "ro" "oj"</code></pre>
+<pre><code>[1] "th" "he" "e " " p" "pr" "ro"</code></pre>
 </div>
 </div>
 </section><section id="estimated-frequencies-from-war-and-peace" class="level3"><h3 class="anchored" data-anchor-id="estimated-frequencies-from-war-and-peace">Estimated frequencies from <em>War and Peace</em>
@@ -499,14 +499,14 @@ The Metropolis algorithm and Bayesian statistics
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>war_and_peace_2_characters
-          aa           ab           ac           ad           ae           af 
-2.491829e-04 1.701236e-03 3.238192e-03 4.792130e-03 8.766813e-05 1.033457e-03 
-          ag           ah           ai           aj           ak           al 
-1.645949e-03 4.201752e-04 3.577018e-03 9.596107e-05 1.064260e-03 5.959459e-03 
-          am           an           ao           ap           aq           ar 
-2.276607e-03 1.819588e-02 8.450892e-05 2.231194e-03 4.185956e-05 7.357410e-03 
-          as           at 
-9.135651e-03 1.152007e-02 </code></pre>
+                        a            b            c            d            e 
+0.0009053610 0.0209713987 0.0074637156 0.0062002911 0.0050770643 0.0034368174 
+           f            g            h            i            j            k 
+0.0064125622 0.0029293414 0.0151255510 0.0092086171 0.0004893754 0.0011946421 
+           l            m            n            o            p            q 
+0.0039890514 0.0058504552 0.0044221503 0.0103858167 0.0054347987 0.0004205930 
+           r            s 
+0.0044840216 0.0121929186 </code></pre>
 </div>
 </div>
 <p>Here are the 10 most common combinations.</p>
@@ -516,10 +516,10 @@ The Metropolis algorithm and Bayesian statistics
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>war_and_peace_2_characters
-        th         he         in         er         an         re         nd 
-0.03135952 0.02983125 0.01916378 0.01909072 0.01819588 0.01441272 0.01397793 
-        ed         ha         es 
-0.01297251 0.01201764 0.01184468 </code></pre>
+        e           t         he         th         d           a         s  
+0.03315905 0.02646478 0.02467347 0.02441644 0.02281931 0.02097140 0.01867525 
+        t          in          h 
+0.01758822 0.01590914 0.01512555 </code></pre>
 </div>
 </div>
 <p>We can also see the probability of any combination we choose:</p>
@@ -528,7 +528,7 @@ The Metropolis algorithm and Bayesian statistics
 <span><span class="va">probability_table</span><span class="op">[</span><span class="st">"ou"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
-0.009408133 </code></pre>
+0.007754971 </code></pre>
 </div>
 </div>
 <p>However, there are some two-character combinations that do not occur in <em>War and Peace</em>. Instead of estimating the probability of these combinations to be zero, we instead approximate the probability by assuming each of them occurred once in the book. To implement this approximation, we use the below function, which returns the empirical probability of any two-character combination.</p>
@@ -549,17 +549,17 @@ The Metropolis algorithm and Bayesian statistics
 <span><span class="fu">get_prob_two_char</span><span class="op">(</span><span class="st">"ou"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
-0.009408133 </code></pre>
+0.007754971 </code></pre>
 </div>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span><span class="op">[</span><span class="st">"ou"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
-0.009408133 </code></pre>
+0.007754971 </code></pre>
 </div>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Try a combination not in War and Peace</span></span>
 <span><span class="fu">get_prob_two_char</span><span class="op">(</span><span class="st">"qq"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.949015e-07</code></pre>
+<pre><code>[1] 3.291025e-07</code></pre>
 </div>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span><span class="op">[</span><span class="st">"qq"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -580,7 +580,7 @@ The Metropolis algorithm and Bayesian statistics
 <span></span>
 <span><span class="va">score</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.020952e-55</code></pre>
+<pre><code>[1] 8.63621e-29</code></pre>
 </div>
 </div>
 <p>However, we see that the score is an extremely small number, about <span class="math inline">\(10^{-55}\)</span>. Therefore, for better numerical precision, we should work on the log scale, and then transform back when we need probabilities. Remember, on the log scale we express products as sums. Below is a function to implement this approach:</p>
@@ -603,11 +603,11 @@ The Metropolis algorithm and Bayesian statistics
 <div class="cell">
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">get_log_lik_text</span><span class="op">(</span><span class="st">"This is English text"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -179.1254</code></pre>
+<pre><code>[1] -130.5349</code></pre>
 </div>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">get_log_lik_text</span><span class="op">(</span><span class="st">"fghr gh wghdfrf etfs"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -180.6663</code></pre>
+<pre><code>[1] -139.0768</code></pre>
 </div>
 </div>
 <p>As expected the log-likelihood for the English text is higher than for the non-English text.</p>
@@ -1125,7 +1125,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb59-228"><a href="#cb59-228" aria-hidden="true" tabindex="-1"></a>We'll process the text a bit by:</span>
 <span id="cb59-229"><a href="#cb59-229" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-230"><a href="#cb59-230" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Converting all letters to lowercase</span>
-<span id="cb59-231"><a href="#cb59-231" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Removing all not alphabetical characters (numbers, symbols, etc...)</span>
+<span id="cb59-231"><a href="#cb59-231" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Removing all non-alphabetical characters (numbers, symbols, etc...) but keep spaces</span>
 <span id="cb59-232"><a href="#cb59-232" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Removing all accent characters (like é)</span>
 <span id="cb59-233"><a href="#cb59-233" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-234"><a href="#cb59-234" aria-hidden="true" tabindex="-1"></a>so that in the end, the text only contains the 26 lowercase letters and the space character.</span>
@@ -1134,7 +1134,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb59-239"><a href="#cb59-239" aria-hidden="true" tabindex="-1"></a>war_and_peace <span class="ot">&lt;-</span></span>
 <span id="cb59-240"><a href="#cb59-240" aria-hidden="true" tabindex="-1"></a>  war_and_peace <span class="sc">|&gt;</span></span>
 <span id="cb59-241"><a href="#cb59-241" aria-hidden="true" tabindex="-1"></a>  stringr<span class="sc">::</span><span class="fu">str_to_lower</span>() <span class="sc">|&gt;</span></span>
-<span id="cb59-242"><a href="#cb59-242" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"[^[:alpha:]]+"</span>, <span class="at">replacement =</span> <span class="st">""</span>, <span class="at">x=</span>_) <span class="sc">|&gt;</span></span>
+<span id="cb59-242"><a href="#cb59-242" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"[^A-Za-z ]+"</span>, <span class="at">replacement =</span> <span class="st">""</span>, <span class="at">x=</span>_) <span class="sc">|&gt;</span></span>
 <span id="cb59-243"><a href="#cb59-243" aria-hidden="true" tabindex="-1"></a>  stringi<span class="sc">::</span><span class="fu">stri_trans_general</span>(<span class="at">id =</span> <span class="st">"Latin-ASCII"</span>)</span>
 <span id="cb59-244"><a href="#cb59-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb59-245"><a href="#cb59-245" aria-hidden="true" tabindex="-1"></a></span>
