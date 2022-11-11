@@ -420,7 +420,7 @@ The Metropolis algorithm and Bayesian statistics
 \text{freq}(\text{he}) \times \text{freq}(\text{el}) \times \text{freq}(\text{ll}) \times \ldots \times \text{freq}(\text{re})
 \]</span></p>
 <section id="estimating-frequencies-based-on-a-sample-text" class="level3"><h3 class="anchored" data-anchor-id="estimating-frequencies-based-on-a-sample-text">Estimating frequencies based on a sample text</h3>
-<p>Now let’s return to how we implement the <span class="math inline">\(\text{freq}(x)\)</span> function. An approximation to the true two-letter frequencies could be to find a very long English text and use the frequencies in it by assuming that it is representative of the English language. The text we’ll use to do this is <em>War and Peace</em> by Leo Tolstoy, a very long book by most standards. Luckily for us, <em>War and Peace</em> is in the public domain, and we can download a text file of the book from &lt;www.gutenberg.org&gt;.</p>
+<p>Now let’s return to how we implement the <span class="math inline">\(\text{freq}(x)\)</span> function. An approximation to the true two-letter frequencies could be to find a very long English text and use the frequencies in it by assuming that it is representative of the English language. The text we’ll use to do this is <em>War and Peace</em> by Leo Tolstoy, a very long book by most standards. Luckily for us, <em>War and Peace</em> is in the public domain, and we can download a text file of the book from <a href="https://www.gutenberg.org/" class="uri">https://www.gutenberg.org/</a>.</p>
 <div class="cell">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">war_and_peace</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html">read_file</a></span><span class="op">(</span><span class="st">"https://www.gutenberg.org/cache/epub/2600/pg2600.txt"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -568,7 +568,7 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 </div>
 </section><section id="getting-the-probability-of-a-new-text" class="level3 page-columns page-full"><h3 class="anchored" data-anchor-id="getting-the-probability-of-a-new-text">Getting the probability of a new text</h3>
-<p>Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach might be to break the new text into two character chunks, compute the probability of each, and multiply them together.</p>
+<p>Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach, as described above, might be to break the new text into two character chunks, compute the probability of each, and multiply them together.</p>
 <div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class=""><code>map_dbl()</code> is a function from the <code>purrr</code> package that iterates over each element of an input vector or list, and applies a function to each element. The <code>_dbl</code> in the function name means that the expected output is numeric. We need to use <code>map_dbl()</code> because our <code>get_prob_two_char()</code> function isn’t vectorized.</span></div></div>
 <div class="cell">
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sample_text</span> <span class="op">&lt;-</span> <span class="st">"this is a text"</span></span>
@@ -611,7 +611,7 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 </div>
 <p>As expected the log-likelihood for the English text is higher than for the non-English text.</p>
-</section></section><section id="implementing-the-metropolis-algorithm" class="level2"><h2 class="anchored" data-anchor-id="implementing-the-metropolis-algorithm">Implementing the Metropolis Algorithm</h2>
+</section></section><section id="implementing-the-metropolis-algorithm" class="level2 page-columns page-full"><h2 class="anchored" data-anchor-id="implementing-the-metropolis-algorithm">Implementing the Metropolis Algorithm</h2>
 <p>Now we are finally ready to implement our code-breaking algorithm! One helper function we need is a function to swap two elements of a vector. As discussed above, we’ll use this to propose a new cipher given the current cipher.</p>
 <div class="cell">
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swap</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
@@ -628,11 +628,11 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 <p>Below is the full algorithm, the same one I ran to create the video at the beginning of this post. The steps correspond to the description I gave above, now substituting the functions we have created. Try running it for yourself. A few tips:</p>
 <ul>
-<li>The algorithm make take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.</li>
-<li>Since this is a relatively short text, it many take more iterations to decode. Long texts contain more information, and so are decoded more easily.</li>
-<li>If the chain doesn’t seem to be converging, try a new random seed.</li>
+<li>The algorithm may take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.</li>
+<li>Since this is a relatively short text, it may take more iterations to decode. Long texts contain more information, and so are more easily decoded.</li>
+<li>If the chain doesn’t seem to be converging, try a new random seed. I had to try a few random seeds for the algorithm to converge in a reasonable number of iterations<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</li>
 </ul>
-<div class="cell">
+<div class="no-row-height column-margin column-container"><li id="fn5"><p><sup>5</sup>&nbsp;While this strategy of restarting misbehaving Markov chains isn’t a good strategy for other applications of MCMC like Bayesian statistics, it’s perfectly reasonable for the optimization task we are performing here.</p></li></div><div class="cell">
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plaintext</span> <span class="op">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
 <span></span>
 <span><span class="co"># Generate a random cipher to be the true cipher</span></span>
@@ -1116,7 +1116,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb59-217"><a href="#cb59-217" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-218"><a href="#cb59-218" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estimating frequencies based on a sample text</span></span>
 <span id="cb59-219"><a href="#cb59-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-220"><a href="#cb59-220" aria-hidden="true" tabindex="-1"></a>Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the true two-letter frequencies could be to find a very long English text and use the frequencies in it by assuming that it is representative of the English language. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <span class="kw">&lt;www.gutenberg.org&gt;</span>.</span>
+<span id="cb59-220"><a href="#cb59-220" aria-hidden="true" tabindex="-1"></a>Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the true two-letter frequencies could be to find a very long English text and use the frequencies in it by assuming that it is representative of the English language. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <span class="ot">&lt;https://www.gutenberg.org/&gt;</span>.</span>
 <span id="cb59-221"><a href="#cb59-221" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-224"><a href="#cb59-224" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb59-225"><a href="#cb59-225" aria-hidden="true" tabindex="-1"></a>war_and_peace <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_file</span>(<span class="st">"https://www.gutenberg.org/cache/epub/2600/pg2600.txt"</span>)</span>
@@ -1244,7 +1244,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb59-375"><a href="#cb59-375" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-376"><a href="#cb59-376" aria-hidden="true" tabindex="-1"></a><span class="fu">### Getting the probability of a new text</span></span>
 <span id="cb59-377"><a href="#cb59-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-378"><a href="#cb59-378" aria-hidden="true" tabindex="-1"></a>Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach might be to break the new text into two character chunks, compute the probability of each, and multiply them together.</span>
+<span id="cb59-378"><a href="#cb59-378" aria-hidden="true" tabindex="-1"></a>Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach, as described above, might be to break the new text into two character chunks, compute the probability of each, and multiply them together.</span>
 <span id="cb59-379"><a href="#cb59-379" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-380"><a href="#cb59-380" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`map_dbl()` is a function from the `purrr` package that iterates over each element of an input vector or list, and applies a function to each element. The `_dbl` in the function name means that the expected output is numeric. We need to use `map_dbl()` because our `get_prob_two_char()` function isn't vectorized.</span><span class="co">]</span>{.aside}</span>
 <span id="cb59-381"><a href="#cb59-381" aria-hidden="true" tabindex="-1"></a></span>
@@ -1306,9 +1306,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb59-445"><a href="#cb59-445" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-446"><a href="#cb59-446" aria-hidden="true" tabindex="-1"></a>Below is the full algorithm, the same one I ran to create the video at the beginning of this post. The steps correspond to the description I gave above, now substituting the functions we have created. Try running it for yourself. A few tips:</span>
 <span id="cb59-447"><a href="#cb59-447" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-448"><a href="#cb59-448" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The algorithm make take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.</span>
-<span id="cb59-449"><a href="#cb59-449" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Since this is a relatively short text, it many take more iterations to decode. Long texts contain more information, and so are decoded more easily.</span>
-<span id="cb59-450"><a href="#cb59-450" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If the chain doesn't seem to be converging, try a new random seed.</span>
+<span id="cb59-448"><a href="#cb59-448" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The algorithm may take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.</span>
+<span id="cb59-449"><a href="#cb59-449" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Since this is a relatively short text, it may take more iterations to decode. Long texts contain more information, and so are more easily decoded.</span>
+<span id="cb59-450"><a href="#cb59-450" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If the chain doesn't seem to be converging, try a new random seed. I had to try a few random seeds for the algorithm to converge in a reasonable number of iterations^<span class="co">[</span><span class="ot">While this strategy of restarting misbehaving Markov chains isn't a good strategy for other applications of MCMC like Bayesian statistics, it's perfectly reasonable for the optimization task we are performing here.</span><span class="co">]</span>.</span>
 <span id="cb59-451"><a href="#cb59-451" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-454"><a href="#cb59-454" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb59-455"><a href="#cb59-455" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>

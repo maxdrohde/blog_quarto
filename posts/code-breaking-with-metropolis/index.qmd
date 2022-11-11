@@ -195,7 +195,7 @@ $$
 
 ### Estimating frequencies based on a sample text
 
-Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the true two-letter frequencies could be to find a very long English text and use the frequencies in it by assuming that it is representative of the English language. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <www.gutenberg.org>.
+Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the true two-letter frequencies could be to find a very long English text and use the frequencies in it by assuming that it is representative of the English language. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <https://www.gutenberg.org/>.
 
 ```{r}
 war_and_peace <- readr::read_file("https://www.gutenberg.org/cache/epub/2600/pg2600.txt")
@@ -323,7 +323,7 @@ probability_table["qq"]
 
 ### Getting the probability of a new text
 
-Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach might be to break the new text into two character chunks, compute the probability of each, and multiply them together.
+Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach, as described above, might be to break the new text into two character chunks, compute the probability of each, and multiply them together.
 
 [`map_dbl()` is a function from the `purrr` package that iterates over each element of an input vector or list, and applies a function to each element. The `_dbl` in the function name means that the expected output is numeric. We need to use `map_dbl()` because our `get_prob_two_char()` function isn't vectorized.]{.aside}
 
@@ -385,9 +385,9 @@ swap <- function(x){
 
 Below is the full algorithm, the same one I ran to create the video at the beginning of this post. The steps correspond to the description I gave above, now substituting the functions we have created. Try running it for yourself. A few tips:
 
-- The algorithm make take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.
-- Since this is a relatively short text, it many take more iterations to decode. Long texts contain more information, and so are decoded more easily.
-- If the chain doesn't seem to be converging, try a new random seed.
+- The algorithm may take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.
+- Since this is a relatively short text, it may take more iterations to decode. Long texts contain more information, and so are more easily decoded.
+- If the chain doesn't seem to be converging, try a new random seed. I had to try a few random seeds for the algorithm to converge in a reasonable number of iterations^[While this strategy of restarting misbehaving Markov chains isn't a good strategy for other applications of MCMC like Bayesian statistics, it's perfectly reasonable for the optimization task we are performing here.].
 
 ```{r}
 #| eval: false
