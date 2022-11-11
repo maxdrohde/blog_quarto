@@ -277,15 +277,17 @@ probability_table <-
 ```
 
 ```{r}
-probability_table |> head(20)
+probability_table |> head(40)
 ```
 
-Here are the 10 most common combinations.
+Note that two-letter combinations that look like a single letter are actually a letter and a space, since we are including spaces in our frequencies to help the algorithm learn word boundaries.
+
+Here are the 20 most common combinations.
 
 ```{r}
 probability_table |>
   sort(decreasing = TRUE) |>
-  head(10)
+  head(20)
 ```
 
 We can also see the probability of any combination we choose:
