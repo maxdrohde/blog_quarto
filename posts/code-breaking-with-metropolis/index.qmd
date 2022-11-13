@@ -133,15 +133,16 @@ print(decoded_text)
 
 Suppose we intercept the ciphertext above, but we didn't know the true cipher. How could we decode the hidden message?
 
-A brute force idea would be to try all possible ciphers until we find the correct one. How long would it take to try all possible ciphers? There are $26!$ ciphers to check because they are formed from permutations of the alphabet.
+A brute force idea would be to try all possible ciphers until we find the correct one. How long would that take? There are $26!$ ciphers to check because each cipher corresponds to a certain permutation of the alphabet.
 
 ```{r}
 factorial(26)
 ```
 
-That's a very big number! Just for argument sake, let's assume that we have access to the fastest supercomputer in the world^[<https://arstechnica.com/information-technology/2022/05/1-1-quintillion-operations-per-second-us-has-worlds-fastest-supercomputer/>]. It's reported that it can compute 1.1 quintillion operations ($1.1 \times 10^{18}$) per second. Although checking a cipher would take more than a single operation, let's assume that we can check a cipher in a single operation (since we are seeing if this is even feasible).
+That's a very big number! As a thought experiment, let's assume that we have access to the fastest supercomputer in the world^[<https://arstechnica.com/information-technology/2022/05/1-1-quintillion-operations-per-second-us-has-worlds-fastest-supercomputer/>]. It's reported that it can compute 1.1 quintillion operations ($1.1 \times 10^{18}$) per second. Although checking a cipher would take more than a single operation, let's assume that we can check a cipher in a single operation (since we are seeing if this approach is even feasible).
 
 ```{r}
+#| include: false
 factorial(26) / (1.1 * 10^18)
 ```
 
