@@ -263,7 +263,8 @@ war_and_peace_2_characters <- break_into_two_chars(war_and_peace)
 ```
 
 ```{r}
-head(war_and_peace_2_characters, 20)
+# Look at a piece of the results (skipping the table of contents)
+war_and_peace_2_characters[10000:10100]
 ```
 
 ### Estimated frequencies from *War and Peace*
