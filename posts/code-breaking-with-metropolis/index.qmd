@@ -195,16 +195,16 @@ $$
 
 ### Estimating frequencies based on a sample text
 
-Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the true two-letter frequencies could be to find a very long English text and use the frequencies in it by assuming that it is representative of the English language. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <https://www.gutenberg.org/>.
+Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the two-letter frequencies in English could be to find a very long English text and use the frequencies within it. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <https://www.gutenberg.org/>.
 
 ```{r}
 war_and_peace <- readr::read_file("https://www.gutenberg.org/cache/epub/2600/pg2600.txt")
 ```
 
-We'll process the text a bit by:
+We'll clean the text a bit by:
 
 - Converting all letters to lowercase
-- Removing all non-alphabetical characters (numbers, symbols, etc...) but keep spaces
+- Removing all non-alphabetical characters (numbers, symbols, etc...) but keeping spaces
 - Removing all accent characters (like é)
 
 so that in the end, the text only contains the 26 lowercase letters and the space character.
@@ -219,7 +219,7 @@ war_and_peace <-
 
 ### Obtaining two-character frequencies
 
-Now let's design a function to break the text into two-character chunks. We can use the very fast `stringi::stri_sub()` function which, given a starting and ending index, extracts the substrings in between. Since our window has length two, we'll offset the starting and ending indices by one.
+Now let's design a function to break the text into two-character chunks. We can use the very fast `stringi::stri_sub()` function which, given a starting and ending index, extracts the substrings between them. Since our window has length two, we'll offset the starting and ending indices by one.
 
 We can test this approach on a short phrase to make sure it works.
 
@@ -263,7 +263,7 @@ war_and_peace_2_characters <- break_into_two_chars(war_and_peace)
 ```
 
 ```{r}
-head(war_and_peace_2_characters)
+head(war_and_peace_2_characters, 20)
 ```
 
 ### Estimated frequencies from *War and Peace*
@@ -277,7 +277,7 @@ probability_table <-
 ```
 
 ```{r}
-probability_table |> head(40)
+head(probability_table, 40)
 ```
 
 Note that two-letter combinations that look like a single letter are actually a letter and a space, since we are including spaces in our frequencies to help the algorithm learn word boundaries.
@@ -385,7 +385,9 @@ swap <- function(x){
 }
 ```
 
-Below is the full algorithm, the same one I ran to create the video at the beginning of this post. The steps correspond to the description I gave above, now substituting the functions we have created. Try running it for yourself. A few tips:
+Below is the full algorithm, the same one I ran to create the video at the beginning of this post. The steps correspond to the description I gave above for the Metropolis algorithm, now substituting in the functions we created. I have added detailed comments for each line of the code. Try running it for yourself and use your own example text.
+
+A few tips:
 
 - The algorithm may take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.
 - Since this is a relatively short text, it may take more iterations to decode. Long texts contain more information, and so are more easily decoded.
