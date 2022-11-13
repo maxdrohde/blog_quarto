@@ -235,7 +235,7 @@ background: #f1f3f5;
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content"><section id="overview" class="level2 page-columns page-full"><h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<div class="page-columns page-full"><p>In this post we will show how a common method in computational statistics, Markov Chain Monte Carlo (implemented using the Metropolis algorithm), can be used to decode hidden messages encoded using a substitution cipher<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;From Merriam-Webster, a cipher is defined as “a method of transforming a text in order to conceal its meaning”</p></li></div></div>
+<div class="page-columns page-full"><p>In this post we will show how a common method in computational statistics, Markov Chain Monte Carlo (implemented using the Metropolis algorithm), can be used to decode hidden messages encoded using a substitution cipher<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;From Merriam-Webster, a cipher is defined as “a method of transforming a text in order to conceal its meaning”.</p></li></div></div>
 <p>To cut to the chase, here’s a video of the algorithm in action running on my laptop:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><video src="demo.mp4" class="img-fluid" controls=""><a href="demo.mp4">Video</a></video></p>
@@ -329,9 +329,10 @@ Terminology
 </div>
 <p>Let’s test these functions to make sure they’re working correctly:</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plaintext</span> <span class="op">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
-<span></span>
-<span><span class="co"># Create and store the cipher</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plaintext</span> <span class="op">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create and store the cipher</span></span>
 <span><span class="va">true_cipher</span> <span class="op">&lt;-</span> <span class="fu">generate_cipher</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">true_cipher</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -341,7 +342,7 @@ Terminology
 </div>
 <p>Here’s what the ciphertext looks like:</p>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Encode the plaintext</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Encode the plaintext</span></span>
 <span><span class="va">ciphertext</span> <span class="op">&lt;-</span> <span class="fu">encode_text</span><span class="op">(</span><span class="va">plaintext</span>, <span class="va">true_cipher</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ciphertext</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -350,7 +351,7 @@ Terminology
 </div>
 <p>And we see that decoding it with the true cipher recovers the plaintext:</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Decode the ciphertext</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Decode the ciphertext</span></span>
 <span><span class="va">decoded_text</span> <span class="op">&lt;-</span> <span class="fu">decode_text</span><span class="op">(</span><span class="va">ciphertext</span>, <span class="va">true_cipher</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">decoded_text</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -362,7 +363,7 @@ Terminology
 <p>Suppose we intercept the ciphertext above, but we didn’t know the true cipher. How could we decode the hidden message?</p>
 <p>A brute force idea would be to try all possible ciphers until we find the correct one. How long would that take? There are <span class="math inline">\(26!\)</span> ciphers to check because each cipher corresponds to a certain permutation of the alphabet.</p>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Special.html">factorial</a></span><span class="op">(</span><span class="fl">26</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Special.html">factorial</a></span><span class="op">(</span><span class="fl">26</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4.032915e+26</code></pre>
 </div>
@@ -416,7 +417,7 @@ The Metropolis algorithm and Bayesian statistics
 <section id="estimating-frequencies-based-on-a-sample-text" class="level3"><h3 class="anchored" data-anchor-id="estimating-frequencies-based-on-a-sample-text">Estimating frequencies based on a sample text</h3>
 <p>Now let’s return to how we implement the <span class="math inline">\(\text{freq}(x)\)</span> function. An approximation to the two-letter frequencies in English could be to find a very long English text and use the frequencies within it. The text we’ll use to do this is <em>War and Peace</em> by Leo Tolstoy, a very long book by most standards. Luckily for us, <em>War and Peace</em> is in the public domain, and we can download a text file of the book from <a href="https://www.gutenberg.org/" class="uri">https://www.gutenberg.org/</a>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">war_and_peace</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html">read_file</a></span><span class="op">(</span><span class="st">"https://www.gutenberg.org/cache/epub/2600/pg2600.txt"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">war_and_peace</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html">read_file</a></span><span class="op">(</span><span class="st">"https://www.gutenberg.org/cache/epub/2600/pg2600.txt"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We’ll clean the text a bit by:</p>
 <ul>
@@ -426,7 +427,7 @@ The Metropolis algorithm and Bayesian statistics
 </ul>
 <p>so that in the end, the text only contains the 26 lowercase letters and the space character.</p>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">war_and_peace</span> <span class="op">&lt;-</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">war_and_peace</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">war_and_peace</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html">str_to_lower</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"[^A-Za-z ]+"</span>, replacement <span class="op">=</span> <span class="st">""</span>, x<span class="op">=</span><span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -436,25 +437,25 @@ The Metropolis algorithm and Bayesian statistics
 <p>Now let’s design a function to break the text into two-character chunks. We can use the very fast <code><a href="https://rdrr.io/pkg/stringi/man/stri_sub.html">stringi::stri_sub()</a></code> function which, given a starting and ending index, extracts the substrings between them. Since our window has length two, we’ll offset the starting and ending indices by one.</p>
 <p>We can test this approach on a short phrase to make sure it works.</p>
 <div class="cell">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">test_string</span> <span class="op">&lt;-</span> <span class="st">"hello there"</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">test_string</span> <span class="op">&lt;-</span> <span class="st">"hello there"</span></span>
 <span></span>
 <span><span class="va">starting_indices</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">:</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html">nchar</a></span><span class="op">(</span><span class="va">test_string</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">ending_indices</span> <span class="op">&lt;-</span> <span class="va">starting_indices</span> <span class="op">+</span> <span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">starting_indices</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">starting_indices</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ending_indices</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ending_indices</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  2  3  4  5  6  7  8  9 10 11</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_sub.html">stri_sub</a></span><span class="op">(</span><span class="va">test_string</span>,</span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_sub.html">stri_sub</a></span><span class="op">(</span><span class="va">test_string</span>,</span>
 <span>                  from <span class="op">=</span> <span class="va">starting_indices</span>,</span>
 <span>                  to <span class="op">=</span> <span class="va">ending_indices</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -463,7 +464,7 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 <p>Now that we see our code works, let’s put it into a function.</p>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">break_into_two_chars</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">text</span><span class="op">)</span><span class="op">{</span></span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">break_into_two_chars</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">text</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">starting_indices</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">:</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html">nchar</a></span><span class="op">(</span><span class="va">text</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">ending_indices</span> <span class="op">&lt;-</span> <span class="va">starting_indices</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_sub.html">stri_sub</a></span><span class="op">(</span><span class="va">text</span>,</span>
@@ -473,10 +474,10 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 <p>We can now break <em>War and Peace</em> into two-character chunks.</p>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">war_and_peace_2_characters</span> <span class="op">&lt;-</span> <span class="fu">break_into_two_chars</span><span class="op">(</span><span class="va">war_and_peace</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">war_and_peace_2_characters</span> <span class="op">&lt;-</span> <span class="fu">break_into_two_chars</span><span class="op">(</span><span class="va">war_and_peace</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Look at a piece of the results (skipping the table of contents)</span></span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Look at a piece of the results (skipping the table of contents)</span></span>
 <span><span class="va">war_and_peace_2_characters</span><span class="op">[</span><span class="fl">10000</span><span class="op">:</span><span class="fl">10100</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] "f " " a" "au" "us" "st" "tr" "ri" "ia" "a " " p" "pe" "er" "rh" "ha" "ap"
@@ -492,12 +493,12 @@ The Metropolis algorithm and Bayesian statistics
 </h3>
 <p>We can calculate the empirical probability of any two-letter combination by dividing the number of times it occurs by the total number of two-character chunks.</p>
 <div class="cell">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Ten most common two-character combinations</span></span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Ten most common two-character combinations</span></span>
 <span><span class="va">probability_table</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">war_and_peace_2_characters</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">war_and_peace_2_characters</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">probability_table</span>, <span class="fl">40</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">probability_table</span>, <span class="fl">40</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>war_and_peace_2_characters
                         a            b            c            d            e 
@@ -519,7 +520,7 @@ The Metropolis algorithm and Bayesian statistics
 <p>Note that two-letter combinations that look like a single letter are actually a letter and a space, since we are including spaces in our frequencies to help the algorithm learn word boundaries.</p>
 <p>Here are the 20 most common combinations.</p>
 <div class="cell">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span> <span class="op">|&gt;</span></span>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span>decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -536,7 +537,7 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 <p>We can also see the probability of any combination we choose:</p>
 <div class="cell">
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Get the probability of "ou"</span></span>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Get the probability of "ou"</span></span>
 <span><span class="va">probability_table</span><span class="op">[</span><span class="st">"ou"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
@@ -545,7 +546,7 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 <p>However, there are some two-character combinations that do not occur in <em>War and Peace</em>. Instead of estimating the probability of these combinations to be zero, we instead approximate the probability by assuming each of them occurred once in the book. To implement this approximation, we use the below function, which returns the empirical probability of any two-character combination.</p>
 <div class="cell">
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_prob_two_char</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">two_char</span><span class="op">)</span><span class="op">{</span></span>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_prob_two_char</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">two_char</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">prob_from_table</span> <span class="op">&lt;-</span> <span class="va">probability_table</span><span class="op">[</span><span class="va">two_char</span><span class="op">]</span></span>
 <span>  </span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">prob_from_table</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -557,23 +558,23 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 <p>We can try our function for a combination in <em>War and Peace</em> and a combination that is not:</p>
 <div class="cell">
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Try a combination in War and Peace</span></span>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Try a combination in War and Peace</span></span>
 <span><span class="fu">get_prob_two_char</span><span class="op">(</span><span class="st">"ou"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
 0.007754971 </code></pre>
 </div>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span><span class="op">[</span><span class="st">"ou"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span><span class="op">[</span><span class="st">"ou"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
 0.007754971 </code></pre>
 </div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Try a combination not in War and Peace</span></span>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Try a combination not in War and Peace</span></span>
 <span><span class="fu">get_prob_two_char</span><span class="op">(</span><span class="st">"qq"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.291025e-07</code></pre>
 </div>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span><span class="op">[</span><span class="st">"qq"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span><span class="op">[</span><span class="st">"qq"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;NA&gt; 
   NA </code></pre>
@@ -583,7 +584,7 @@ The Metropolis algorithm and Bayesian statistics
 <p>Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach, as described above, might be to break the new text into two character chunks, compute the probability of each, and multiply them together.</p>
 <div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class=""><code>map_dbl()</code> is a function from the <code>purrr</code> package that iterates over each element of an input vector or list, and applies a function to each element. The <code>_dbl</code> in the function name means that the expected output is numeric. We need to use <code>map_dbl()</code> because our <code>get_prob_two_char()</code> function isn’t vectorized.</span></div></div>
 <div class="cell">
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sample_text</span> <span class="op">&lt;-</span> <span class="st">"this is a text"</span></span>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sample_text</span> <span class="op">&lt;-</span> <span class="st">"this is a text"</span></span>
 <span><span class="va">sample_text_two_char</span> <span class="op">&lt;-</span> <span class="fu">break_into_two_chars</span><span class="op">(</span><span class="va">sample_text</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">score</span> <span class="op">&lt;-</span> </span>
@@ -603,7 +604,7 @@ The Metropolis algorithm and Bayesian statistics
 <li>Sum the probabilities to get a log-likelihood for the text</li>
 </ol>
 <div class="cell">
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_log_lik_text</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">text</span><span class="op">)</span><span class="op">{</span></span>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_log_lik_text</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">text</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">text</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">break_into_two_chars</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span><span class="op">(</span><span class="va">get_prob_two_char</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -613,11 +614,11 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 <p>Let’s see if our score can differentiate English and non-English: a comparison of English words with me hitting random keys.</p>
 <div class="cell">
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">get_log_lik_text</span><span class="op">(</span><span class="st">"This is English text"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">get_log_lik_text</span><span class="op">(</span><span class="st">"This is English text"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -130.5349</code></pre>
 </div>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">get_log_lik_text</span><span class="op">(</span><span class="st">"fghr gh wghdfrf etfs"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">get_log_lik_text</span><span class="op">(</span><span class="st">"fghr gh wghdfrf etfs"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -139.0768</code></pre>
 </div>
@@ -626,7 +627,7 @@ The Metropolis algorithm and Bayesian statistics
 </section></section><section id="implementing-the-metropolis-algorithm" class="level2 page-columns page-full"><h2 class="anchored" data-anchor-id="implementing-the-metropolis-algorithm">Implementing the Metropolis Algorithm</h2>
 <p>Now we are finally ready to implement our code-breaking algorithm! One helper function we need is a function to swap two elements of a vector. As discussed above, we’ll use this to propose a new cipher given the current cipher.</p>
 <div class="cell">
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swap</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swap</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="co"># Select two distinct indices</span></span>
 <span>  <span class="va">rand_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">element_1</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">[</span><span class="va">rand_indices</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
@@ -646,7 +647,7 @@ The Metropolis algorithm and Bayesian statistics
 <li>If the chain doesn’t seem to be converging, try a new random seed. I had to try a few random seeds for the algorithm to converge in a reasonable number of iterations<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</li>
 </ul>
 <div class="no-row-height column-margin column-container"><li id="fn5"><p><sup>5</sup>&nbsp;While this strategy of restarting misbehaving Markov chains isn’t a good strategy for other applications of MCMC like Bayesian statistics, it’s perfectly reasonable for the optimization task we are performing here.</p></li></div><div class="cell">
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plaintext</span> <span class="op">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plaintext</span> <span class="op">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
 <span></span>
 <span><span class="co"># Generate a random cipher to be the true cipher</span></span>
 <span><span class="va">true_cipher</span> <span class="op">&lt;-</span> <span class="fu">generate_cipher</span><span class="op">(</span><span class="op">)</span></span>
@@ -707,7 +708,7 @@ The Metropolis algorithm and Bayesian statistics
 </div>
 <p>For clarity, here’s the same code without comments.</p>
 <div class="cell">
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plaintext</span> <span class="op">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plaintext</span> <span class="op">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
 <span></span>
 <span><span class="va">true_cipher</span> <span class="op">&lt;-</span> <span class="fu">generate_cipher</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">ciphered_text</span> <span class="op">&lt;-</span> <span class="fu">encode_text</span><span class="op">(</span>text <span class="op">=</span> <span class="va">plaintext</span>,</span>
@@ -932,509 +933,511 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><script src="https://utteranc.es/client.js" repo="maxdrohde/blog_quarto" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb57" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> Code-breaking with Markov Chain Monte Carlo (MCMC)</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> Using cryptography to demonstrate the power of MCMC techniques in computational statistics</span></span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> Max Rohde</span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 11/10/2022</span></span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> preview.png</span></span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="an">code-fold:</span><span class="co"> false</span></span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">777</span>)</span>
-<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
-<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>In this post we will show how a common method in computational statistics, Markov Chain Monte Carlo (implemented using the Metropolis algorithm), can be used to decode hidden messages encoded using a substitution cipher^<span class="co">[</span><span class="ot">From Merriam-Webster, a cipher is defined as "a method of transforming a text in order to conceal its meaning"</span><span class="co">]</span>.</span>
-<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>To cut to the chase, here's a video of the algorithm in action running on my laptop:</span>
-<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a><span class="al">![](demo.mp4)</span>{fig-width=100%}</span>
-<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a>We see that within a few hundred iterations of the algorithm, the true text is revealed. This post will explain the theory of how this works and will describe the computational details using R. Many of the details were inspired by an example given by Persi Diaconis in his paper "The Markov Chain Monte Carlo Revolution"^<span class="co">[</span><span class="ot">&lt;https://math.uchicago.edu/~shmuel/Network-course-readings/MCMCRev.pdf&gt;</span><span class="co">]</span>.</span>
-<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-27"><a href="#cb57-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## The substitution cipher</span></span>
-<span id="cb57-28"><a href="#cb57-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-29"><a href="#cb57-29" aria-hidden="true" tabindex="-1"></a>The substitution cipher is one of the simplest cryptographic methods. It works by swapping each letter in the alphabet with another.</span>
-<span id="cb57-30"><a href="#cb57-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-31"><a href="#cb57-31" aria-hidden="true" tabindex="-1"></a>One simple type of substitution cipher is a shift cipher, where we shift the alphabet by a certain number of units. So a shift cipher with a shift of 3 would yield:</span>
-<span id="cb57-32"><a href="#cb57-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-33"><a href="#cb57-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-34"><a href="#cb57-34" aria-hidden="true" tabindex="-1"></a><span class="in">Original Alpabet:  abcdefghijklmnopqrstuvwxyz</span></span>
-<span id="cb57-35"><a href="#cb57-35" aria-hidden="true" tabindex="-1"></a><span class="in">Cipher Alphabet:   defghijklmnopqrstuvwxyzabc</span></span>
-<span id="cb57-36"><a href="#cb57-36" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-37"><a href="#cb57-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-38"><a href="#cb57-38" aria-hidden="true" tabindex="-1"></a>With this cipher, the word <span class="in">`hello`</span> would map to:</span>
-<span id="cb57-39"><a href="#cb57-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-40"><a href="#cb57-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`h -&gt; k`</span></span>
-<span id="cb57-41"><a href="#cb57-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`e -&gt; h`</span></span>
-<span id="cb57-42"><a href="#cb57-42" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`l -&gt; o`</span></span>
-<span id="cb57-43"><a href="#cb57-43" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`l -&gt; o`</span></span>
-<span id="cb57-44"><a href="#cb57-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`o -&gt; r`</span></span>
-<span id="cb57-45"><a href="#cb57-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-46"><a href="#cb57-46" aria-hidden="true" tabindex="-1"></a>resulting in the ciphertext <span class="in">`khoor`</span>.</span>
-<span id="cb57-47"><a href="#cb57-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-48"><a href="#cb57-48" aria-hidden="true" tabindex="-1"></a>:::{.callout-note collapse="false"}</span>
-<span id="cb57-49"><a href="#cb57-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Terminology</span></span>
-<span id="cb57-50"><a href="#cb57-50" aria-hidden="true" tabindex="-1"></a>**Plaintext** refers to the text you input to the cipher ("hello") and **ciphertext** refers to the output of the cipher ("khoor").</span>
-<span id="cb57-51"><a href="#cb57-51" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb57-52"><a href="#cb57-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-53"><a href="#cb57-53" aria-hidden="true" tabindex="-1"></a>We can do this in R using the built-in <span class="in">`chartr()`</span> function, which encodes a given string from one alphabet to another.</span>
-<span id="cb57-54"><a href="#cb57-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-57"><a href="#cb57-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-58"><a href="#cb57-58" aria-hidden="true" tabindex="-1"></a><span class="fu">chartr</span>(</span>
-<span id="cb57-59"><a href="#cb57-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"hello"</span>,</span>
-<span id="cb57-60"><a href="#cb57-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">old =</span> <span class="st">"abcdefghijklmnopqrstuvwxyz"</span>,</span>
-<span id="cb57-61"><a href="#cb57-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">new =</span> <span class="st">"defghijklmnopqrstuvwxyzabc"</span></span>
-<span id="cb57-62"><a href="#cb57-62" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb57-63"><a href="#cb57-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-64"><a href="#cb57-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-65"><a href="#cb57-65" aria-hidden="true" tabindex="-1"></a>More generally, we can create an arbitrary substitution cipher by permuting the letters of the alphabet.</span>
-<span id="cb57-66"><a href="#cb57-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-67"><a href="#cb57-67" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`letters` is a built-in R object that contains the 26 letters of the English alphabet.</span><span class="co">]</span>{.aside}</span>
-<span id="cb57-68"><a href="#cb57-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-69"><a href="#cb57-69" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`paste(collapse = "")` is used to turn a vector of characters into a single string.</span><span class="co">]</span>{.aside}</span>
-<span id="cb57-70"><a href="#cb57-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-73"><a href="#cb57-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-74"><a href="#cb57-74" aria-hidden="true" tabindex="-1"></a>letters <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">""</span>)</span>
-<span id="cb57-75"><a href="#cb57-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-78"><a href="#cb57-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-79"><a href="#cb57-79" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(letters) <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">""</span>)</span>
-<span id="cb57-80"><a href="#cb57-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-81"><a href="#cb57-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-82"><a href="#cb57-82" aria-hidden="true" tabindex="-1"></a>We can use the above code to create three functions which</span>
-<span id="cb57-83"><a href="#cb57-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-84"><a href="#cb57-84" aria-hidden="true" tabindex="-1"></a>1) Generate a random cipher</span>
-<span id="cb57-85"><a href="#cb57-85" aria-hidden="true" tabindex="-1"></a>2) Encode plaintext with a given cipher</span>
-<span id="cb57-86"><a href="#cb57-86" aria-hidden="true" tabindex="-1"></a>3) Decode ciphertext with a given cipher</span>
-<span id="cb57-87"><a href="#cb57-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-90"><a href="#cb57-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-91"><a href="#cb57-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a new cipher by permuting the letters of the alphabet</span></span>
-<span id="cb57-92"><a href="#cb57-92" aria-hidden="true" tabindex="-1"></a>generate_cipher <span class="ot">&lt;-</span> <span class="cf">function</span>() <span class="fu">sample</span>(letters,</span>
-<span id="cb57-93"><a href="#cb57-93" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb57-94"><a href="#cb57-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-95"><a href="#cb57-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode a text using a cipher</span></span>
-<span id="cb57-96"><a href="#cb57-96" aria-hidden="true" tabindex="-1"></a>encode_text <span class="ot">&lt;-</span> <span class="cf">function</span>(text, cipher) {</span>
-<span id="cb57-97"><a href="#cb57-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chartr</span>(</span>
-<span id="cb57-98"><a href="#cb57-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> text,</span>
-<span id="cb57-99"><a href="#cb57-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">old =</span> <span class="fu">paste</span>(letters, <span class="at">collapse =</span> <span class="st">""</span>),</span>
-<span id="cb57-100"><a href="#cb57-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">new =</span> <span class="fu">paste</span>(cipher, <span class="at">collapse =</span> <span class="st">""</span>)</span>
-<span id="cb57-101"><a href="#cb57-101" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb57-102"><a href="#cb57-102" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-103"><a href="#cb57-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-104"><a href="#cb57-104" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode a text given a cipher</span></span>
-<span id="cb57-105"><a href="#cb57-105" aria-hidden="true" tabindex="-1"></a>decode_text <span class="ot">&lt;-</span> <span class="cf">function</span>(ciphered_text, cipher) {</span>
-<span id="cb57-106"><a href="#cb57-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chartr</span>(</span>
-<span id="cb57-107"><a href="#cb57-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> ciphered_text,</span>
-<span id="cb57-108"><a href="#cb57-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">old =</span> <span class="fu">paste</span>(cipher, <span class="at">collapse =</span> <span class="st">""</span>),</span>
-<span id="cb57-109"><a href="#cb57-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">new =</span> <span class="fu">paste</span>(letters, <span class="at">collapse =</span> <span class="st">""</span>)</span>
-<span id="cb57-110"><a href="#cb57-110" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb57-111"><a href="#cb57-111" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-112"><a href="#cb57-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-113"><a href="#cb57-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-114"><a href="#cb57-114" aria-hidden="true" tabindex="-1"></a>Let's test these functions to make sure they're working correctly:</span>
-<span id="cb57-115"><a href="#cb57-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-118"><a href="#cb57-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-119"><a href="#cb57-119" aria-hidden="true" tabindex="-1"></a>plaintext <span class="ot">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
-<span id="cb57-120"><a href="#cb57-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-121"><a href="#cb57-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and store the cipher</span></span>
-<span id="cb57-122"><a href="#cb57-122" aria-hidden="true" tabindex="-1"></a>true_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
-<span id="cb57-123"><a href="#cb57-123" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(true_cipher)</span>
-<span id="cb57-124"><a href="#cb57-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-125"><a href="#cb57-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-126"><a href="#cb57-126" aria-hidden="true" tabindex="-1"></a>Here's what the ciphertext looks like:</span>
-<span id="cb57-127"><a href="#cb57-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-130"><a href="#cb57-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-131"><a href="#cb57-131" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode the plaintext</span></span>
-<span id="cb57-132"><a href="#cb57-132" aria-hidden="true" tabindex="-1"></a>ciphertext <span class="ot">&lt;-</span> <span class="fu">encode_text</span>(plaintext, true_cipher)</span>
-<span id="cb57-133"><a href="#cb57-133" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ciphertext)</span>
-<span id="cb57-134"><a href="#cb57-134" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-135"><a href="#cb57-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-136"><a href="#cb57-136" aria-hidden="true" tabindex="-1"></a>And we see that decoding it with the true cipher recovers the plaintext:</span>
-<span id="cb57-137"><a href="#cb57-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-140"><a href="#cb57-140" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-141"><a href="#cb57-141" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode the ciphertext</span></span>
-<span id="cb57-142"><a href="#cb57-142" aria-hidden="true" tabindex="-1"></a>decoded_text <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphertext, true_cipher)</span>
-<span id="cb57-143"><a href="#cb57-143" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(decoded_text)</span>
-<span id="cb57-144"><a href="#cb57-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-145"><a href="#cb57-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-146"><a href="#cb57-146" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview of the Metropolis algorithm</span></span>
-<span id="cb57-147"><a href="#cb57-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-148"><a href="#cb57-148" aria-hidden="true" tabindex="-1"></a><span class="fu">### Why not use brute force?</span></span>
-<span id="cb57-149"><a href="#cb57-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-150"><a href="#cb57-150" aria-hidden="true" tabindex="-1"></a>Suppose we intercept the ciphertext above, but we didn't know the true cipher. How could we decode the hidden message?</span>
-<span id="cb57-151"><a href="#cb57-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-152"><a href="#cb57-152" aria-hidden="true" tabindex="-1"></a>A brute force idea would be to try all possible ciphers until we find the correct one. How long would that take? There are $26!$ ciphers to check because each cipher corresponds to a certain permutation of the alphabet.</span>
-<span id="cb57-153"><a href="#cb57-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-156"><a href="#cb57-156" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-157"><a href="#cb57-157" aria-hidden="true" tabindex="-1"></a><span class="fu">factorial</span>(<span class="dv">26</span>)</span>
-<span id="cb57-158"><a href="#cb57-158" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-159"><a href="#cb57-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-160"><a href="#cb57-160" aria-hidden="true" tabindex="-1"></a>That's a very big number! As a thought experiment, let's assume that we have access to the fastest supercomputer in the world^<span class="co">[</span><span class="ot">&lt;https://arstechnica.com/information-technology/2022/05/1-1-quintillion-operations-per-second-us-has-worlds-fastest-supercomputer/&gt;</span><span class="co">]</span>. It's reported that it can compute 1.1 quintillion operations ($1.1 \times 10^{18}$) per second. Although checking a cipher would take more than a single operation, let's assume that we can check a cipher in a single operation (since we are seeing if this approach is even feasible).</span>
-<span id="cb57-161"><a href="#cb57-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-164"><a href="#cb57-164" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-165"><a href="#cb57-165" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb57-166"><a href="#cb57-166" aria-hidden="true" tabindex="-1"></a><span class="fu">factorial</span>(<span class="dv">26</span>) <span class="sc">/</span> (<span class="fl">1.1</span> <span class="sc">*</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">18</span>)</span>
-<span id="cb57-167"><a href="#cb57-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-168"><a href="#cb57-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-169"><a href="#cb57-169" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb57-170"><a href="#cb57-170" aria-hidden="true" tabindex="-1"></a>(4.03 \times 10^{26}) \text{ ciphers} \times \left(\frac{1 \text{ second}}{1.1 \times 10^{18} \text{ciphers}}\right) \approx 366 \text{ million seconds} \approx 11.6 \text{ years} </span>
-<span id="cb57-171"><a href="#cb57-171" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb57-172"><a href="#cb57-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-173"><a href="#cb57-173" aria-hidden="true" tabindex="-1"></a>So even with the fastest computer in the world, and with some very generous assumptions about how many operations it takes to check a cipher, it would still take 11.6 years to test all of them. Let's learn a much faster way to solve this problem. We don't even need a supercomputer; a laptop will do just fine.</span>
-<span id="cb57-174"><a href="#cb57-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-175"><a href="#cb57-175" aria-hidden="true" tabindex="-1"></a><span class="fu">### The Metropolis algorithm</span></span>
-<span id="cb57-176"><a href="#cb57-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-177"><a href="#cb57-177" aria-hidden="true" tabindex="-1"></a>So, how can we beat the brute force method? The idea is to use an algorithm that seeks out the likely ciphers, and ignores the ciphers that are unlikely to be correct. This is what the Metropolis algorithm does.</span>
-<span id="cb57-178"><a href="#cb57-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-179"><a href="#cb57-179" aria-hidden="true" tabindex="-1"></a>The Metropolis algorithm is a Markov Chain Monte Carlo algorithm, which means that it is used to generate Markov Chains that converge to a desirable stationary distribution^<span class="co">[</span><span class="ot">For a review of Markov chains, see &lt;https://setosa.io/ev/markov-chains/&gt; and &lt;https://youtu.be/i3AkTO9HLXo&gt;</span><span class="co">]</span>. Markov chains are defined on a state space, where the chain is traveling from state to state. In the framework of our problem, the states our Markov Chain is traveling between are the $26!$ possible ciphers. We want to the Markov chain to travel to the ciphers that are more "likely to be correct" and stay away from the ciphers that are "unlikely to be correct". While we will elaborate on this later, we can tentatively define "likely to be correct" ciphers as those that produce text that looks similar to English.</span>
-<span id="cb57-180"><a href="#cb57-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-181"><a href="#cb57-181" aria-hidden="true" tabindex="-1"></a>Let $\text{sim}(\text{cipher})$ be a function that returns a score from 0 and 1 indicating how similar the text that a cipher produces is to English. With the $\text{sim}(\text{cipher})$ function defined, the Metropolis algorithm works like this. First, start with a randomly chosen cipher as the initial state. Then repeat the following steps until the code is cracked:</span>
-<span id="cb57-182"><a href="#cb57-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-183"><a href="#cb57-183" aria-hidden="true" tabindex="-1"></a>1) Choose a new (but closely related) cipher by swapping two letters in the current cipher at random. This is called the **proposal cipher**.</span>
-<span id="cb57-184"><a href="#cb57-184" aria-hidden="true" tabindex="-1"></a>2) Compute the quantity $\frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$. If the proposal cipher produces text more similar to English than the current cipher, this ratio will always be greater than 1. If the current cipher produces text more similar to English than the proposal cipher, this ratio will be between 0 and 1.</span>
-<span id="cb57-185"><a href="#cb57-185" aria-hidden="true" tabindex="-1"></a>3) If the ratio in the previous step is greater than 1, set the current cipher to the proposed cipher. This is called **accepting the proposal**.</span>
-<span id="cb57-186"><a href="#cb57-186" aria-hidden="true" tabindex="-1"></a>4) If the ratio is less than 1, accept the proposal with probability equal to $\frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$ and reject it (i.e., stay at the current cipher) with probability $1 - \frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$.</span>
-<span id="cb57-187"><a href="#cb57-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-188"><a href="#cb57-188" aria-hidden="true" tabindex="-1"></a>In other words, if the proposal cipher produces text more similar to English than the current cipher, we always accept it; and if the current cipher produces text more similar to English than the proposal cipher, we accept or reject it with probability given by the ratio of their scores. The worse a proposal performs, the less likely it will be accepted. The intuition behind this method is that it will travel towards ciphers that produce text more similar to English and ignore ciphers that don't.</span>
-<span id="cb57-189"><a href="#cb57-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-190"><a href="#cb57-190" aria-hidden="true" tabindex="-1"></a>:::{.callout-note collapse="false"}</span>
-<span id="cb57-191"><a href="#cb57-191" aria-hidden="true" tabindex="-1"></a><span class="fu">## The Metropolis algorithm and Bayesian statistics</span></span>
-<span id="cb57-192"><a href="#cb57-192" aria-hidden="true" tabindex="-1"></a>Technically, the Metropolis algorithm is designed to travel to states in proportion to the probability of each state. So by running the Metropolis algorithm on the space of ciphers, we are approximately sampling from the probability distribution of ciphers given the ciphertext, a concept that will be very familiar to those who use Bayesian statistics. Indeed, the Metropolis algorithm is used to perform Bayesian statistics in a variety of settings where an analytical approach is not feasible.</span>
-<span id="cb57-193"><a href="#cb57-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-194"><a href="#cb57-194" aria-hidden="true" tabindex="-1"></a>We are using the Metropolis algorithm here for optimization rather than sampling, a nice side-effect of the property that when sampling according to each state's probability, high probability states are visited frequently.</span>
-<span id="cb57-195"><a href="#cb57-195" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb57-196"><a href="#cb57-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-197"><a href="#cb57-197" aria-hidden="true" tabindex="-1"></a>To implement this algorithm, we need for formalize our notion of an "English-similarity score". This will be the topic of the next section.</span>
-<span id="cb57-198"><a href="#cb57-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-199"><a href="#cb57-199" aria-hidden="true" tabindex="-1"></a><span class="fu">## Defining an "English-similarity score"</span></span>
-<span id="cb57-200"><a href="#cb57-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-201"><a href="#cb57-201" aria-hidden="true" tabindex="-1"></a>We need some way of measuring how similar to English an arbitrary text looks. Even a non-native speaker could likely tell that</span>
-<span id="cb57-202"><a href="#cb57-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-205"><a href="#cb57-205" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-206"><a href="#cb57-206" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb57-207"><a href="#cb57-207" aria-hidden="true" tabindex="-1"></a>ciphertext</span>
-<span id="cb57-208"><a href="#cb57-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-209"><a href="#cb57-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-210"><a href="#cb57-210" aria-hidden="true" tabindex="-1"></a>does not look like English. For example, most words don't have any vowels!</span>
-<span id="cb57-211"><a href="#cb57-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-212"><a href="#cb57-212" aria-hidden="true" tabindex="-1"></a>A rough heuristic to see how similar a text is to English is to compute the two letter frequencies and see how similar they are to those in English. Here's an example. <span class="in">`hello there`</span> has the following 2-letter combinations: <span class="in">`"he" "el" "ll" "lo" "o " " t" "th" "he" "er" "re"`</span>. You can picture this as a sliding window of width 2.</span>
-<span id="cb57-213"><a href="#cb57-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-214"><a href="#cb57-214" aria-hidden="true" tabindex="-1"></a>We could then compare how close the frequencies in this text align with the frequencies in English. Let $\text{freq}(x)$ be the frequency of two-letter combination $x$ in English (we'll see how to compute this soon). Then the "English-similarity" score for <span class="in">`hello there`</span> could be computed as</span>
-<span id="cb57-215"><a href="#cb57-215" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb57-216"><a href="#cb57-216" aria-hidden="true" tabindex="-1"></a>\text{freq}(\text{he}) \times \text{freq}(\text{el}) \times \text{freq}(\text{ll}) \times \ldots \times \text{freq}(\text{re})</span>
-<span id="cb57-217"><a href="#cb57-217" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb57-218"><a href="#cb57-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-219"><a href="#cb57-219" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estimating frequencies based on a sample text</span></span>
-<span id="cb57-220"><a href="#cb57-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-221"><a href="#cb57-221" aria-hidden="true" tabindex="-1"></a>Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the two-letter frequencies in English could be to find a very long English text and use the frequencies within it. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <span class="ot">&lt;https://www.gutenberg.org/&gt;</span>.</span>
-<span id="cb57-222"><a href="#cb57-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-225"><a href="#cb57-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-226"><a href="#cb57-226" aria-hidden="true" tabindex="-1"></a>war_and_peace <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_file</span>(<span class="st">"https://www.gutenberg.org/cache/epub/2600/pg2600.txt"</span>)</span>
-<span id="cb57-227"><a href="#cb57-227" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-228"><a href="#cb57-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-229"><a href="#cb57-229" aria-hidden="true" tabindex="-1"></a>We'll clean the text a bit by:</span>
-<span id="cb57-230"><a href="#cb57-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-231"><a href="#cb57-231" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Converting all letters to lowercase</span>
-<span id="cb57-232"><a href="#cb57-232" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Removing all non-alphabetical characters (numbers, symbols, etc...) but keeping spaces</span>
-<span id="cb57-233"><a href="#cb57-233" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Removing all accent characters (like é)</span>
-<span id="cb57-234"><a href="#cb57-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-235"><a href="#cb57-235" aria-hidden="true" tabindex="-1"></a>so that in the end, the text only contains the 26 lowercase letters and the space character.</span>
-<span id="cb57-236"><a href="#cb57-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-239"><a href="#cb57-239" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-240"><a href="#cb57-240" aria-hidden="true" tabindex="-1"></a>war_and_peace <span class="ot">&lt;-</span></span>
-<span id="cb57-241"><a href="#cb57-241" aria-hidden="true" tabindex="-1"></a>  war_and_peace <span class="sc">|&gt;</span></span>
-<span id="cb57-242"><a href="#cb57-242" aria-hidden="true" tabindex="-1"></a>  stringr<span class="sc">::</span><span class="fu">str_to_lower</span>() <span class="sc">|&gt;</span></span>
-<span id="cb57-243"><a href="#cb57-243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"[^A-Za-z ]+"</span>, <span class="at">replacement =</span> <span class="st">""</span>, <span class="at">x=</span>_) <span class="sc">|&gt;</span></span>
-<span id="cb57-244"><a href="#cb57-244" aria-hidden="true" tabindex="-1"></a>  stringi<span class="sc">::</span><span class="fu">stri_trans_general</span>(<span class="at">id =</span> <span class="st">"Latin-ASCII"</span>)</span>
-<span id="cb57-245"><a href="#cb57-245" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-246"><a href="#cb57-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-247"><a href="#cb57-247" aria-hidden="true" tabindex="-1"></a><span class="fu">### Obtaining two-character frequencies</span></span>
-<span id="cb57-248"><a href="#cb57-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-249"><a href="#cb57-249" aria-hidden="true" tabindex="-1"></a>Now let's design a function to break the text into two-character chunks. We can use the very fast <span class="in">`stringi::stri_sub()`</span> function which, given a starting and ending index, extracts the substrings between them. Since our window has length two, we'll offset the starting and ending indices by one.</span>
-<span id="cb57-250"><a href="#cb57-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-251"><a href="#cb57-251" aria-hidden="true" tabindex="-1"></a>We can test this approach on a short phrase to make sure it works.</span>
-<span id="cb57-252"><a href="#cb57-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-255"><a href="#cb57-255" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-256"><a href="#cb57-256" aria-hidden="true" tabindex="-1"></a>test_string <span class="ot">&lt;-</span> <span class="st">"hello there"</span></span>
-<span id="cb57-257"><a href="#cb57-257" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-258"><a href="#cb57-258" aria-hidden="true" tabindex="-1"></a>starting_indices <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> (<span class="fu">nchar</span>(test_string) <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb57-259"><a href="#cb57-259" aria-hidden="true" tabindex="-1"></a>ending_indices <span class="ot">&lt;-</span> starting_indices <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb57-260"><a href="#cb57-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-261"><a href="#cb57-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-264"><a href="#cb57-264" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-265"><a href="#cb57-265" aria-hidden="true" tabindex="-1"></a>starting_indices</span>
-<span id="cb57-266"><a href="#cb57-266" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-267"><a href="#cb57-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-270"><a href="#cb57-270" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-271"><a href="#cb57-271" aria-hidden="true" tabindex="-1"></a>ending_indices</span>
-<span id="cb57-272"><a href="#cb57-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-273"><a href="#cb57-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-276"><a href="#cb57-276" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-277"><a href="#cb57-277" aria-hidden="true" tabindex="-1"></a>stringi<span class="sc">::</span><span class="fu">stri_sub</span>(test_string,</span>
-<span id="cb57-278"><a href="#cb57-278" aria-hidden="true" tabindex="-1"></a>                  <span class="at">from =</span> starting_indices,</span>
-<span id="cb57-279"><a href="#cb57-279" aria-hidden="true" tabindex="-1"></a>                  <span class="at">to =</span> ending_indices)</span>
-<span id="cb57-280"><a href="#cb57-280" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-281"><a href="#cb57-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-282"><a href="#cb57-282" aria-hidden="true" tabindex="-1"></a>Now that we see our code works, let's put it into a function.</span>
-<span id="cb57-283"><a href="#cb57-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-286"><a href="#cb57-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-287"><a href="#cb57-287" aria-hidden="true" tabindex="-1"></a>break_into_two_chars <span class="ot">&lt;-</span> <span class="cf">function</span>(text){</span>
-<span id="cb57-288"><a href="#cb57-288" aria-hidden="true" tabindex="-1"></a>  starting_indices <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> (<span class="fu">nchar</span>(text) <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb57-289"><a href="#cb57-289" aria-hidden="true" tabindex="-1"></a>  ending_indices <span class="ot">&lt;-</span> starting_indices <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb57-290"><a href="#cb57-290" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(stringi<span class="sc">::</span><span class="fu">stri_sub</span>(text,</span>
-<span id="cb57-291"><a href="#cb57-291" aria-hidden="true" tabindex="-1"></a>                           <span class="at">from =</span> starting_indices,</span>
-<span id="cb57-292"><a href="#cb57-292" aria-hidden="true" tabindex="-1"></a>                           <span class="at">to =</span> ending_indices))</span>
-<span id="cb57-293"><a href="#cb57-293" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-294"><a href="#cb57-294" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-295"><a href="#cb57-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-296"><a href="#cb57-296" aria-hidden="true" tabindex="-1"></a>We can now break *War and Peace* into two-character chunks.</span>
-<span id="cb57-297"><a href="#cb57-297" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-300"><a href="#cb57-300" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-301"><a href="#cb57-301" aria-hidden="true" tabindex="-1"></a>war_and_peace_2_characters <span class="ot">&lt;-</span> <span class="fu">break_into_two_chars</span>(war_and_peace)</span>
-<span id="cb57-302"><a href="#cb57-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-303"><a href="#cb57-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-306"><a href="#cb57-306" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-307"><a href="#cb57-307" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at a piece of the results (skipping the table of contents)</span></span>
-<span id="cb57-308"><a href="#cb57-308" aria-hidden="true" tabindex="-1"></a>war_and_peace_2_characters[<span class="dv">10000</span><span class="sc">:</span><span class="dv">10100</span>]</span>
-<span id="cb57-309"><a href="#cb57-309" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-310"><a href="#cb57-310" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-311"><a href="#cb57-311" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estimated frequencies from *War and Peace*</span></span>
-<span id="cb57-312"><a href="#cb57-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-313"><a href="#cb57-313" aria-hidden="true" tabindex="-1"></a>We can calculate the empirical probability of any two-letter combination by dividing the number of times it occurs by the total number of two-character chunks.</span>
-<span id="cb57-314"><a href="#cb57-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-317"><a href="#cb57-317" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-318"><a href="#cb57-318" aria-hidden="true" tabindex="-1"></a><span class="co"># Ten most common two-character combinations</span></span>
-<span id="cb57-319"><a href="#cb57-319" aria-hidden="true" tabindex="-1"></a>probability_table <span class="ot">&lt;-</span></span>
-<span id="cb57-320"><a href="#cb57-320" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>(war_and_peace_2_characters) <span class="sc">/</span> <span class="fu">length</span>(war_and_peace_2_characters)</span>
-<span id="cb57-321"><a href="#cb57-321" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-322"><a href="#cb57-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-325"><a href="#cb57-325" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-326"><a href="#cb57-326" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probability_table, <span class="dv">40</span>)</span>
-<span id="cb57-327"><a href="#cb57-327" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-328"><a href="#cb57-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-329"><a href="#cb57-329" aria-hidden="true" tabindex="-1"></a>Note that two-letter combinations that look like a single letter are actually a letter and a space, since we are including spaces in our frequencies to help the algorithm learn word boundaries.</span>
-<span id="cb57-330"><a href="#cb57-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-331"><a href="#cb57-331" aria-hidden="true" tabindex="-1"></a>Here are the 20 most common combinations.</span>
-<span id="cb57-332"><a href="#cb57-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-335"><a href="#cb57-335" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-336"><a href="#cb57-336" aria-hidden="true" tabindex="-1"></a>probability_table <span class="sc">|&gt;</span></span>
-<span id="cb57-337"><a href="#cb57-337" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(<span class="at">decreasing =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb57-338"><a href="#cb57-338" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">20</span>)</span>
-<span id="cb57-339"><a href="#cb57-339" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-340"><a href="#cb57-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-341"><a href="#cb57-341" aria-hidden="true" tabindex="-1"></a>We can also see the probability of any combination we choose:</span>
-<span id="cb57-342"><a href="#cb57-342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-345"><a href="#cb57-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-346"><a href="#cb57-346" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the probability of "ou"</span></span>
-<span id="cb57-347"><a href="#cb57-347" aria-hidden="true" tabindex="-1"></a>probability_table[<span class="st">"ou"</span>]</span>
-<span id="cb57-348"><a href="#cb57-348" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-349"><a href="#cb57-349" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-350"><a href="#cb57-350" aria-hidden="true" tabindex="-1"></a>However, there are some two-character combinations that do not occur in *War and Peace*. Instead of estimating the probability of these combinations to be zero, we instead approximate the probability by assuming each of them occurred once in the book. To implement this approximation, we use the below function, which returns the empirical probability of any two-character combination.</span>
-<span id="cb57-351"><a href="#cb57-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-354"><a href="#cb57-354" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-355"><a href="#cb57-355" aria-hidden="true" tabindex="-1"></a>get_prob_two_char <span class="ot">&lt;-</span> <span class="cf">function</span>(two_char){</span>
-<span id="cb57-356"><a href="#cb57-356" aria-hidden="true" tabindex="-1"></a>  prob_from_table <span class="ot">&lt;-</span> probability_table[two_char]</span>
-<span id="cb57-357"><a href="#cb57-357" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-358"><a href="#cb57-358" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(prob_from_table)) {</span>
-<span id="cb57-359"><a href="#cb57-359" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="fu">length</span>(war_and_peace_2_characters))</span>
-<span id="cb57-360"><a href="#cb57-360" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
-<span id="cb57-361"><a href="#cb57-361" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(prob_from_table)</span>
-<span id="cb57-362"><a href="#cb57-362" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb57-363"><a href="#cb57-363" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-364"><a href="#cb57-364" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-365"><a href="#cb57-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-366"><a href="#cb57-366" aria-hidden="true" tabindex="-1"></a>We can try our function for a combination in *War and Peace* and a combination that is not:</span>
-<span id="cb57-367"><a href="#cb57-367" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-370"><a href="#cb57-370" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-371"><a href="#cb57-371" aria-hidden="true" tabindex="-1"></a><span class="co"># Try a combination in War and Peace</span></span>
-<span id="cb57-372"><a href="#cb57-372" aria-hidden="true" tabindex="-1"></a><span class="fu">get_prob_two_char</span>(<span class="st">"ou"</span>)</span>
-<span id="cb57-373"><a href="#cb57-373" aria-hidden="true" tabindex="-1"></a>probability_table[<span class="st">"ou"</span>]</span>
-<span id="cb57-374"><a href="#cb57-374" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-375"><a href="#cb57-375" aria-hidden="true" tabindex="-1"></a><span class="co"># Try a combination not in War and Peace</span></span>
-<span id="cb57-376"><a href="#cb57-376" aria-hidden="true" tabindex="-1"></a><span class="fu">get_prob_two_char</span>(<span class="st">"qq"</span>)</span>
-<span id="cb57-377"><a href="#cb57-377" aria-hidden="true" tabindex="-1"></a>probability_table[<span class="st">"qq"</span>]</span>
-<span id="cb57-378"><a href="#cb57-378" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-379"><a href="#cb57-379" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-380"><a href="#cb57-380" aria-hidden="true" tabindex="-1"></a><span class="fu">### Getting the probability of a new text</span></span>
-<span id="cb57-381"><a href="#cb57-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-382"><a href="#cb57-382" aria-hidden="true" tabindex="-1"></a>Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach, as described above, might be to break the new text into two character chunks, compute the probability of each, and multiply them together.</span>
-<span id="cb57-383"><a href="#cb57-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-384"><a href="#cb57-384" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`map_dbl()` is a function from the `purrr` package that iterates over each element of an input vector or list, and applies a function to each element. The `_dbl` in the function name means that the expected output is numeric. We need to use `map_dbl()` because our `get_prob_two_char()` function isn't vectorized.</span><span class="co">]</span>{.aside}</span>
-<span id="cb57-385"><a href="#cb57-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-388"><a href="#cb57-388" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-389"><a href="#cb57-389" aria-hidden="true" tabindex="-1"></a>sample_text <span class="ot">&lt;-</span> <span class="st">"this is a text"</span></span>
-<span id="cb57-390"><a href="#cb57-390" aria-hidden="true" tabindex="-1"></a>sample_text_two_char <span class="ot">&lt;-</span> <span class="fu">break_into_two_chars</span>(sample_text)</span>
-<span id="cb57-391"><a href="#cb57-391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-392"><a href="#cb57-392" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> </span>
-<span id="cb57-393"><a href="#cb57-393" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map_dbl</span>(sample_text_two_char, get_prob_two_char) <span class="sc">|&gt;</span></span>
-<span id="cb57-394"><a href="#cb57-394" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prod</span>()</span>
-<span id="cb57-395"><a href="#cb57-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-396"><a href="#cb57-396" aria-hidden="true" tabindex="-1"></a>score</span>
-<span id="cb57-397"><a href="#cb57-397" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-398"><a href="#cb57-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-399"><a href="#cb57-399" aria-hidden="true" tabindex="-1"></a>However, we see that the score is an extremely small number, about $10^{-55}$. Therefore, for better numerical precision, we should work on the log scale, and then transform back when we need probabilities. Remember, on the log scale we express products as sums. Below is a function to implement this approach:</span>
-<span id="cb57-400"><a href="#cb57-400" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-401"><a href="#cb57-401" aria-hidden="true" tabindex="-1"></a>1) Break the text into two character chunks</span>
-<span id="cb57-402"><a href="#cb57-402" aria-hidden="true" tabindex="-1"></a>2) Compute the probability of each chunk using our representative English text (*War and Peace*)</span>
-<span id="cb57-403"><a href="#cb57-403" aria-hidden="true" tabindex="-1"></a>3) Take the log of each probability</span>
-<span id="cb57-404"><a href="#cb57-404" aria-hidden="true" tabindex="-1"></a>4) Sum the probabilities to get a log-likelihood for the text</span>
-<span id="cb57-405"><a href="#cb57-405" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-408"><a href="#cb57-408" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-409"><a href="#cb57-409" aria-hidden="true" tabindex="-1"></a>get_log_lik_text <span class="ot">&lt;-</span> <span class="cf">function</span>(text){</span>
-<span id="cb57-410"><a href="#cb57-410" aria-hidden="true" tabindex="-1"></a>  text <span class="sc">|&gt;</span></span>
-<span id="cb57-411"><a href="#cb57-411" aria-hidden="true" tabindex="-1"></a>  <span class="fu">break_into_two_chars</span>() <span class="sc">|&gt;</span></span>
-<span id="cb57-412"><a href="#cb57-412" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map_dbl</span>(get_prob_two_char) <span class="sc">|&gt;</span></span>
-<span id="cb57-413"><a href="#cb57-413" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>() <span class="sc">|&gt;</span></span>
-<span id="cb57-414"><a href="#cb57-414" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
-<span id="cb57-415"><a href="#cb57-415" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-416"><a href="#cb57-416" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-417"><a href="#cb57-417" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-418"><a href="#cb57-418" aria-hidden="true" tabindex="-1"></a>Let's see if our score can differentiate English and non-English: a comparison of English words with me hitting random keys.</span>
-<span id="cb57-419"><a href="#cb57-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-422"><a href="#cb57-422" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-423"><a href="#cb57-423" aria-hidden="true" tabindex="-1"></a><span class="fu">get_log_lik_text</span>(<span class="st">"This is English text"</span>)</span>
-<span id="cb57-424"><a href="#cb57-424" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-425"><a href="#cb57-425" aria-hidden="true" tabindex="-1"></a><span class="fu">get_log_lik_text</span>(<span class="st">"fghr gh wghdfrf etfs"</span>)</span>
-<span id="cb57-426"><a href="#cb57-426" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-427"><a href="#cb57-427" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-428"><a href="#cb57-428" aria-hidden="true" tabindex="-1"></a>As expected the log-likelihood for the English text is higher than for the non-English text.</span>
-<span id="cb57-429"><a href="#cb57-429" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-430"><a href="#cb57-430" aria-hidden="true" tabindex="-1"></a><span class="fu">## Implementing the Metropolis Algorithm</span></span>
-<span id="cb57-431"><a href="#cb57-431" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-432"><a href="#cb57-432" aria-hidden="true" tabindex="-1"></a>Now we are finally ready to implement our code-breaking algorithm! One helper function we need is a function to swap two elements of a vector. As discussed above, we'll use this to propose a new cipher given the current cipher.</span>
-<span id="cb57-433"><a href="#cb57-433" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-436"><a href="#cb57-436" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-437"><a href="#cb57-437" aria-hidden="true" tabindex="-1"></a>swap <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
-<span id="cb57-438"><a href="#cb57-438" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select two distinct indices</span></span>
-<span id="cb57-439"><a href="#cb57-439" aria-hidden="true" tabindex="-1"></a>  rand_indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
-<span id="cb57-440"><a href="#cb57-440" aria-hidden="true" tabindex="-1"></a>  element_1 <span class="ot">&lt;-</span> x[rand_indices[<span class="dv">1</span>]]</span>
-<span id="cb57-441"><a href="#cb57-441" aria-hidden="true" tabindex="-1"></a>  element_2 <span class="ot">&lt;-</span> x[rand_indices[<span class="dv">2</span>]]</span>
-<span id="cb57-442"><a href="#cb57-442" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-443"><a href="#cb57-443" aria-hidden="true" tabindex="-1"></a>  x[rand_indices[<span class="dv">1</span>]] <span class="ot">&lt;-</span> element_2</span>
-<span id="cb57-444"><a href="#cb57-444" aria-hidden="true" tabindex="-1"></a>  x[rand_indices[<span class="dv">2</span>]] <span class="ot">&lt;-</span> element_1</span>
-<span id="cb57-445"><a href="#cb57-445" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-446"><a href="#cb57-446" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
-<span id="cb57-447"><a href="#cb57-447" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-448"><a href="#cb57-448" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-449"><a href="#cb57-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-450"><a href="#cb57-450" aria-hidden="true" tabindex="-1"></a>Below is the full algorithm, the same one I ran to create the video at the beginning of this post. The steps correspond to the description I gave above for the Metropolis algorithm, now substituting in the functions we created. I have added detailed comments for each line of the code. Try running it for yourself and use your own example text.</span>
-<span id="cb57-451"><a href="#cb57-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-452"><a href="#cb57-452" aria-hidden="true" tabindex="-1"></a>A few tips:</span>
-<span id="cb57-453"><a href="#cb57-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-454"><a href="#cb57-454" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The algorithm may take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.</span>
-<span id="cb57-455"><a href="#cb57-455" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Since this is a relatively short text, it may take more iterations to decode. Long texts contain more information, and so are more easily decoded.</span>
-<span id="cb57-456"><a href="#cb57-456" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If the chain doesn't seem to be converging, try a new random seed. I had to try a few random seeds for the algorithm to converge in a reasonable number of iterations^<span class="co">[</span><span class="ot">While this strategy of restarting misbehaving Markov chains isn't a good strategy for other applications of MCMC like Bayesian statistics, it's perfectly reasonable for the optimization task we are performing here.</span><span class="co">]</span>.</span>
-<span id="cb57-457"><a href="#cb57-457" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-460"><a href="#cb57-460" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-461"><a href="#cb57-461" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb57-462"><a href="#cb57-462" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-463"><a href="#cb57-463" aria-hidden="true" tabindex="-1"></a>plaintext <span class="ot">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
-<span id="cb57-464"><a href="#cb57-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-465"><a href="#cb57-465" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a random cipher to be the true cipher</span></span>
-<span id="cb57-466"><a href="#cb57-466" aria-hidden="true" tabindex="-1"></a>true_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
-<span id="cb57-467"><a href="#cb57-467" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-468"><a href="#cb57-468" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode the plaintext</span></span>
-<span id="cb57-469"><a href="#cb57-469" aria-hidden="true" tabindex="-1"></a>ciphered_text <span class="ot">&lt;-</span> <span class="fu">encode_text</span>(<span class="at">text =</span> plaintext,</span>
-<span id="cb57-470"><a href="#cb57-470" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cipher =</span> true_cipher)</span>
-<span id="cb57-471"><a href="#cb57-471" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-472"><a href="#cb57-472" aria-hidden="true" tabindex="-1"></a><span class="co"># Create another random cipher to be the starting cipher for the Markov Chain</span></span>
-<span id="cb57-473"><a href="#cb57-473" aria-hidden="true" tabindex="-1"></a>current_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
-<span id="cb57-474"><a href="#cb57-474" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-475"><a href="#cb57-475" aria-hidden="true" tabindex="-1"></a><span class="co"># A counter to track how many decoded texts have been accepted</span></span>
-<span id="cb57-476"><a href="#cb57-476" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb57-477"><a href="#cb57-477" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-478"><a href="#cb57-478" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50000</span>) {</span>
-<span id="cb57-479"><a href="#cb57-479" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-480"><a href="#cb57-480" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Propose a new cipher by swapping two letters in the current cipher</span></span>
-<span id="cb57-481"><a href="#cb57-481" aria-hidden="true" tabindex="-1"></a>  proposed_cipher <span class="ot">&lt;-</span> <span class="fu">swap</span>(current_cipher)</span>
-<span id="cb57-482"><a href="#cb57-482" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-483"><a href="#cb57-483" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Text decoded from the proposal cipher</span></span>
-<span id="cb57-484"><a href="#cb57-484" aria-hidden="true" tabindex="-1"></a>  decoded_text_proposed <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphered_text,</span>
-<span id="cb57-485"><a href="#cb57-485" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cipher =</span> proposed_cipher)</span>
-<span id="cb57-486"><a href="#cb57-486" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-487"><a href="#cb57-487" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Text decoded from the current cipher</span></span>
-<span id="cb57-488"><a href="#cb57-488" aria-hidden="true" tabindex="-1"></a>  decoded_text_current <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphered_text,</span>
-<span id="cb57-489"><a href="#cb57-489" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cipher =</span> current_cipher)</span>
-<span id="cb57-490"><a href="#cb57-490" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-491"><a href="#cb57-491" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Log-likelihood of the decoded text from the proposal cipher</span></span>
-<span id="cb57-492"><a href="#cb57-492" aria-hidden="true" tabindex="-1"></a>  proposed_log_lik <span class="ot">&lt;-</span> <span class="fu">get_log_lik_text</span>(decoded_text_proposed)</span>
-<span id="cb57-493"><a href="#cb57-493" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-494"><a href="#cb57-494" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Log-likelihood of the decoded text from the current cipher</span></span>
-<span id="cb57-495"><a href="#cb57-495" aria-hidden="true" tabindex="-1"></a>  current_log_lik <span class="ot">&lt;-</span> <span class="fu">get_log_lik_text</span>(decoded_text_current)</span>
-<span id="cb57-496"><a href="#cb57-496" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-497"><a href="#cb57-497" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Acceptance probability of the proposal, defined by the Metropolis algorithm</span></span>
-<span id="cb57-498"><a href="#cb57-498" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remember that subtraction on the log-scale is division on the probability</span></span>
-<span id="cb57-499"><a href="#cb57-499" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale. We exponentiate to get back to the probability scale.</span></span>
-<span id="cb57-500"><a href="#cb57-500" aria-hidden="true" tabindex="-1"></a>  acceptance_probability <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">1</span>, <span class="fu">exp</span>(proposed_log_lik <span class="sc">-</span> current_log_lik))</span>
-<span id="cb57-501"><a href="#cb57-501" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-502"><a href="#cb57-502" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Accept or not with probability given by `acceptance_probability`</span></span>
-<span id="cb57-503"><a href="#cb57-503" aria-hidden="true" tabindex="-1"></a>  accept <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>),</span>
-<span id="cb57-504"><a href="#cb57-504" aria-hidden="true" tabindex="-1"></a>                   <span class="at">size=</span><span class="dv">1</span>,</span>
-<span id="cb57-505"><a href="#cb57-505" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prob =</span> <span class="fu">c</span>(acceptance_probability,</span>
-<span id="cb57-506"><a href="#cb57-506" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">1</span><span class="sc">-</span>acceptance_probability))</span>
-<span id="cb57-507"><a href="#cb57-507" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-508"><a href="#cb57-508" aria-hidden="true" tabindex="-1"></a>  <span class="co"># IF we accept the proposal, set the proposal cipher as the current cipher</span></span>
-<span id="cb57-509"><a href="#cb57-509" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ELSE, go on to the next iteration</span></span>
-<span id="cb57-510"><a href="#cb57-510" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (accept) {</span>
-<span id="cb57-511"><a href="#cb57-511" aria-hidden="true" tabindex="-1"></a>    current_cipher <span class="ot">&lt;-</span> proposed_cipher</span>
-<span id="cb57-512"><a href="#cb57-512" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb57-513"><a href="#cb57-513" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Print the text as decoded by the current cipher</span></span>
-<span id="cb57-514"><a href="#cb57-514" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Iteration {i}: {decoded_text_proposed}"</span>))</span>
-<span id="cb57-515"><a href="#cb57-515" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb57-516"><a href="#cb57-516" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Increment the counter so that we can keep track of acceptances</span></span>
-<span id="cb57-517"><a href="#cb57-517" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This is just for printing the output</span></span>
-<span id="cb57-518"><a href="#cb57-518" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb57-519"><a href="#cb57-519" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb57-520"><a href="#cb57-520" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-521"><a href="#cb57-521" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-522"><a href="#cb57-522" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-523"><a href="#cb57-523" aria-hidden="true" tabindex="-1"></a>For clarity, here's the same code without comments.</span>
-<span id="cb57-524"><a href="#cb57-524" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-527"><a href="#cb57-527" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb57-528"><a href="#cb57-528" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb57-529"><a href="#cb57-529" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-530"><a href="#cb57-530" aria-hidden="true" tabindex="-1"></a>plaintext <span class="ot">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
-<span id="cb57-531"><a href="#cb57-531" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-532"><a href="#cb57-532" aria-hidden="true" tabindex="-1"></a>true_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
-<span id="cb57-533"><a href="#cb57-533" aria-hidden="true" tabindex="-1"></a>ciphered_text <span class="ot">&lt;-</span> <span class="fu">encode_text</span>(<span class="at">text =</span> plaintext,</span>
-<span id="cb57-534"><a href="#cb57-534" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cipher =</span> true_cipher)</span>
-<span id="cb57-535"><a href="#cb57-535" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-536"><a href="#cb57-536" aria-hidden="true" tabindex="-1"></a>current_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
-<span id="cb57-537"><a href="#cb57-537" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-538"><a href="#cb57-538" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb57-539"><a href="#cb57-539" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-540"><a href="#cb57-540" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50000</span>) {</span>
-<span id="cb57-541"><a href="#cb57-541" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-542"><a href="#cb57-542" aria-hidden="true" tabindex="-1"></a>  proposed_cipher <span class="ot">&lt;-</span> <span class="fu">swap</span>(current_cipher)</span>
-<span id="cb57-543"><a href="#cb57-543" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-544"><a href="#cb57-544" aria-hidden="true" tabindex="-1"></a>  decoded_text_proposed <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphered_text,</span>
-<span id="cb57-545"><a href="#cb57-545" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cipher =</span> proposed_cipher)</span>
-<span id="cb57-546"><a href="#cb57-546" aria-hidden="true" tabindex="-1"></a>  decoded_text_current <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphered_text,</span>
-<span id="cb57-547"><a href="#cb57-547" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cipher =</span> current_cipher)</span>
-<span id="cb57-548"><a href="#cb57-548" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-549"><a href="#cb57-549" aria-hidden="true" tabindex="-1"></a>  proposed_log_lik <span class="ot">&lt;-</span> <span class="fu">get_log_lik_text</span>(decoded_text_proposed)</span>
-<span id="cb57-550"><a href="#cb57-550" aria-hidden="true" tabindex="-1"></a>  current_log_lik <span class="ot">&lt;-</span> <span class="fu">get_log_lik_text</span>(decoded_text_current)</span>
-<span id="cb57-551"><a href="#cb57-551" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-552"><a href="#cb57-552" aria-hidden="true" tabindex="-1"></a>  acceptance_probability <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">1</span>, <span class="fu">exp</span>(proposed_log_lik <span class="sc">-</span> current_log_lik))</span>
-<span id="cb57-553"><a href="#cb57-553" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-554"><a href="#cb57-554" aria-hidden="true" tabindex="-1"></a>  accept <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>),</span>
-<span id="cb57-555"><a href="#cb57-555" aria-hidden="true" tabindex="-1"></a>                   <span class="at">size=</span><span class="dv">1</span>,</span>
-<span id="cb57-556"><a href="#cb57-556" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prob =</span> <span class="fu">c</span>(acceptance_probability,</span>
-<span id="cb57-557"><a href="#cb57-557" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">1</span><span class="sc">-</span>acceptance_probability))</span>
-<span id="cb57-558"><a href="#cb57-558" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb57-559"><a href="#cb57-559" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (accept) {</span>
-<span id="cb57-560"><a href="#cb57-560" aria-hidden="true" tabindex="-1"></a>    current_cipher <span class="ot">&lt;-</span> proposed_cipher</span>
-<span id="cb57-561"><a href="#cb57-561" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Iteration {i}: {decoded_text_proposed}"</span>))</span>
-<span id="cb57-562"><a href="#cb57-562" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb57-563"><a href="#cb57-563" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb57-564"><a href="#cb57-564" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-565"><a href="#cb57-565" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb57-566"><a href="#cb57-566" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-567"><a href="#cb57-567" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb58" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> Code-breaking with Markov Chain Monte Carlo (MCMC)</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> Using cryptography to demonstrate the power of MCMC techniques in computational statistics</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> Max Rohde</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 11/10/2022</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> preview.png</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="an">code-fold:</span><span class="co"> false</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">777</span>)</span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>In this post we will show how a common method in computational statistics, Markov Chain Monte Carlo (implemented using the Metropolis algorithm), can be used to decode hidden messages encoded using a substitution cipher^<span class="co">[</span><span class="ot">From Merriam-Webster, a cipher is defined as "a method of transforming a text in order to conceal its meaning".</span><span class="co">]</span>.</span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>To cut to the chase, here's a video of the algorithm in action running on my laptop:</span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a><span class="al">![](demo.mp4)</span>{fig-width=100%}</span>
+<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>We see that within a few hundred iterations of the algorithm, the true text is revealed. This post will explain the theory of how this works and will describe the computational details using R. Many of the details were inspired by an example given by Persi Diaconis in his paper "The Markov Chain Monte Carlo Revolution"^<span class="co">[</span><span class="ot">&lt;https://math.uchicago.edu/~shmuel/Network-course-readings/MCMCRev.pdf&gt;</span><span class="co">]</span>.</span>
+<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## The substitution cipher</span></span>
+<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a>The substitution cipher is one of the simplest cryptographic methods. It works by swapping each letter in the alphabet with another.</span>
+<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a>One simple type of substitution cipher is a shift cipher, where we shift the alphabet by a certain number of units. So a shift cipher with a shift of 3 would yield:</span>
+<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a><span class="in">Original Alpabet:  abcdefghijklmnopqrstuvwxyz</span></span>
+<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a><span class="in">Cipher Alphabet:   defghijklmnopqrstuvwxyzabc</span></span>
+<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a>With this cipher, the word <span class="in">`hello`</span> would map to:</span>
+<span id="cb58-39"><a href="#cb58-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-40"><a href="#cb58-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`h -&gt; k`</span></span>
+<span id="cb58-41"><a href="#cb58-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`e -&gt; h`</span></span>
+<span id="cb58-42"><a href="#cb58-42" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`l -&gt; o`</span></span>
+<span id="cb58-43"><a href="#cb58-43" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`l -&gt; o`</span></span>
+<span id="cb58-44"><a href="#cb58-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`o -&gt; r`</span></span>
+<span id="cb58-45"><a href="#cb58-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-46"><a href="#cb58-46" aria-hidden="true" tabindex="-1"></a>resulting in the ciphertext <span class="in">`khoor`</span>.</span>
+<span id="cb58-47"><a href="#cb58-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-48"><a href="#cb58-48" aria-hidden="true" tabindex="-1"></a>:::{.callout-note collapse="false"}</span>
+<span id="cb58-49"><a href="#cb58-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Terminology</span></span>
+<span id="cb58-50"><a href="#cb58-50" aria-hidden="true" tabindex="-1"></a>**Plaintext** refers to the text you input to the cipher ("hello") and **ciphertext** refers to the output of the cipher ("khoor").</span>
+<span id="cb58-51"><a href="#cb58-51" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb58-52"><a href="#cb58-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-53"><a href="#cb58-53" aria-hidden="true" tabindex="-1"></a>We can do this in R using the built-in <span class="in">`chartr()`</span> function, which encodes a given string from one alphabet to another.</span>
+<span id="cb58-54"><a href="#cb58-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-57"><a href="#cb58-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-58"><a href="#cb58-58" aria-hidden="true" tabindex="-1"></a><span class="fu">chartr</span>(</span>
+<span id="cb58-59"><a href="#cb58-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"hello"</span>,</span>
+<span id="cb58-60"><a href="#cb58-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">old =</span> <span class="st">"abcdefghijklmnopqrstuvwxyz"</span>,</span>
+<span id="cb58-61"><a href="#cb58-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">new =</span> <span class="st">"defghijklmnopqrstuvwxyzabc"</span></span>
+<span id="cb58-62"><a href="#cb58-62" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-63"><a href="#cb58-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-64"><a href="#cb58-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-65"><a href="#cb58-65" aria-hidden="true" tabindex="-1"></a>More generally, we can create an arbitrary substitution cipher by permuting the letters of the alphabet.</span>
+<span id="cb58-66"><a href="#cb58-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-67"><a href="#cb58-67" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`letters` is a built-in R object that contains the 26 letters of the English alphabet.</span><span class="co">]</span>{.aside}</span>
+<span id="cb58-68"><a href="#cb58-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-69"><a href="#cb58-69" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`paste(collapse = "")` is used to turn a vector of characters into a single string.</span><span class="co">]</span>{.aside}</span>
+<span id="cb58-70"><a href="#cb58-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-73"><a href="#cb58-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-74"><a href="#cb58-74" aria-hidden="true" tabindex="-1"></a>letters <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb58-75"><a href="#cb58-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-78"><a href="#cb58-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-79"><a href="#cb58-79" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(letters) <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb58-80"><a href="#cb58-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-81"><a href="#cb58-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-82"><a href="#cb58-82" aria-hidden="true" tabindex="-1"></a>We can use the above code to create three functions which</span>
+<span id="cb58-83"><a href="#cb58-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-84"><a href="#cb58-84" aria-hidden="true" tabindex="-1"></a>1) Generate a random cipher</span>
+<span id="cb58-85"><a href="#cb58-85" aria-hidden="true" tabindex="-1"></a>2) Encode plaintext with a given cipher</span>
+<span id="cb58-86"><a href="#cb58-86" aria-hidden="true" tabindex="-1"></a>3) Decode ciphertext with a given cipher</span>
+<span id="cb58-87"><a href="#cb58-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-90"><a href="#cb58-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-91"><a href="#cb58-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a new cipher by permuting the letters of the alphabet</span></span>
+<span id="cb58-92"><a href="#cb58-92" aria-hidden="true" tabindex="-1"></a>generate_cipher <span class="ot">&lt;-</span> <span class="cf">function</span>() <span class="fu">sample</span>(letters,</span>
+<span id="cb58-93"><a href="#cb58-93" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb58-94"><a href="#cb58-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-95"><a href="#cb58-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode a text using a cipher</span></span>
+<span id="cb58-96"><a href="#cb58-96" aria-hidden="true" tabindex="-1"></a>encode_text <span class="ot">&lt;-</span> <span class="cf">function</span>(text, cipher) {</span>
+<span id="cb58-97"><a href="#cb58-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chartr</span>(</span>
+<span id="cb58-98"><a href="#cb58-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> text,</span>
+<span id="cb58-99"><a href="#cb58-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">old =</span> <span class="fu">paste</span>(letters, <span class="at">collapse =</span> <span class="st">""</span>),</span>
+<span id="cb58-100"><a href="#cb58-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">new =</span> <span class="fu">paste</span>(cipher, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb58-101"><a href="#cb58-101" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb58-102"><a href="#cb58-102" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-103"><a href="#cb58-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-104"><a href="#cb58-104" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode a text given a cipher</span></span>
+<span id="cb58-105"><a href="#cb58-105" aria-hidden="true" tabindex="-1"></a>decode_text <span class="ot">&lt;-</span> <span class="cf">function</span>(ciphered_text, cipher) {</span>
+<span id="cb58-106"><a href="#cb58-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chartr</span>(</span>
+<span id="cb58-107"><a href="#cb58-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> ciphered_text,</span>
+<span id="cb58-108"><a href="#cb58-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">old =</span> <span class="fu">paste</span>(cipher, <span class="at">collapse =</span> <span class="st">""</span>),</span>
+<span id="cb58-109"><a href="#cb58-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">new =</span> <span class="fu">paste</span>(letters, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb58-110"><a href="#cb58-110" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb58-111"><a href="#cb58-111" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-112"><a href="#cb58-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-113"><a href="#cb58-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-114"><a href="#cb58-114" aria-hidden="true" tabindex="-1"></a>Let's test these functions to make sure they're working correctly:</span>
+<span id="cb58-115"><a href="#cb58-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-118"><a href="#cb58-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-119"><a href="#cb58-119" aria-hidden="true" tabindex="-1"></a>plaintext <span class="ot">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
+<span id="cb58-120"><a href="#cb58-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-121"><a href="#cb58-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-124"><a href="#cb58-124" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-125"><a href="#cb58-125" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and store the cipher</span></span>
+<span id="cb58-126"><a href="#cb58-126" aria-hidden="true" tabindex="-1"></a>true_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
+<span id="cb58-127"><a href="#cb58-127" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(true_cipher)</span>
+<span id="cb58-128"><a href="#cb58-128" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-129"><a href="#cb58-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-130"><a href="#cb58-130" aria-hidden="true" tabindex="-1"></a>Here's what the ciphertext looks like:</span>
+<span id="cb58-131"><a href="#cb58-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-134"><a href="#cb58-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-135"><a href="#cb58-135" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode the plaintext</span></span>
+<span id="cb58-136"><a href="#cb58-136" aria-hidden="true" tabindex="-1"></a>ciphertext <span class="ot">&lt;-</span> <span class="fu">encode_text</span>(plaintext, true_cipher)</span>
+<span id="cb58-137"><a href="#cb58-137" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ciphertext)</span>
+<span id="cb58-138"><a href="#cb58-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-139"><a href="#cb58-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-140"><a href="#cb58-140" aria-hidden="true" tabindex="-1"></a>And we see that decoding it with the true cipher recovers the plaintext:</span>
+<span id="cb58-141"><a href="#cb58-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-144"><a href="#cb58-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-145"><a href="#cb58-145" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode the ciphertext</span></span>
+<span id="cb58-146"><a href="#cb58-146" aria-hidden="true" tabindex="-1"></a>decoded_text <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphertext, true_cipher)</span>
+<span id="cb58-147"><a href="#cb58-147" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(decoded_text)</span>
+<span id="cb58-148"><a href="#cb58-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-149"><a href="#cb58-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-150"><a href="#cb58-150" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview of the Metropolis algorithm</span></span>
+<span id="cb58-151"><a href="#cb58-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-152"><a href="#cb58-152" aria-hidden="true" tabindex="-1"></a><span class="fu">### Why not use brute force?</span></span>
+<span id="cb58-153"><a href="#cb58-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-154"><a href="#cb58-154" aria-hidden="true" tabindex="-1"></a>Suppose we intercept the ciphertext above, but we didn't know the true cipher. How could we decode the hidden message?</span>
+<span id="cb58-155"><a href="#cb58-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-156"><a href="#cb58-156" aria-hidden="true" tabindex="-1"></a>A brute force idea would be to try all possible ciphers until we find the correct one. How long would that take? There are $26!$ ciphers to check because each cipher corresponds to a certain permutation of the alphabet.</span>
+<span id="cb58-157"><a href="#cb58-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-160"><a href="#cb58-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-161"><a href="#cb58-161" aria-hidden="true" tabindex="-1"></a><span class="fu">factorial</span>(<span class="dv">26</span>)</span>
+<span id="cb58-162"><a href="#cb58-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-163"><a href="#cb58-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-164"><a href="#cb58-164" aria-hidden="true" tabindex="-1"></a>That's a very big number! As a thought experiment, let's assume that we have access to the fastest supercomputer in the world^<span class="co">[</span><span class="ot">&lt;https://arstechnica.com/information-technology/2022/05/1-1-quintillion-operations-per-second-us-has-worlds-fastest-supercomputer/&gt;</span><span class="co">]</span>. It's reported that it can compute 1.1 quintillion operations ($1.1 \times 10^{18}$) per second. Although checking a cipher would take more than a single operation, let's assume that we can check a cipher in a single operation (since we are seeing if this approach is even feasible).</span>
+<span id="cb58-165"><a href="#cb58-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-168"><a href="#cb58-168" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-169"><a href="#cb58-169" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb58-170"><a href="#cb58-170" aria-hidden="true" tabindex="-1"></a><span class="fu">factorial</span>(<span class="dv">26</span>) <span class="sc">/</span> (<span class="fl">1.1</span> <span class="sc">*</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">18</span>)</span>
+<span id="cb58-171"><a href="#cb58-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-172"><a href="#cb58-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-173"><a href="#cb58-173" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb58-174"><a href="#cb58-174" aria-hidden="true" tabindex="-1"></a>(4.03 \times 10^{26}) \text{ ciphers} \times \left(\frac{1 \text{ second}}{1.1 \times 10^{18} \text{ciphers}}\right) \approx 366 \text{ million seconds} \approx 11.6 \text{ years} </span>
+<span id="cb58-175"><a href="#cb58-175" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb58-176"><a href="#cb58-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-177"><a href="#cb58-177" aria-hidden="true" tabindex="-1"></a>So even with the fastest computer in the world, and with some very generous assumptions about how many operations it takes to check a cipher, it would still take 11.6 years to test all of them. Let's learn a much faster way to solve this problem. We don't even need a supercomputer; a laptop will do just fine.</span>
+<span id="cb58-178"><a href="#cb58-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-179"><a href="#cb58-179" aria-hidden="true" tabindex="-1"></a><span class="fu">### The Metropolis algorithm</span></span>
+<span id="cb58-180"><a href="#cb58-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-181"><a href="#cb58-181" aria-hidden="true" tabindex="-1"></a>So, how can we beat the brute force method? The idea is to use an algorithm that seeks out the likely ciphers, and ignores the ciphers that are unlikely to be correct. This is what the Metropolis algorithm does.</span>
+<span id="cb58-182"><a href="#cb58-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-183"><a href="#cb58-183" aria-hidden="true" tabindex="-1"></a>The Metropolis algorithm is a Markov Chain Monte Carlo algorithm, which means that it is used to generate Markov Chains that converge to a desirable stationary distribution^<span class="co">[</span><span class="ot">For a review of Markov chains, see &lt;https://setosa.io/ev/markov-chains/&gt; and &lt;https://youtu.be/i3AkTO9HLXo&gt;</span><span class="co">]</span>. Markov chains are defined on a state space, where the chain is traveling from state to state. In the framework of our problem, the states our Markov Chain is traveling between are the $26!$ possible ciphers. We want to the Markov chain to travel to the ciphers that are more "likely to be correct" and stay away from the ciphers that are "unlikely to be correct". While we will elaborate on this later, we can tentatively define "likely to be correct" ciphers as those that produce text that looks similar to English.</span>
+<span id="cb58-184"><a href="#cb58-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-185"><a href="#cb58-185" aria-hidden="true" tabindex="-1"></a>Let $\text{sim}(\text{cipher})$ be a function that returns a score from 0 and 1 indicating how similar the text that a cipher produces is to English. With the $\text{sim}(\text{cipher})$ function defined, the Metropolis algorithm works like this. First, start with a randomly chosen cipher as the initial state. Then repeat the following steps until the code is cracked:</span>
+<span id="cb58-186"><a href="#cb58-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-187"><a href="#cb58-187" aria-hidden="true" tabindex="-1"></a>1) Choose a new (but closely related) cipher by swapping two letters in the current cipher at random. This is called the **proposal cipher**.</span>
+<span id="cb58-188"><a href="#cb58-188" aria-hidden="true" tabindex="-1"></a>2) Compute the quantity $\frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$. If the proposal cipher produces text more similar to English than the current cipher, this ratio will always be greater than 1. If the current cipher produces text more similar to English than the proposal cipher, this ratio will be between 0 and 1.</span>
+<span id="cb58-189"><a href="#cb58-189" aria-hidden="true" tabindex="-1"></a>3) If the ratio in the previous step is greater than 1, set the current cipher to the proposed cipher. This is called **accepting the proposal**.</span>
+<span id="cb58-190"><a href="#cb58-190" aria-hidden="true" tabindex="-1"></a>4) If the ratio is less than 1, accept the proposal with probability equal to $\frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$ and reject it (i.e., stay at the current cipher) with probability $1 - \frac{\text{sim}(\text{proposal cipher})}{\text{sim}(\text{current cipher})}$.</span>
+<span id="cb58-191"><a href="#cb58-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-192"><a href="#cb58-192" aria-hidden="true" tabindex="-1"></a>In other words, if the proposal cipher produces text more similar to English than the current cipher, we always accept it; and if the current cipher produces text more similar to English than the proposal cipher, we accept or reject it with probability given by the ratio of their scores. The worse a proposal performs, the less likely it will be accepted. The intuition behind this method is that it will travel towards ciphers that produce text more similar to English and ignore ciphers that don't.</span>
+<span id="cb58-193"><a href="#cb58-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-194"><a href="#cb58-194" aria-hidden="true" tabindex="-1"></a>:::{.callout-note collapse="false"}</span>
+<span id="cb58-195"><a href="#cb58-195" aria-hidden="true" tabindex="-1"></a><span class="fu">## The Metropolis algorithm and Bayesian statistics</span></span>
+<span id="cb58-196"><a href="#cb58-196" aria-hidden="true" tabindex="-1"></a>Technically, the Metropolis algorithm is designed to travel to states in proportion to the probability of each state. So by running the Metropolis algorithm on the space of ciphers, we are approximately sampling from the probability distribution of ciphers given the ciphertext, a concept that will be very familiar to those who use Bayesian statistics. Indeed, the Metropolis algorithm is used to perform Bayesian statistics in a variety of settings where an analytical approach is not feasible.</span>
+<span id="cb58-197"><a href="#cb58-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-198"><a href="#cb58-198" aria-hidden="true" tabindex="-1"></a>We are using the Metropolis algorithm here for optimization rather than sampling, a nice side-effect of the property that when sampling according to each state's probability, high probability states are visited frequently.</span>
+<span id="cb58-199"><a href="#cb58-199" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb58-200"><a href="#cb58-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-201"><a href="#cb58-201" aria-hidden="true" tabindex="-1"></a>To implement this algorithm, we need for formalize our notion of an "English-similarity score". This will be the topic of the next section.</span>
+<span id="cb58-202"><a href="#cb58-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-203"><a href="#cb58-203" aria-hidden="true" tabindex="-1"></a><span class="fu">## Defining an "English-similarity score"</span></span>
+<span id="cb58-204"><a href="#cb58-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-205"><a href="#cb58-205" aria-hidden="true" tabindex="-1"></a>We need some way of measuring how similar to English an arbitrary text looks. Even a non-native speaker could likely tell that</span>
+<span id="cb58-206"><a href="#cb58-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-209"><a href="#cb58-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-210"><a href="#cb58-210" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb58-211"><a href="#cb58-211" aria-hidden="true" tabindex="-1"></a>ciphertext</span>
+<span id="cb58-212"><a href="#cb58-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-213"><a href="#cb58-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-214"><a href="#cb58-214" aria-hidden="true" tabindex="-1"></a>does not look like English. For example, most words don't have any vowels!</span>
+<span id="cb58-215"><a href="#cb58-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-216"><a href="#cb58-216" aria-hidden="true" tabindex="-1"></a>A rough heuristic to see how similar a text is to English is to compute the two letter frequencies and see how similar they are to those in English. Here's an example. <span class="in">`hello there`</span> has the following 2-letter combinations: <span class="in">`"he" "el" "ll" "lo" "o " " t" "th" "he" "er" "re"`</span>. You can picture this as a sliding window of width 2.</span>
+<span id="cb58-217"><a href="#cb58-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-218"><a href="#cb58-218" aria-hidden="true" tabindex="-1"></a>We could then compare how close the frequencies in this text align with the frequencies in English. Let $\text{freq}(x)$ be the frequency of two-letter combination $x$ in English (we'll see how to compute this soon). Then the "English-similarity" score for <span class="in">`hello there`</span> could be computed as</span>
+<span id="cb58-219"><a href="#cb58-219" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb58-220"><a href="#cb58-220" aria-hidden="true" tabindex="-1"></a>\text{freq}(\text{he}) \times \text{freq}(\text{el}) \times \text{freq}(\text{ll}) \times \ldots \times \text{freq}(\text{re})</span>
+<span id="cb58-221"><a href="#cb58-221" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb58-222"><a href="#cb58-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-223"><a href="#cb58-223" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estimating frequencies based on a sample text</span></span>
+<span id="cb58-224"><a href="#cb58-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-225"><a href="#cb58-225" aria-hidden="true" tabindex="-1"></a>Now let's return to how we implement the $\text{freq}(x)$ function. An approximation to the two-letter frequencies in English could be to find a very long English text and use the frequencies within it. The text we'll use to do this is *War and Peace* by Leo Tolstoy, a very long book by most standards. Luckily for us, *War and Peace* is in the public domain, and we can download a text file of the book from <span class="ot">&lt;https://www.gutenberg.org/&gt;</span>.</span>
+<span id="cb58-226"><a href="#cb58-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-229"><a href="#cb58-229" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-230"><a href="#cb58-230" aria-hidden="true" tabindex="-1"></a>war_and_peace <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_file</span>(<span class="st">"https://www.gutenberg.org/cache/epub/2600/pg2600.txt"</span>)</span>
+<span id="cb58-231"><a href="#cb58-231" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-232"><a href="#cb58-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-233"><a href="#cb58-233" aria-hidden="true" tabindex="-1"></a>We'll clean the text a bit by:</span>
+<span id="cb58-234"><a href="#cb58-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-235"><a href="#cb58-235" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Converting all letters to lowercase</span>
+<span id="cb58-236"><a href="#cb58-236" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Removing all non-alphabetical characters (numbers, symbols, etc...) but keeping spaces</span>
+<span id="cb58-237"><a href="#cb58-237" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Removing all accent characters (like é)</span>
+<span id="cb58-238"><a href="#cb58-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-239"><a href="#cb58-239" aria-hidden="true" tabindex="-1"></a>so that in the end, the text only contains the 26 lowercase letters and the space character.</span>
+<span id="cb58-240"><a href="#cb58-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-243"><a href="#cb58-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-244"><a href="#cb58-244" aria-hidden="true" tabindex="-1"></a>war_and_peace <span class="ot">&lt;-</span></span>
+<span id="cb58-245"><a href="#cb58-245" aria-hidden="true" tabindex="-1"></a>  war_and_peace <span class="sc">|&gt;</span></span>
+<span id="cb58-246"><a href="#cb58-246" aria-hidden="true" tabindex="-1"></a>  stringr<span class="sc">::</span><span class="fu">str_to_lower</span>() <span class="sc">|&gt;</span></span>
+<span id="cb58-247"><a href="#cb58-247" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"[^A-Za-z ]+"</span>, <span class="at">replacement =</span> <span class="st">""</span>, <span class="at">x=</span>_) <span class="sc">|&gt;</span></span>
+<span id="cb58-248"><a href="#cb58-248" aria-hidden="true" tabindex="-1"></a>  stringi<span class="sc">::</span><span class="fu">stri_trans_general</span>(<span class="at">id =</span> <span class="st">"Latin-ASCII"</span>)</span>
+<span id="cb58-249"><a href="#cb58-249" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-250"><a href="#cb58-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-251"><a href="#cb58-251" aria-hidden="true" tabindex="-1"></a><span class="fu">### Obtaining two-character frequencies</span></span>
+<span id="cb58-252"><a href="#cb58-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-253"><a href="#cb58-253" aria-hidden="true" tabindex="-1"></a>Now let's design a function to break the text into two-character chunks. We can use the very fast <span class="in">`stringi::stri_sub()`</span> function which, given a starting and ending index, extracts the substrings between them. Since our window has length two, we'll offset the starting and ending indices by one.</span>
+<span id="cb58-254"><a href="#cb58-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-255"><a href="#cb58-255" aria-hidden="true" tabindex="-1"></a>We can test this approach on a short phrase to make sure it works.</span>
+<span id="cb58-256"><a href="#cb58-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-259"><a href="#cb58-259" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-260"><a href="#cb58-260" aria-hidden="true" tabindex="-1"></a>test_string <span class="ot">&lt;-</span> <span class="st">"hello there"</span></span>
+<span id="cb58-261"><a href="#cb58-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-262"><a href="#cb58-262" aria-hidden="true" tabindex="-1"></a>starting_indices <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> (<span class="fu">nchar</span>(test_string) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb58-263"><a href="#cb58-263" aria-hidden="true" tabindex="-1"></a>ending_indices <span class="ot">&lt;-</span> starting_indices <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb58-264"><a href="#cb58-264" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-265"><a href="#cb58-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-268"><a href="#cb58-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-269"><a href="#cb58-269" aria-hidden="true" tabindex="-1"></a>starting_indices</span>
+<span id="cb58-270"><a href="#cb58-270" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-271"><a href="#cb58-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-274"><a href="#cb58-274" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-275"><a href="#cb58-275" aria-hidden="true" tabindex="-1"></a>ending_indices</span>
+<span id="cb58-276"><a href="#cb58-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-277"><a href="#cb58-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-280"><a href="#cb58-280" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-281"><a href="#cb58-281" aria-hidden="true" tabindex="-1"></a>stringi<span class="sc">::</span><span class="fu">stri_sub</span>(test_string,</span>
+<span id="cb58-282"><a href="#cb58-282" aria-hidden="true" tabindex="-1"></a>                  <span class="at">from =</span> starting_indices,</span>
+<span id="cb58-283"><a href="#cb58-283" aria-hidden="true" tabindex="-1"></a>                  <span class="at">to =</span> ending_indices)</span>
+<span id="cb58-284"><a href="#cb58-284" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-285"><a href="#cb58-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-286"><a href="#cb58-286" aria-hidden="true" tabindex="-1"></a>Now that we see our code works, let's put it into a function.</span>
+<span id="cb58-287"><a href="#cb58-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-290"><a href="#cb58-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-291"><a href="#cb58-291" aria-hidden="true" tabindex="-1"></a>break_into_two_chars <span class="ot">&lt;-</span> <span class="cf">function</span>(text){</span>
+<span id="cb58-292"><a href="#cb58-292" aria-hidden="true" tabindex="-1"></a>  starting_indices <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> (<span class="fu">nchar</span>(text) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb58-293"><a href="#cb58-293" aria-hidden="true" tabindex="-1"></a>  ending_indices <span class="ot">&lt;-</span> starting_indices <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb58-294"><a href="#cb58-294" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(stringi<span class="sc">::</span><span class="fu">stri_sub</span>(text,</span>
+<span id="cb58-295"><a href="#cb58-295" aria-hidden="true" tabindex="-1"></a>                           <span class="at">from =</span> starting_indices,</span>
+<span id="cb58-296"><a href="#cb58-296" aria-hidden="true" tabindex="-1"></a>                           <span class="at">to =</span> ending_indices))</span>
+<span id="cb58-297"><a href="#cb58-297" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-298"><a href="#cb58-298" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-299"><a href="#cb58-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-300"><a href="#cb58-300" aria-hidden="true" tabindex="-1"></a>We can now break *War and Peace* into two-character chunks.</span>
+<span id="cb58-301"><a href="#cb58-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-304"><a href="#cb58-304" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-305"><a href="#cb58-305" aria-hidden="true" tabindex="-1"></a>war_and_peace_2_characters <span class="ot">&lt;-</span> <span class="fu">break_into_two_chars</span>(war_and_peace)</span>
+<span id="cb58-306"><a href="#cb58-306" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-307"><a href="#cb58-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-310"><a href="#cb58-310" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-311"><a href="#cb58-311" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at a piece of the results (skipping the table of contents)</span></span>
+<span id="cb58-312"><a href="#cb58-312" aria-hidden="true" tabindex="-1"></a>war_and_peace_2_characters[<span class="dv">10000</span><span class="sc">:</span><span class="dv">10100</span>]</span>
+<span id="cb58-313"><a href="#cb58-313" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-314"><a href="#cb58-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-315"><a href="#cb58-315" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estimated frequencies from *War and Peace*</span></span>
+<span id="cb58-316"><a href="#cb58-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-317"><a href="#cb58-317" aria-hidden="true" tabindex="-1"></a>We can calculate the empirical probability of any two-letter combination by dividing the number of times it occurs by the total number of two-character chunks.</span>
+<span id="cb58-318"><a href="#cb58-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-321"><a href="#cb58-321" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-322"><a href="#cb58-322" aria-hidden="true" tabindex="-1"></a><span class="co"># Ten most common two-character combinations</span></span>
+<span id="cb58-323"><a href="#cb58-323" aria-hidden="true" tabindex="-1"></a>probability_table <span class="ot">&lt;-</span></span>
+<span id="cb58-324"><a href="#cb58-324" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>(war_and_peace_2_characters) <span class="sc">/</span> <span class="fu">length</span>(war_and_peace_2_characters)</span>
+<span id="cb58-325"><a href="#cb58-325" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-326"><a href="#cb58-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-329"><a href="#cb58-329" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-330"><a href="#cb58-330" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(probability_table, <span class="dv">40</span>)</span>
+<span id="cb58-331"><a href="#cb58-331" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-332"><a href="#cb58-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-333"><a href="#cb58-333" aria-hidden="true" tabindex="-1"></a>Note that two-letter combinations that look like a single letter are actually a letter and a space, since we are including spaces in our frequencies to help the algorithm learn word boundaries.</span>
+<span id="cb58-334"><a href="#cb58-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-335"><a href="#cb58-335" aria-hidden="true" tabindex="-1"></a>Here are the 20 most common combinations.</span>
+<span id="cb58-336"><a href="#cb58-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-339"><a href="#cb58-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-340"><a href="#cb58-340" aria-hidden="true" tabindex="-1"></a>probability_table <span class="sc">|&gt;</span></span>
+<span id="cb58-341"><a href="#cb58-341" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(<span class="at">decreasing =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb58-342"><a href="#cb58-342" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">20</span>)</span>
+<span id="cb58-343"><a href="#cb58-343" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-344"><a href="#cb58-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-345"><a href="#cb58-345" aria-hidden="true" tabindex="-1"></a>We can also see the probability of any combination we choose:</span>
+<span id="cb58-346"><a href="#cb58-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-349"><a href="#cb58-349" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-350"><a href="#cb58-350" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the probability of "ou"</span></span>
+<span id="cb58-351"><a href="#cb58-351" aria-hidden="true" tabindex="-1"></a>probability_table[<span class="st">"ou"</span>]</span>
+<span id="cb58-352"><a href="#cb58-352" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-353"><a href="#cb58-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-354"><a href="#cb58-354" aria-hidden="true" tabindex="-1"></a>However, there are some two-character combinations that do not occur in *War and Peace*. Instead of estimating the probability of these combinations to be zero, we instead approximate the probability by assuming each of them occurred once in the book. To implement this approximation, we use the below function, which returns the empirical probability of any two-character combination.</span>
+<span id="cb58-355"><a href="#cb58-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-358"><a href="#cb58-358" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-359"><a href="#cb58-359" aria-hidden="true" tabindex="-1"></a>get_prob_two_char <span class="ot">&lt;-</span> <span class="cf">function</span>(two_char){</span>
+<span id="cb58-360"><a href="#cb58-360" aria-hidden="true" tabindex="-1"></a>  prob_from_table <span class="ot">&lt;-</span> probability_table[two_char]</span>
+<span id="cb58-361"><a href="#cb58-361" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-362"><a href="#cb58-362" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(prob_from_table)) {</span>
+<span id="cb58-363"><a href="#cb58-363" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="fu">length</span>(war_and_peace_2_characters))</span>
+<span id="cb58-364"><a href="#cb58-364" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb58-365"><a href="#cb58-365" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(prob_from_table)</span>
+<span id="cb58-366"><a href="#cb58-366" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb58-367"><a href="#cb58-367" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-368"><a href="#cb58-368" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-369"><a href="#cb58-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-370"><a href="#cb58-370" aria-hidden="true" tabindex="-1"></a>We can try our function for a combination in *War and Peace* and a combination that is not:</span>
+<span id="cb58-371"><a href="#cb58-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-374"><a href="#cb58-374" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-375"><a href="#cb58-375" aria-hidden="true" tabindex="-1"></a><span class="co"># Try a combination in War and Peace</span></span>
+<span id="cb58-376"><a href="#cb58-376" aria-hidden="true" tabindex="-1"></a><span class="fu">get_prob_two_char</span>(<span class="st">"ou"</span>)</span>
+<span id="cb58-377"><a href="#cb58-377" aria-hidden="true" tabindex="-1"></a>probability_table[<span class="st">"ou"</span>]</span>
+<span id="cb58-378"><a href="#cb58-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-379"><a href="#cb58-379" aria-hidden="true" tabindex="-1"></a><span class="co"># Try a combination not in War and Peace</span></span>
+<span id="cb58-380"><a href="#cb58-380" aria-hidden="true" tabindex="-1"></a><span class="fu">get_prob_two_char</span>(<span class="st">"qq"</span>)</span>
+<span id="cb58-381"><a href="#cb58-381" aria-hidden="true" tabindex="-1"></a>probability_table[<span class="st">"qq"</span>]</span>
+<span id="cb58-382"><a href="#cb58-382" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-383"><a href="#cb58-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-384"><a href="#cb58-384" aria-hidden="true" tabindex="-1"></a><span class="fu">### Getting the probability of a new text</span></span>
+<span id="cb58-385"><a href="#cb58-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-386"><a href="#cb58-386" aria-hidden="true" tabindex="-1"></a>Now that we have a way to estimate the probability of any two character combination in English, we can use it to score how similar a given text is to English. A first approach, as described above, might be to break the new text into two character chunks, compute the probability of each, and multiply them together.</span>
+<span id="cb58-387"><a href="#cb58-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-388"><a href="#cb58-388" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">`map_dbl()` is a function from the `purrr` package that iterates over each element of an input vector or list, and applies a function to each element. The `_dbl` in the function name means that the expected output is numeric. We need to use `map_dbl()` because our `get_prob_two_char()` function isn't vectorized.</span><span class="co">]</span>{.aside}</span>
+<span id="cb58-389"><a href="#cb58-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-392"><a href="#cb58-392" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-393"><a href="#cb58-393" aria-hidden="true" tabindex="-1"></a>sample_text <span class="ot">&lt;-</span> <span class="st">"this is a text"</span></span>
+<span id="cb58-394"><a href="#cb58-394" aria-hidden="true" tabindex="-1"></a>sample_text_two_char <span class="ot">&lt;-</span> <span class="fu">break_into_two_chars</span>(sample_text)</span>
+<span id="cb58-395"><a href="#cb58-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-396"><a href="#cb58-396" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> </span>
+<span id="cb58-397"><a href="#cb58-397" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map_dbl</span>(sample_text_two_char, get_prob_two_char) <span class="sc">|&gt;</span></span>
+<span id="cb58-398"><a href="#cb58-398" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prod</span>()</span>
+<span id="cb58-399"><a href="#cb58-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-400"><a href="#cb58-400" aria-hidden="true" tabindex="-1"></a>score</span>
+<span id="cb58-401"><a href="#cb58-401" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-402"><a href="#cb58-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-403"><a href="#cb58-403" aria-hidden="true" tabindex="-1"></a>However, we see that the score is an extremely small number, about $10^{-55}$. Therefore, for better numerical precision, we should work on the log scale, and then transform back when we need probabilities. Remember, on the log scale we express products as sums. Below is a function to implement this approach:</span>
+<span id="cb58-404"><a href="#cb58-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-405"><a href="#cb58-405" aria-hidden="true" tabindex="-1"></a>1) Break the text into two character chunks</span>
+<span id="cb58-406"><a href="#cb58-406" aria-hidden="true" tabindex="-1"></a>2) Compute the probability of each chunk using our representative English text (*War and Peace*)</span>
+<span id="cb58-407"><a href="#cb58-407" aria-hidden="true" tabindex="-1"></a>3) Take the log of each probability</span>
+<span id="cb58-408"><a href="#cb58-408" aria-hidden="true" tabindex="-1"></a>4) Sum the probabilities to get a log-likelihood for the text</span>
+<span id="cb58-409"><a href="#cb58-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-412"><a href="#cb58-412" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-413"><a href="#cb58-413" aria-hidden="true" tabindex="-1"></a>get_log_lik_text <span class="ot">&lt;-</span> <span class="cf">function</span>(text){</span>
+<span id="cb58-414"><a href="#cb58-414" aria-hidden="true" tabindex="-1"></a>  text <span class="sc">|&gt;</span></span>
+<span id="cb58-415"><a href="#cb58-415" aria-hidden="true" tabindex="-1"></a>  <span class="fu">break_into_two_chars</span>() <span class="sc">|&gt;</span></span>
+<span id="cb58-416"><a href="#cb58-416" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map_dbl</span>(get_prob_two_char) <span class="sc">|&gt;</span></span>
+<span id="cb58-417"><a href="#cb58-417" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>() <span class="sc">|&gt;</span></span>
+<span id="cb58-418"><a href="#cb58-418" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
+<span id="cb58-419"><a href="#cb58-419" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-420"><a href="#cb58-420" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-421"><a href="#cb58-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-422"><a href="#cb58-422" aria-hidden="true" tabindex="-1"></a>Let's see if our score can differentiate English and non-English: a comparison of English words with me hitting random keys.</span>
+<span id="cb58-423"><a href="#cb58-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-426"><a href="#cb58-426" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-427"><a href="#cb58-427" aria-hidden="true" tabindex="-1"></a><span class="fu">get_log_lik_text</span>(<span class="st">"This is English text"</span>)</span>
+<span id="cb58-428"><a href="#cb58-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-429"><a href="#cb58-429" aria-hidden="true" tabindex="-1"></a><span class="fu">get_log_lik_text</span>(<span class="st">"fghr gh wghdfrf etfs"</span>)</span>
+<span id="cb58-430"><a href="#cb58-430" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-431"><a href="#cb58-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-432"><a href="#cb58-432" aria-hidden="true" tabindex="-1"></a>As expected the log-likelihood for the English text is higher than for the non-English text.</span>
+<span id="cb58-433"><a href="#cb58-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-434"><a href="#cb58-434" aria-hidden="true" tabindex="-1"></a><span class="fu">## Implementing the Metropolis Algorithm</span></span>
+<span id="cb58-435"><a href="#cb58-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-436"><a href="#cb58-436" aria-hidden="true" tabindex="-1"></a>Now we are finally ready to implement our code-breaking algorithm! One helper function we need is a function to swap two elements of a vector. As discussed above, we'll use this to propose a new cipher given the current cipher.</span>
+<span id="cb58-437"><a href="#cb58-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-440"><a href="#cb58-440" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-441"><a href="#cb58-441" aria-hidden="true" tabindex="-1"></a>swap <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb58-442"><a href="#cb58-442" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select two distinct indices</span></span>
+<span id="cb58-443"><a href="#cb58-443" aria-hidden="true" tabindex="-1"></a>  rand_indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
+<span id="cb58-444"><a href="#cb58-444" aria-hidden="true" tabindex="-1"></a>  element_1 <span class="ot">&lt;-</span> x[rand_indices[<span class="dv">1</span>]]</span>
+<span id="cb58-445"><a href="#cb58-445" aria-hidden="true" tabindex="-1"></a>  element_2 <span class="ot">&lt;-</span> x[rand_indices[<span class="dv">2</span>]]</span>
+<span id="cb58-446"><a href="#cb58-446" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-447"><a href="#cb58-447" aria-hidden="true" tabindex="-1"></a>  x[rand_indices[<span class="dv">1</span>]] <span class="ot">&lt;-</span> element_2</span>
+<span id="cb58-448"><a href="#cb58-448" aria-hidden="true" tabindex="-1"></a>  x[rand_indices[<span class="dv">2</span>]] <span class="ot">&lt;-</span> element_1</span>
+<span id="cb58-449"><a href="#cb58-449" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-450"><a href="#cb58-450" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb58-451"><a href="#cb58-451" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-452"><a href="#cb58-452" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-453"><a href="#cb58-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-454"><a href="#cb58-454" aria-hidden="true" tabindex="-1"></a>Below is the full algorithm, the same one I ran to create the video at the beginning of this post. The steps correspond to the description I gave above for the Metropolis algorithm, now substituting in the functions we created. I have added detailed comments for each line of the code. Try running it for yourself and use your own example text.</span>
+<span id="cb58-455"><a href="#cb58-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-456"><a href="#cb58-456" aria-hidden="true" tabindex="-1"></a>A few tips:</span>
+<span id="cb58-457"><a href="#cb58-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-458"><a href="#cb58-458" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The algorithm may take many iterations to converge, sometimes close to 20,000, although this is highly dependent on the cipher chosen and the starting cipher.</span>
+<span id="cb58-459"><a href="#cb58-459" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Since this is a relatively short text, it may take more iterations to decode. Long texts contain more information, and so are more easily decoded.</span>
+<span id="cb58-460"><a href="#cb58-460" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If the chain doesn't seem to be converging, try a new random seed. I had to try a few random seeds for the algorithm to converge in a reasonable number of iterations^<span class="co">[</span><span class="ot">While this strategy of restarting misbehaving Markov chains isn't a good strategy for other applications of MCMC like Bayesian statistics, it's perfectly reasonable for the optimization task we are performing here.</span><span class="co">]</span>.</span>
+<span id="cb58-461"><a href="#cb58-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-464"><a href="#cb58-464" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-465"><a href="#cb58-465" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb58-466"><a href="#cb58-466" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-467"><a href="#cb58-467" aria-hidden="true" tabindex="-1"></a>plaintext <span class="ot">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
+<span id="cb58-468"><a href="#cb58-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-469"><a href="#cb58-469" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a random cipher to be the true cipher</span></span>
+<span id="cb58-470"><a href="#cb58-470" aria-hidden="true" tabindex="-1"></a>true_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
+<span id="cb58-471"><a href="#cb58-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-472"><a href="#cb58-472" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode the plaintext</span></span>
+<span id="cb58-473"><a href="#cb58-473" aria-hidden="true" tabindex="-1"></a>ciphered_text <span class="ot">&lt;-</span> <span class="fu">encode_text</span>(<span class="at">text =</span> plaintext,</span>
+<span id="cb58-474"><a href="#cb58-474" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cipher =</span> true_cipher)</span>
+<span id="cb58-475"><a href="#cb58-475" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-476"><a href="#cb58-476" aria-hidden="true" tabindex="-1"></a><span class="co"># Create another random cipher to be the starting cipher for the Markov Chain</span></span>
+<span id="cb58-477"><a href="#cb58-477" aria-hidden="true" tabindex="-1"></a>current_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
+<span id="cb58-478"><a href="#cb58-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-479"><a href="#cb58-479" aria-hidden="true" tabindex="-1"></a><span class="co"># A counter to track how many decoded texts have been accepted</span></span>
+<span id="cb58-480"><a href="#cb58-480" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb58-481"><a href="#cb58-481" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-482"><a href="#cb58-482" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50000</span>) {</span>
+<span id="cb58-483"><a href="#cb58-483" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-484"><a href="#cb58-484" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Propose a new cipher by swapping two letters in the current cipher</span></span>
+<span id="cb58-485"><a href="#cb58-485" aria-hidden="true" tabindex="-1"></a>  proposed_cipher <span class="ot">&lt;-</span> <span class="fu">swap</span>(current_cipher)</span>
+<span id="cb58-486"><a href="#cb58-486" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-487"><a href="#cb58-487" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Text decoded from the proposal cipher</span></span>
+<span id="cb58-488"><a href="#cb58-488" aria-hidden="true" tabindex="-1"></a>  decoded_text_proposed <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphered_text,</span>
+<span id="cb58-489"><a href="#cb58-489" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cipher =</span> proposed_cipher)</span>
+<span id="cb58-490"><a href="#cb58-490" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-491"><a href="#cb58-491" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Text decoded from the current cipher</span></span>
+<span id="cb58-492"><a href="#cb58-492" aria-hidden="true" tabindex="-1"></a>  decoded_text_current <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphered_text,</span>
+<span id="cb58-493"><a href="#cb58-493" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cipher =</span> current_cipher)</span>
+<span id="cb58-494"><a href="#cb58-494" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-495"><a href="#cb58-495" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Log-likelihood of the decoded text from the proposal cipher</span></span>
+<span id="cb58-496"><a href="#cb58-496" aria-hidden="true" tabindex="-1"></a>  proposed_log_lik <span class="ot">&lt;-</span> <span class="fu">get_log_lik_text</span>(decoded_text_proposed)</span>
+<span id="cb58-497"><a href="#cb58-497" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-498"><a href="#cb58-498" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Log-likelihood of the decoded text from the current cipher</span></span>
+<span id="cb58-499"><a href="#cb58-499" aria-hidden="true" tabindex="-1"></a>  current_log_lik <span class="ot">&lt;-</span> <span class="fu">get_log_lik_text</span>(decoded_text_current)</span>
+<span id="cb58-500"><a href="#cb58-500" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-501"><a href="#cb58-501" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Acceptance probability of the proposal, defined by the Metropolis algorithm</span></span>
+<span id="cb58-502"><a href="#cb58-502" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remember that subtraction on the log-scale is division on the probability</span></span>
+<span id="cb58-503"><a href="#cb58-503" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale. We exponentiate to get back to the probability scale.</span></span>
+<span id="cb58-504"><a href="#cb58-504" aria-hidden="true" tabindex="-1"></a>  acceptance_probability <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">1</span>, <span class="fu">exp</span>(proposed_log_lik <span class="sc">-</span> current_log_lik))</span>
+<span id="cb58-505"><a href="#cb58-505" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-506"><a href="#cb58-506" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Accept or not with probability given by `acceptance_probability`</span></span>
+<span id="cb58-507"><a href="#cb58-507" aria-hidden="true" tabindex="-1"></a>  accept <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>),</span>
+<span id="cb58-508"><a href="#cb58-508" aria-hidden="true" tabindex="-1"></a>                   <span class="at">size=</span><span class="dv">1</span>,</span>
+<span id="cb58-509"><a href="#cb58-509" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prob =</span> <span class="fu">c</span>(acceptance_probability,</span>
+<span id="cb58-510"><a href="#cb58-510" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">1</span><span class="sc">-</span>acceptance_probability))</span>
+<span id="cb58-511"><a href="#cb58-511" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-512"><a href="#cb58-512" aria-hidden="true" tabindex="-1"></a>  <span class="co"># IF we accept the proposal, set the proposal cipher as the current cipher</span></span>
+<span id="cb58-513"><a href="#cb58-513" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ELSE, go on to the next iteration</span></span>
+<span id="cb58-514"><a href="#cb58-514" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (accept) {</span>
+<span id="cb58-515"><a href="#cb58-515" aria-hidden="true" tabindex="-1"></a>    current_cipher <span class="ot">&lt;-</span> proposed_cipher</span>
+<span id="cb58-516"><a href="#cb58-516" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb58-517"><a href="#cb58-517" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Print the text as decoded by the current cipher</span></span>
+<span id="cb58-518"><a href="#cb58-518" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Iteration {i}: {decoded_text_proposed}"</span>))</span>
+<span id="cb58-519"><a href="#cb58-519" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb58-520"><a href="#cb58-520" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Increment the counter so that we can keep track of acceptances</span></span>
+<span id="cb58-521"><a href="#cb58-521" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This is just for printing the output</span></span>
+<span id="cb58-522"><a href="#cb58-522" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb58-523"><a href="#cb58-523" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb58-524"><a href="#cb58-524" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-525"><a href="#cb58-525" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-526"><a href="#cb58-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-527"><a href="#cb58-527" aria-hidden="true" tabindex="-1"></a>For clarity, here's the same code without comments.</span>
+<span id="cb58-528"><a href="#cb58-528" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-531"><a href="#cb58-531" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb58-532"><a href="#cb58-532" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb58-533"><a href="#cb58-533" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-534"><a href="#cb58-534" aria-hidden="true" tabindex="-1"></a>plaintext <span class="ot">&lt;-</span> <span class="st">"to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"</span></span>
+<span id="cb58-535"><a href="#cb58-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-536"><a href="#cb58-536" aria-hidden="true" tabindex="-1"></a>true_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
+<span id="cb58-537"><a href="#cb58-537" aria-hidden="true" tabindex="-1"></a>ciphered_text <span class="ot">&lt;-</span> <span class="fu">encode_text</span>(<span class="at">text =</span> plaintext,</span>
+<span id="cb58-538"><a href="#cb58-538" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cipher =</span> true_cipher)</span>
+<span id="cb58-539"><a href="#cb58-539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-540"><a href="#cb58-540" aria-hidden="true" tabindex="-1"></a>current_cipher <span class="ot">&lt;-</span> <span class="fu">generate_cipher</span>()</span>
+<span id="cb58-541"><a href="#cb58-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-542"><a href="#cb58-542" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb58-543"><a href="#cb58-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-544"><a href="#cb58-544" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50000</span>) {</span>
+<span id="cb58-545"><a href="#cb58-545" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-546"><a href="#cb58-546" aria-hidden="true" tabindex="-1"></a>  proposed_cipher <span class="ot">&lt;-</span> <span class="fu">swap</span>(current_cipher)</span>
+<span id="cb58-547"><a href="#cb58-547" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-548"><a href="#cb58-548" aria-hidden="true" tabindex="-1"></a>  decoded_text_proposed <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphered_text,</span>
+<span id="cb58-549"><a href="#cb58-549" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cipher =</span> proposed_cipher)</span>
+<span id="cb58-550"><a href="#cb58-550" aria-hidden="true" tabindex="-1"></a>  decoded_text_current <span class="ot">&lt;-</span> <span class="fu">decode_text</span>(ciphered_text,</span>
+<span id="cb58-551"><a href="#cb58-551" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cipher =</span> current_cipher)</span>
+<span id="cb58-552"><a href="#cb58-552" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-553"><a href="#cb58-553" aria-hidden="true" tabindex="-1"></a>  proposed_log_lik <span class="ot">&lt;-</span> <span class="fu">get_log_lik_text</span>(decoded_text_proposed)</span>
+<span id="cb58-554"><a href="#cb58-554" aria-hidden="true" tabindex="-1"></a>  current_log_lik <span class="ot">&lt;-</span> <span class="fu">get_log_lik_text</span>(decoded_text_current)</span>
+<span id="cb58-555"><a href="#cb58-555" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-556"><a href="#cb58-556" aria-hidden="true" tabindex="-1"></a>  acceptance_probability <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">1</span>, <span class="fu">exp</span>(proposed_log_lik <span class="sc">-</span> current_log_lik))</span>
+<span id="cb58-557"><a href="#cb58-557" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-558"><a href="#cb58-558" aria-hidden="true" tabindex="-1"></a>  accept <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>),</span>
+<span id="cb58-559"><a href="#cb58-559" aria-hidden="true" tabindex="-1"></a>                   <span class="at">size=</span><span class="dv">1</span>,</span>
+<span id="cb58-560"><a href="#cb58-560" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prob =</span> <span class="fu">c</span>(acceptance_probability,</span>
+<span id="cb58-561"><a href="#cb58-561" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">1</span><span class="sc">-</span>acceptance_probability))</span>
+<span id="cb58-562"><a href="#cb58-562" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-563"><a href="#cb58-563" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (accept) {</span>
+<span id="cb58-564"><a href="#cb58-564" aria-hidden="true" tabindex="-1"></a>    current_cipher <span class="ot">&lt;-</span> proposed_cipher</span>
+<span id="cb58-565"><a href="#cb58-565" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Iteration {i}: {decoded_text_proposed}"</span>))</span>
+<span id="cb58-566"><a href="#cb58-566" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb58-567"><a href="#cb58-567" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb58-568"><a href="#cb58-568" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-569"><a href="#cb58-569" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb58-570"><a href="#cb58-570" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-571"><a href="#cb58-571" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

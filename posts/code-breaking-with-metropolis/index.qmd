@@ -14,7 +14,7 @@ set.seed(777)
 
 ## Overview
 
-In this post we will show how a common method in computational statistics, Markov Chain Monte Carlo (implemented using the Metropolis algorithm), can be used to decode hidden messages encoded using a substitution cipher^[From Merriam-Webster, a cipher is defined as "a method of transforming a text in order to conceal its meaning"].
+In this post we will show how a common method in computational statistics, Markov Chain Monte Carlo (implemented using the Metropolis algorithm), can be used to decode hidden messages encoded using a substitution cipher^[From Merriam-Webster, a cipher is defined as "a method of transforming a text in order to conceal its meaning".].
 
 To cut to the chase, here's a video of the algorithm in action running on my laptop:
 
@@ -105,7 +105,9 @@ Let's test these functions to make sure they're working correctly:
 
 ```{r}
 plaintext <- "to be or not to be that is the question whether tis nobler in the mind to suffer the slings and arrows of outrageous fortune or to take arms against a sea of troubles"
+```
 
+```{r}
 # Create and store the cipher
 true_cipher <- generate_cipher()
 print(true_cipher)
