@@ -4,7 +4,7 @@ description: Informal notes about common linear algebra / matrix operations in R
 author: Max Rohde
 date: 04/29/2022
 image: preview.png
-code-fold: show
+code-fold: false
 ---
 
 The following material should be understandable to anyone with a basic knowledge of R and linear algebra. I plan to update this page with more material in the future.
@@ -52,11 +52,15 @@ The first method is using the `matrix()` function. You pass the elements of the 
 
 ```{r}
 # Put the numbers 1 to 12 in 3 rows and 4 columns
-matrix(1:12, nrow=3, ncol=4)
+matrix(1:12,
+       nrow=3,
+       ncol=4)
 ```
 ```{r}
 # Put the numbers 1 to 12 in 2 rows and 6 columns
-matrix(1:12, nrow=2, ncol=6)
+matrix(1:12,
+       nrow=2,
+       ncol=6)
 ```
 
 The second method is using `rbind()` and `cbind()`. Use `rbind()` to combine vectors into a matrix by row, and `cbind()` to combine vectors into a matrix by column.
@@ -103,7 +107,9 @@ ncol(m)
 Once you have a matrix in R, how do you subset parts of the matrix? Let's use this matrix, `m` as an example.
 
 ```{r}
-m <- matrix(1:12, nrow=3, ncol=4)
+m <- matrix(1:12,
+            nrow=3,
+            ncol=4)
 
 print(m)
 ```
@@ -154,3 +160,33 @@ B %*% A
 ```
 Error in B %*% A : non-conformable arguments
 ```
+
+To find the inverse of a matrix, we use the (somewhat unintuitively named) `solve()` function.
+
+```{r}
+A <- matrix(runif(9),
+            nrow=3,
+            ncol=3)
+A
+```
+
+```{r}
+solve(A)
+```
+
+Multiplying A by its inverse, we see that we obtain the identity matrix. The numbers very close to zero in the off-diagonal elements are due to floating-point error.
+
+```{r}
+solve(A) %*% A
+```
+
+To take the transpose of a matrix, use the `t()` function.
+
+```{r}
+B
+```
+
+```{r}
+t(B)
+```
+
