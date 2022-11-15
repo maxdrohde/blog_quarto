@@ -117,7 +117,7 @@ qplot(df$bill_length_cm,bins=50) + qplot(df$body_mass_kg, bins=50)
 
 # Logistic regression overview
 
-Logistic regression is a type of linear model. In statistics, a linear model means linear in the parameters, so we are modeling the output as a linear function of the parameters.
+Logistic regression is a type of linear model^[Specifically, logistic regression is a type of generalized linear model (GLM) along with probit regression, Poisson regression, and other common models used in data analysis.]. In statistics, a linear model means linear in the parameters, so we are modeling the output as a linear function of the parameters.
 
 For example, if we were predicting bill length, we could create a linear model where bill length is normally distributed, with a mean determined as a linear function of body mass and species.
 
@@ -601,9 +601,6 @@ print(glue("Final parameter values: {as.numeric(theta)}"))
 ```{r}
 print(glue("`glm()` parameter values (for comparison): {as.numeric(coef(model_glm))}"))
 ```
-
-
-
 
 Again, we see that the results are very close to the `glm()` results.
 
