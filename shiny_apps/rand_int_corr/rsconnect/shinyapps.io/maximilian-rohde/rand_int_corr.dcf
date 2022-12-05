@@ -1,0 +1,13 @@
+name: rand_int_corr
+title: rand_int_corr
+username:
+account: maximilian-rohde
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7819419
+bundleId: 6595116
+url: https://maximilian-rohde.shinyapps.io/rand_int_corr/
+when: 1670265485.59144
+lastSyncTime: 1670265485.59145
+asMultiple: FALSE
+asStatic: FALSE

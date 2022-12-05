@@ -333,6 +333,6 @@
     "href": "shiny.html",
     "title": "R Shiny Apps",
     "section": "",
-    "text": "Understanding cumulative ordinal models\nLink: https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/\nPreview:"
+    "text": "Below are R Shiny applications I have created to illustrate statistics concepts.\n\nHow random intercepts induce correlation in longitudinal data\nLink: https://maximilian-rohde.shinyapps.io/rand_int_corr/\nPreview:\n\n  \n\n\n\nUnderstanding cumulative ordinal models\nLink: https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/\nPreview:"
   }
 ]

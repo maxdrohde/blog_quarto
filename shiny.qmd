@@ -6,6 +6,20 @@ title-block-banner: "#f1f3f5"
 title-block-banner-color: black
 ---
 
+Below are R Shiny applications I have created to illustrate statistics concepts.
+
+### How random intercepts induce correlation in longitudinal data
+
+Link: [https://maximilian-rohde.shinyapps.io/rand_int_corr/](https://maximilian-rohde.shinyapps.io/rand_int_corr/)
+
+Preview:
+
+<p>
+  <a href="https://maximilian-rohde.shinyapps.io/rand_int_corr/">
+    ![](images/rand_int_corr_preview.png)
+  </a>
+</p>
+
 ### Understanding cumulative ordinal models
 
 Link: [https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/](https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/)
@@ -17,3 +31,4 @@ Preview:
     ![](images/ordinal_model_shiny_preview.png)
   </a>
 </p>
+

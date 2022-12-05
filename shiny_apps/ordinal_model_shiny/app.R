@@ -76,11 +76,15 @@ generate_plot2 <- function(b, cuts, type){
 
 ui <-
   fluidPage(theme=bs_theme(version = 5,
+                           bootswatch = "journal",
+                           primary = "#5b7eb0",
                            base_font = font_google("Source Sans Pro"),
                            code_font = font_google("Source Code Pro")),
     titlePanel("Understanding Cumulative Ordinal Models"),
     sidebarLayout(
       sidebarPanel(
+        p("Cumulative ordinal models have slope and cutpoint parameters, but they can be difficult to interpret."),
+        p("This app allows you to adjust these parameters and see how the predicted probability of each category changes."),
         sliderInput("slope", "Slope", value=2.7, min = -4, max = 4, step = 0.1),
         sliderInput("c1", "Cutpoint 1", value=-0.5, min = -4, max = 1, step = 0.1),
         sliderInput("c2", "Cutpoint 2", value=2, min = 1, max = 2.5, step = 0.1),
