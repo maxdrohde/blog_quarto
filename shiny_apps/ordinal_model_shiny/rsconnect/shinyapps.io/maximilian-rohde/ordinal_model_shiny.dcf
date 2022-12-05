@@ -1,0 +1,14 @@
+name: ordinal_model_shiny
+title: ordinal_model_shiny
+username:
+account: maximilian-rohde
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6941437
+bundleId: 6277778
+url: https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/
+when: 1662558877.26942
+lastSyncTime: 1662558877.26943
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: code.R|ordinal_animation.R

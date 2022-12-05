@@ -14,6 +14,6 @@ Preview:
 
 <p>
   <a href="https://maximilian-rohde.shinyapps.io/ordinal_model_shiny/">
-    ![Elephant](images/ordinal_model_shiny_preview.png)
+    ![](images/ordinal_model_shiny_preview.png)
   </a>
 </p>
