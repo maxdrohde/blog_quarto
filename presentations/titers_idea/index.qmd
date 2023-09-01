@@ -1,0 +1,43 @@
+---
+title: "Statistical Methodology for Vaccine Titers"
+subtitle: "An application for ordinal longitudinal models?"
+author: "Max Rohde"
+knitr: true
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    theme: [default, custom.scss]
+---
+
+## Background
+
+- Titration is a method for approximately measuring the concentration of a solution using a series of dilutions.
+- For Hemagglutination assays, a sample is diluted in a two-fold series, usually starting at 1:10. For example, 1:10, 1:20, 1:40, and 1:80.
+- We record the last dilution at which there is a response. If we observe a response at 1:10, 1:20, 1:40, but not 1:80, then the recorded value is 40.
+- If none have a response, record < 1:10. If all have a response, record > 1:80. Usually these would be recorded as 5 or 160.
+
+## HI Titer Measurement
+
+![Hemagglutination assay of influenza samples (Wikipedia)](assay.jpg)
+
+## Current Methods
+
+The most common methods either assume log-normal distribution and compute geometric mean titer, or dichotomize to calculate a proportion.
+
+From the FDA guidance:
+
+> Studies should be adequately powered to assess the following co-primary endpoints for each of these viral strains: 1) geometric mean titer (GMT), and 2) rates of seroconversion, defined as the percentage of subjects with either a pre-vaccination HI titer < 1:10 and a post-vaccination HI titer > 1:40 or a prevaccination HI titer > 1:10 and a minimum four-fold rise in post-vaccination HI antibody titer.
+
+## Geometric Mean Titer
+
+\begin{align*}
+\frac{1}{n} (\log(x_1) + \log(x_2) \ldots + \log(x_n)) &= \frac{1}{n} \log(x_1 \times x_2 \ldots \times x_n) \\ &=
+\log([x_1 \times x_2 \ldots \times x_n]^{\frac{1}{n}})
+\end{align*}
+
+## Longitudinal data
+
+![Example of longitudinal titer data](long.png)
+

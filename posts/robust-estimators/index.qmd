@@ -5,9 +5,6 @@ author: Max Rohde
 date: 01/13/2021
 image: preview.png
 code-fold: show
-
-execute: 
-  cache: true
 ---
 
 ```{r}
@@ -280,3 +277,16 @@ It looks like the median greatly outperforms the mean! Both are unbiased, but th
 
 - Simulation is a powerful tool in statistics. Here we showed how is can be used to compare the properties of estimators.
 - For distributions with heavy tails, the median may be a better estimator of center than the mean.
+
+
+
+
+
+
+
+
+
+
+
+
+

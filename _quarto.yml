@@ -4,6 +4,8 @@ project:
     - "*.qmd"
     - "!archived/"
     - "!adv_r_notes/"
+    - "!posts_in_progress/"
+    - "!misc/"
 
 website:
   title: "Max Rohde"

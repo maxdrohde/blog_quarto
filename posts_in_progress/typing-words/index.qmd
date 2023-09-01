@@ -1,0 +1,66 @@
+---
+title: The distribution of typing words
+description: mmm
+author: Max Rohde
+date: 12/19/2022
+image: preview.png
+code-fold: false
+---
+
+```{r}
+#| include: false
+set.seed(777)
+```
+
+```{r}
+library(tidyverse)
+library(glue)
+```
+
+```{r}
+df <- readr::read_delim("words.txt", delim="\n", col_names = c("word"))
+
+df$word <-
+df$word |>
+  str_to_lower()
+```
+
+
+```{r}
+percent_right_handed <- function(word){
+  left_handed <- c("q", "w", "e", "r", "t", "a", "s", "d", "f", "g", "z", "x", "c","v","b")
+  right_handed <- c("y", "u", "i", "o", "p", "h", "j", "k", "l", "n", "m")
+  word <- str_split(word, "")[[1]]
+  
+  n <- length(word)
+  left <- map_lgl(word, ~.x %in% left_handed) |> sum()
+  right <- map_lgl(word, ~.x %in% right_handed) |> sum()
+  return(left / n)
+}
+```
+
+```{r}
+x <- map_dbl(df$word, percent_right_handed)
+```
+
+```{r}
+barplot(x, breaks = 50)
+```
+
+
+
+```{r}
+df <- readr::read_delim("words.txt", delim="\n", col_names = c("word"))
+
+checker <- function(word){
+  blacklist <- c("q", "w", "e", "r", "t", "a", "s", "d", "f", "g", "z", "x", "c","v","b")
+  !any(map_lgl(blacklist, ~str_detect(word, .x)))
+}
+
+df$word <-
+df$word |>
+  str_to_lower()
+
+right_words <- map_lgl(df$word, checker)
+```
+

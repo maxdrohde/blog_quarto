@@ -1,1 +1,0 @@
-This is a folder to store timing tests of various R functions.

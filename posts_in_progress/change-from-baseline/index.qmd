@@ -1,0 +1,110 @@
+---
+title: Why it's wrong to analyze change-within-groups for clinical trials
+description: Using a simple simulation study to show why groups in clinical trials must be compared to each other. Comparing change from baseline within each group seperately is not a valid approach.
+author: Max Rohde
+date: 12/16/2022
+image: preview.png
+code-fold: false
+draft: true
+---
+
+```{r}
+#| include: false
+set.seed(777)
+```
+
+```{r}
+library(tidyverse)
+library(glue)
+```
+
+READ CHANGE FROM BASELINE ARTICLES IN BOOKMARK BAR FOLDER
+
+ADD THE CITATION TO THE ALTMAN PAPER AND SAY THAT I WAS INSPIRED BY IT AND WANTED TO CREATE A VERSION DEMONSTRATING THE R CODE.
+
+SEE CHANGE FROM BASELINE HERE: https://www.fharrell.com/post/errmed/#change
+
+and HERE: https://hbiostat.org/bbr/change.html
+
+?? https://homes.ori.org/keiths/Tips/Stats_GainScores.html
+
+When analyzing data from clinical trials, the proper approach is to compare differences between groups. However, some investigators instead compare within groups, which is not a valid approach for analyzing clinical trials data. We can illustrate this with an example.
+
+Assume we are asked to analyze the results of a hypothetical trial for an antiviral drug. The trial design was as follows:
+
+CHANGE THE STATISTIC TO THE DIFF IN CHANGE IN VIRAL LOAD
+
+1) Each patient's viral load^[Viral load is a measurement of the quantity of virus in a given volume of fluid such as the blood.] is measured at baseline (time 1).
+2) The patients in the treatment group receive a dose of the antiviral drug, while the patients in the control group receive a placebo.
+3) Each patient's viral load is measured again (time 2).
+4) For each patient, compute the difference in viral load between time 2 and time 1. We can call this the viral load change.
+
+ADD IN THE VIRAL LOAD CHANGE TERMINOLOGY.
+
+The proper approach would compute a statistic such as the mean viral load at time 2 in the treatment group and the mean viral load at time 2 in the control group, and test if the difference of these means is zero. We could also construct a confidence interval for the difference in means. The key point is that we are focusing on the difference between the groups post-baseline.
+
+However, another approach is often taken that is not valid. Instead of comparing the treatment and control groups directly, each group is compared with itself from time 1 to time 2. In this example, we could test if the mean viral load at time 2 was less than at time 1 for treatment and control groups separately. If we observe a significant decrease comparing time 2 to time 1 for the treatment group but not the control group, we might conclude that the treatment is effective. This is not a valid approach. We will show in the remainder of this post through simulation why it is flawed. The main reasons are that clinical trials are randomized so that 
+
+DOES X decrease over time?
+DOES Y decrease over time?
+
+
+## Overview
+
+```{r}
+generate_data <- function(n, mean, sd, time_effect) {
+  list(
+    "Control Group: Time 1" = rnorm(n = n, mean = mean, sd = sd),
+    "Control Group: Time 2" = rnorm(n = n, mean = mean + time_effect, sd = sd),
+    "Treatment Group: Time 1" = rnorm(n = n, mean = mean, sd = sd),
+    "Treatment Group: Time 2" = rnorm(n = n, mean = mean + time_effect, sd = sd)
+  )
+}
+```
+
+```{r}
+run_simulation <- function(){
+  data <- generate_null_data(n = 10, mean=10, sd=1)
+  
+  control_group_difference <-
+    data[["Control Group: Time 2"]] - data[["Control Group: Time 1"]]
+  
+  treatment_group_difference <-
+    data[["Treatment Group: Time 2"]] - data[["Treatment Group: Time 1"]]
+  
+  control_group_p_value <- t.test(control_group_difference)$p.value
+  treatment_group_p_value <- t.test(treatment_group_difference)$p.value
+  
+  # Calculate if treatment difference is significant but control difference is not
+  treatment_sig_control_not_sig <-
+    (treatment_group_p_value < 0.05) & (control_group_p_value > 0.05)
+  
+  return(c(
+    "Control Group p-value" = control_group_p_value,
+    "Treatment Group p-value" = treatment_group_p_value,
+    "Treatment Signficant / Control Not Significant" = treatment_sig_control_not_sig
+  ))
+}
+```
+
+```{r}
+simulation_results <-
+  map_df(1:1e4, ~run_simulation()) |>
+  mutate(`Treatment Signficant / Control Not Significant` = as.logical(`Treatment Signficant / Control Not Significant`))
+```
+
+```{r}
+simulation_results |>
+  ggplot() +
+  aes(x = `Control Group p-value`,
+      y = `Treatment Group p-value`,
+      color = `Treatment Signficant / Control Not Significant`) +
+  geom_point(alpha=0.5, size=0.5) +
+  coord_equal() +
+  geom_hline(yintercept = 0.05, linetype=2, color="purple") +
+  geom_vline(xintercept = 0.05, linetype=2, color="purple") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  labs(subtitle = glue("Proportion with Treatment Significant only = {round(mean(simulation_results$`Treatment Signficant / Control Not Significant`),3)}"))
+```
+

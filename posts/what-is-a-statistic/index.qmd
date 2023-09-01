@@ -130,3 +130,11 @@ A few things to note:
 - Because of averaging, the mean can take on more possible values than the other statistics. Qe can see it taking on the characteristic bell shape of the normal distribution due to the central limit theorem.
 - The median is always a whole number because we are rolling an odd number of dice.
 - Some of these distributions are tedious to work out analytically, and with more complicated data-generating processes there may be no closed form solutions.
+
+
+
+
+
+
+
+
