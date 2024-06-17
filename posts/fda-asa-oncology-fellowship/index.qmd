@@ -1,0 +1,29 @@
+---
+title: My experience in the FDA-ASA Oncology Fellowship
+description: This post records my experience participating in the FDA-ASA Oncology fellowship
+author: Max Rohde
+date: 11/26/2023
+image: preview.png
+code-fold: show
+draft: true
+---
+
+# 
+
+# Reviewing the basics
+
+## Biology / History
+
+- Emperor of All Maladies
+- Chapter 20 of Alberts
+- Weinberg book 3rd ED
+- DeVita Oncology Textbook (first chapters?)
+- For Blood and Money
+
+## Clinical trial designs
+
+### Survival analysis
+
+- Modelling Survival Data in Medical Research Collet
+
+

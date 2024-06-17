@@ -1,0 +1,66 @@
+---
+title: Resources for adaptive clinical trial design
+description: Resouces that I've found helpful in learning adaptive design methods for clinical trials
+author: Max Rohde
+date: 11/18/2023
+image: preview.png
+code-fold: show
+draft: true
+---
+
+The post collects some resources I've found helpful in learning about adaptive design methods in clinical trials.
+
+# Books
+
+- https://www.cambridge.org/core/books/introduction-to-adaptive-trial-designs-and-master-protocols/0253C309A456A1843416D58A217AAC78
+
+- https://www.routledge.com/Bayesian-Adaptive-Methods-for-Clinical-Trials/Berry-Carlin-Lee-Muller/p/book/9781439825488
+
+
+## 
+
+# Videos
+
+- https://youtu.be/eFmpHxOvk1A?si=6c3njtY-DArUsAAS
+- https://youtu.be/S9iUOqtLAlI?si=lY0D4CETOOQnV6ZK
+
+https://youtu.be/6_vjz9xSdXY?si=gWfdJWPSzsVGScfW
+
+https://youtu.be/n7euuTyUZIw?si=lfsO9GfunFY2EXPz
+
+https://youtu.be/LcuEVL0VUso?si=ZaUsIMeXlBnew2XH
+
+
+
+
+## Overview by Dr. Alex Kaizer
+
+This overview gives a good introduction to the different types of adaptations that one might consider when designing a clinical trial, as well as some examples of trials that have implemented these adaptations.
+
+{{< video https://youtu.be/_njFVqEYz7Q?si=bzlxeHJrpRff_Kir >}}
+
+# Journal articles
+
+- https://doi.org/10.1080/19466315.2020.1790415
+  - Efficient Adaptive Designs for Clinical Trials of Interventions for COVID-19
+  - https://doi.org/10.1017/cts.2023.537
+  - https://doi.org/10.1186/s12916-018-1017-7
+  - 10.1186/s12916-020-01808-2
+
+- Efficient Adaptive Designs for Clinical Trials of Interventions for COVID-19
+Nigel Stallard, Lisa Hampson, Norbert Benda, Werner Brannath, Thomas Burnett, Tim Friede, Peter K. Kimani, Franz Koenig, Johannes Krisam, Pavel Mozgunov, Martin Posch, James Wason, Gernot Wassmer, John Whitehead, S. Faye Williamson, Sarah Zohar & Thomas Jaki
+
+Kaizer AM, Belli HM, Ma Z, et al. Recent innovations in adaptive trial designs: A review of design opportunities in translational research. Journal of Clinical and Translational Science. 2023;7(1):e125. doi:10.1017/cts.2023.537
+
+Ciolino JD, Kaizer AM, Bonner LB. Guidance on interim analysis methods in clinical trials. Journal of Clinical and Translational Science. 2023;7(1):e124. doi:10.1017/cts.2023.552
+
+
+
+# Other
+
+https://panda.shef.ac.uk/techniques/general-considerations-about-adaptive-trials/categories/6
+
+## FDA Guidance
+
+- https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adaptive-design-clinical-trials-drugs-and-biologics-guidance-industry
+

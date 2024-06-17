@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -47,7 +47,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -56,6 +62,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -82,25 +89,50 @@ background: #f1f3f5;
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <link rel="stylesheet" href="styles.css">
 <meta property="og:title" content="Max Rohde - Animations">
 <meta property="og:description" content="Various animations I have created to learn / teach statistics">
-<meta property="og:image" content="anim/collider.gif">
-<meta property="og:site-name" content="Max Rohde">
+<meta property="og:site_name" content="Max Rohde">
 <meta name="twitter:title" content="Max Rohde - Animations">
 <meta name="twitter:description" content="Various animations I have created to learn / teach statistics">
-<meta name="twitter:image" content="anim/collider.gif">
 <meta name="twitter:creator" content="@max_d_rohde">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 
 <body class="floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Max Rohde</span>
     </a>
@@ -112,29 +144,29 @@ background: #f1f3f5;
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html" rel="" target="">
- <span class="menu-text">Blog</span></a>
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./resume.pdf" rel="" target="">
- <span class="menu-text">Resume</span></a>
+    <a class="nav-link" href="./resume.pdf"> 
+<span class="menu-text">Resume</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./anim.html" rel="" target="" aria-current="page">
- <span class="menu-text">Animations</span></a>
+    <a class="nav-link active" href="./anim.html" aria-current="page"> 
+<span class="menu-text">Animations</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./shiny.html" rel="" target="">
- <span class="menu-text">Shiny Apps</span></a>
+    <a class="nav-link" href="./shiny.html"> 
+<span class="menu-text">Shiny Apps</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -162,7 +194,7 @@ background: #f1f3f5;
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
@@ -185,9 +217,9 @@ background: #f1f3f5;
   <li><a href="#comparing-estimators-for-center-of-unif01" id="toc-comparing-estimators-for-center-of-unif01" class="nav-link" data-scroll-target="#comparing-estimators-for-center-of-unif01">Comparing Estimators for Center of Unif(0,1)</a></li>
   <li><a href="#sampling-distribution-of-the-mean-for-the-gamma-distribution" id="toc-sampling-distribution-of-the-mean-for-the-gamma-distribution" class="nav-link" data-scroll-target="#sampling-distribution-of-the-mean-for-the-gamma-distribution">Sampling Distribution of the Mean for the Gamma Distribution</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/maxdrohde/blog_quarto/edit/main/anim.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/maxdrohde/blog_quarto/edit/main/anim.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
@@ -197,59 +229,36 @@ background: #f1f3f5;
 
 
 
+
 <p>Below are some animations I created using <a href="https://gganimate.com/index.html">gganimate</a> to help me understand concepts in statistics. The work of <a href="https://www.3blue1brown.com">3Blue1Brown</a> and <a href="https://seeing-theory.brown.edu">Seeing Theory</a> have been an inspiration for me.</p>
 <section id="overfitting-with-regression-splines" class="level4">
 <h4 class="anchored" data-anchor-id="overfitting-with-regression-splines">Overfitting with Regression Splines</h4>
 <p>Regression splines are an effective tool for fitting curves to non-linear data. However, the flexibility of splines is both a blessing and a curse. If the degrees of freedom are set too high, splines can quickly overfit a dataset – resulting in good performance on the training data but poor performance on the testing data.</p>
 <p>The below animation shows training data (top left) and test data (top right), with the true data generating function as the gray dashed line. We see that the best performance on the test set is obtained at about 5 degrees of freedom, while the training error goes to zero, a clear sign of overfitting.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/spline_overfitting.mp4" class="img-fluid" controls=""><a href="anim/spline_overfitting.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/spline_overfitting.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/spline_overfitting.mp4">Video</a></video></p>
 </section>
 <section id="illustrating-the-bias-variance-tradeoff-with-the-knn-and-least-squares-classifiers" class="level4">
 <h4 class="anchored" data-anchor-id="illustrating-the-bias-variance-tradeoff-with-the-knn-and-least-squares-classifiers">Illustrating the bias-variance tradeoff with the KNN and Least-Squares classifiers</h4>
 <p>Comparing the least-squares classifier to the KNN classifier, fit on bootstrap resamples, demonstrates the bias-variance tradeoff. The black line is the true 0.5 probability contour, the red line is the estimated 0.5 probability contour. Data from Elements of Statistical Learning.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/knn_vs_ls.mp4" class="img-fluid" controls=""><a href="anim/knn_vs_ls.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/knn_vs_ls.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/knn_vs_ls.mp4">Video</a></video></p>
 </section>
 <section id="example-of-link-function-misspecification-in-glm-for-binary-outcomes" class="level4">
 <h4 class="anchored" data-anchor-id="example-of-link-function-misspecification-in-glm-for-binary-outcomes">Example of link function misspecification in GLM for binary outcomes</h4>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/binomial_link.mp4" class="img-fluid" controls=""><a href="anim/binomial_link.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/binomial_link.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/binomial_link.mp4">Video</a></video></p>
 </section>
 <section id="bayesian-inference-for-a-binomial-proportion" class="level4">
 <h4 class="anchored" data-anchor-id="bayesian-inference-for-a-binomial-proportion">Bayesian Inference for a Binomial Proportion</h4>
 <p>Bayesian inference can be using to quantity our uncertainty about the parameter <span class="math inline">\(p\)</span> from a statistical model where the data is distributed <span class="math inline">\(\text{Bin}(n,p)\)</span>. An example is the bias of a coin. In the below example, the true bias is <span class="math inline">\(p = 0.7\)</span>. As the data come in, we can update our posterior distribution for <span class="math inline">\(p\)</span>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/binom_bayes.mp4" class="img-fluid" controls=""><a href="anim/binom_bayes.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/binom_bayes.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/binom_bayes.mp4">Video</a></video></p>
 </section>
 <section id="k-nearest-neighbors-decision-boundary" class="level4">
 <h4 class="anchored" data-anchor-id="k-nearest-neighbors-decision-boundary">k-Nearest Neighbors Decision Boundary</h4>
 <p>k-Nearest Neighbors is a non-parametric classification algorithm that classifies each point to the majority class of the <span class="math inline">\(k\)</span> nearest points. The number of neighbors to use greatly affects the decision boundaries, as shown in the below animation.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/knn_anim.mp4" class="img-fluid" controls=""><a href="anim/knn_anim.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/knn_anim.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/knn_anim.mp4">Video</a></video></p>
 </section>
 <section id="simple-mcmc-animation" class="level4">
 <h4 class="anchored" data-anchor-id="simple-mcmc-animation">Simple MCMC Animation</h4>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/mcmc_anim.mp4" class="img-fluid" controls=""><a href="anim/mcmc_anim.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/mcmc_anim.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/mcmc_anim.mp4">Video</a></video></p>
 </section>
 <section id="bayesian-linear-regression" class="level4">
 <h4 class="anchored" data-anchor-id="bayesian-linear-regression">Bayesian Linear Regression</h4>
@@ -260,66 +269,38 @@ background: #f1f3f5;
 <li>the intercept of the linear relationship</li>
 </ul>
 <p>The model was fit using <a href="https://mc-stan.org">Stan</a> to do the MCMC sampling and the posterior distributions were plotted using a <a href="https://en.wikipedia.org/wiki/Kernel_density_estimation">kernel density estimate</a>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/bayes_lin_reg.mp4" class="img-fluid" controls=""><a href="anim/bayes_lin_reg.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/bayes_lin_reg.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/bayes_lin_reg.mp4">Video</a></video></p>
 </section>
 <section id="visualizing-priors" class="level4">
 <h4 class="anchored" data-anchor-id="visualizing-priors">Visualizing priors</h4>
 <p>When doing Bayesian inference, it’s important to visualize what your priors are implying. For a linear regression with only an intercept and slope, a N(0,1) prior on the slope produces very different regression lines (before using data) compared to a N(0,10) prior.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/priors.mp4" class="img-fluid" controls=""><a href="anim/priors.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/priors.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/priors.mp4">Video</a></video></p>
 </section>
 <section id="calculating-π-with-monte-carlo-estimation" class="level4">
 <h4 class="anchored" data-anchor-id="calculating-π-with-monte-carlo-estimation">Calculating π with Monte Carlo Estimation</h4>
 <p>Monte Carlo estimation is a technique for solving deterministic problems by random sampling.</p>
 <p>For example, you can compute π by uniform sampling within a square for <span class="math inline">\(x \in [-1,1], y \in [-1,1]\)</span>, and rejecting the points where <span class="math inline">\(x^2 + y^2 &gt; 1\)</span>.</p>
 <p>Then <span class="math inline">\(\pi = \text{(Proportion not rejected)} \times 4\)</span>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/pi_monte_carlo.mp4" class="img-fluid" controls=""><a href="anim/pi_monte_carlo.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/pi_monte_carlo.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/pi_monte_carlo.mp4">Video</a></video></p>
 </section>
 <section id="overfitting-in-polynomial-regression" class="level4">
 <h4 class="anchored" data-anchor-id="overfitting-in-polynomial-regression">Overfitting in Polynomial Regression</h4>
 <p>Overfitting is a major problem when fitting complex models to few data points. As a simple example, polynomial regression can fit noise in the data rather than the true model. Here the true model is quadratic with error that is normally distributed with mean zero. As the degree of the polynomial increases, the model rapidly overfits the data. At the extreme, if the degree of the polynomial is greater than (Number of points - 1), then the fitted polynomial will pass through every data point.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/overfitting.mp4" class="img-fluid" controls=""><a href="anim/overfitting.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/overfitting.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/overfitting.mp4">Video</a></video></p>
 </section>
 <section id="finding-the-mle-estimate-of-the-mean-for-a-normal-distribution" class="level4">
 <h4 class="anchored" data-anchor-id="finding-the-mle-estimate-of-the-mean-for-a-normal-distribution">Finding the MLE estimate of the mean for a Normal Distribution</h4>
 <p>You can estimate the MLE for the mean of a normal distribution given a dataset by varying the mean until the peak of the log-likelihood is reached. This visually looks like sliding around different candidate distributions until the best match is found. Once the MLE for the mean is found, the variance can be varied in the same fashion (keeping the mean fixed at the MLE) to find the MLE for the variance.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/lik.mp4" class="img-fluid" controls=""><a href="anim/lik.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/lik.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/lik.mp4">Video</a></video></p>
 </section>
 <section id="example-of-collider-bias" class="level4">
 <h4 class="anchored" data-anchor-id="example-of-collider-bias">Example of collider bias</h4>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="anim/collider.gif" class="img-fluid figure-img"></p>
-</figure>
-</div>
+<p><img src="anim/collider.gif" class="img-fluid" data-fig-width="100%"></p>
 </section>
 <section id="using-quantile-quantile-plots-to-detect-depatures-from-normality" class="level4">
 <h4 class="anchored" data-anchor-id="using-quantile-quantile-plots-to-detect-depatures-from-normality">Using Quantile-Quantile Plots to Detect Depatures from Normality</h4>
 <p>Quantile-quantile plots are a useful tool for assessing the fit of data to a given distribution. This animation shows Q-Q plots for t-distributed data with various degrees of freedom. We see that the Q-Q plot shows more clearly the departure from normality compared to the histogram.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/qq_tdist.mp4" class="img-fluid" controls=""><a href="anim/qq_tdist.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/qq_tdist.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/qq_tdist.mp4">Video</a></video></p>
 </section>
 <section id="the-german-tank-problem" class="level4 page-columns page-full">
 <h4 class="anchored" data-anchor-id="the-german-tank-problem">The German Tank Problem</h4>
@@ -334,29 +315,17 @@ There are <span class="math inline">\(X_{(n)} - n\)</span> known missing tank se
 <aside>
 My analysis follows that given in Leemis, L. (2020). Mathematical Statistics.
 </aside>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/german_tank_anim.mp4" class="img-fluid" controls=""><a href="anim/german_tank_anim.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/german_tank_anim.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/german_tank_anim.mp4">Video</a></video></p>
 </section>
 <section id="comparing-estimators-for-unif0-θ" class="level4">
 <h4 class="anchored" data-anchor-id="comparing-estimators-for-unif0-θ">Comparing Estimators for Unif(0, θ)</h4>
 <p>The maximum likelihood estimator (MLE), while it has many nice statistics properties, isn’t always the best estimator. To estimate θ for Unif(0,θ), the MLE is the maximum of the data, which is biased low. It is an underestimate of the true value of θ. To correct the bias, we can multiply the maximum by <span class="math inline">\(\frac{n+1}{n}\)</span> for an estimator that is unbiased, but has slightly higher variance. However, we see that the result is lower mean-squared error (MSE). We also show the method of moments estimator for reference, which is twice the sample mean.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/mle_unif.mp4" class="img-fluid" controls=""><a href="anim/mle_unif.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/mle_unif.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/mle_unif.mp4">Video</a></video></p>
 </section>
 <section id="comparing-estimators-for-center-of-unif01" class="level4">
 <h4 class="anchored" data-anchor-id="comparing-estimators-for-center-of-unif01">Comparing Estimators for Center of Unif(0,1)</h4>
 <p>Estimators of central tendency can have very different properties. For Unif(0,1), the mean, median, and midrange (defined by <span class="math inline">\(\frac{\text{max} - \text{min}}{2}\)</span>) are consistent estimators of the center, but the median has high variance and the midrange is biased.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/unif_center.mp4" class="img-fluid" controls=""><a href="anim/unif_center.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/unif_center.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/unif_center.mp4">Video</a></video></p>
 </section>
 <section id="sampling-distribution-of-the-mean-for-the-gamma-distribution" class="level4">
 <h4 class="anchored" data-anchor-id="sampling-distribution-of-the-mean-for-the-gamma-distribution">Sampling Distribution of the Mean for the Gamma Distribution</h4>
@@ -367,11 +336,7 @@ My analysis follows that given in Leemis, L. (2020). Mathematical Statistics.
 <li>has expected value equal to population mean</li>
 </ul>
 <p>For example, mean of N i.i.d samples from Gamma(a,b) is distributed Gamma(Na, Nb).</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="anim/gamma.mp4" class="img-fluid" controls=""><a href="anim/gamma.mp4">Video</a></video></p>
-</figure>
-</div>
+<p><video src="anim/gamma.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="anim/gamma.mp4">Video</a></video></p>
 
 
 </section>
@@ -456,10 +421,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -469,8 +451,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -482,7 +473,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -526,6 +640,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -551,6 +666,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -614,4 +755,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/maxdrohde/blog_quarto/edit/main/anim.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
