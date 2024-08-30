@@ -18,7 +18,7 @@ In this post we will show how a common method in computational statistics, Marko
 
 To cut to the chase, here's a video of the algorithm in action running on my laptop:
 
-![](demo.mp4){fig-width=100%}
+{{< video compressed_demo.mp4 >}}
 
 We see that within a few hundred iterations of the algorithm, the true text is revealed. This post will explain the theory of how this works and will describe the computational details using R. Many of the details were inspired by an example given by Persi Diaconis in his paper "The Markov Chain Monte Carlo Revolution"^[<https://math.uchicago.edu/~shmuel/Network-course-readings/MCMCRev.pdf>].
 

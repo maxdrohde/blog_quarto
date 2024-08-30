@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.5.56">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Max Rohde">
 <meta name="dcterms.date" content="2022-11-10">
 <meta name="description" content="Using cryptography to demonstrate the power of MCMC techniques in computational statistics">
-<title>Max Rohde - Code-breaking with Markov Chain Monte Carlo (MCMC)</title>
+<title>Code-breaking with Markov Chain Monte Carlo (MCMC) – Max Rohde</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -72,7 +72,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -115,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 background: #f1f3f5;
       }
 </style>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -141,11 +143,11 @@ window.Quarto = {
   typesetMath
 };
 </script><link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Max Rohde - Code-breaking with Markov Chain Monte Carlo (MCMC)">
+<meta property="og:title" content="Code-breaking with Markov Chain Monte Carlo (MCMC) – Max Rohde">
 <meta property="og:description" content="Using cryptography to demonstrate the power of MCMC techniques in computational statistics">
 <meta property="og:image" content="preview.png">
 <meta property="og:site_name" content="Max Rohde">
-<meta name="twitter:title" content="Max Rohde - Code-breaking with Markov Chain Monte Carlo (MCMC)">
+<meta name="twitter:title" content="Code-breaking with Markov Chain Monte Carlo (MCMC) – Max Rohde">
 <meta name="twitter:description" content="Using cryptography to demonstrate the power of MCMC techniques in computational statistics">
 <meta name="twitter:image" content="preview.png">
 <meta name="twitter:creator" content="@max_d_rohde">
@@ -161,7 +163,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -188,7 +190,7 @@ window.Quarto = {
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full"><div class="quarto-title-banner page-columns page-full">
@@ -250,13 +252,13 @@ window.Quarto = {
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/maxdrohde/blog_quarto/edit/main/posts/code-breaking-with-metropolis/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content"><section id="overview" class="level2 page-columns page-full"><h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <p>In this post we will show how a common method in computational statistics, Markov Chain Monte Carlo (implemented using the Metropolis algorithm), can be used to decode hidden messages encoded using a substitution cipher<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;From Merriam-Webster, a cipher is defined as “a method of transforming a text in order to conceal its meaning”.</p></div></div><p>To cut to the chase, here’s a video of the algorithm in action running on my laptop:</p>
-<p><video src="demo.mp4" class="img-fluid" data-fig-width="100%" controls=""><a href="demo.mp4">Video</a></video></p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="compressed_demo.mp4"></video></div>
 <p>We see that within a few hundred iterations of the algorithm, the true text is revealed. This post will explain the theory of how this works and will describe the computational details using R. Many of the details were inspired by an example given by Persi Diaconis in his paper “The Markov Chain Monte Carlo Revolution”<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;<a href="https://math.uchicago.edu/~shmuel/Network-course-readings/MCMCRev.pdf" class="uri">https://math.uchicago.edu/~shmuel/Network-course-readings/MCMCRev.pdf</a></p></div></div></section><section id="the-substitution-cipher" class="level2 page-columns page-full"><h2 class="anchored" data-anchor-id="the-substitution-cipher">The substitution cipher</h2>
 <p>The substitution cipher is one of the simplest cryptographic methods. It works by swapping each letter in the alphabet with another.</p>
@@ -496,13 +498,13 @@ The Metropolis algorithm and Bayesian statistics
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Look at a piece of the results (skipping the table of contents)</span></span>
 <span><span class="va">war_and_peace_2_characters</span><span class="op">[</span><span class="fl">10000</span><span class="op">:</span><span class="fl">10100</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  [1] "f " " a" "au" "us" "st" "tr" "ri" "ia" "a " " p" "pe" "er" "rh" "ha" "ap"
- [16] "ps" "s " " i" "i " " d" "do" "on" "nt" "t " " u" "un" "nd" "de" "er" "rs"
- [31] "st" "ta" "an" "nd" "dt" "th" "hi" "in" "ng" "gs" "s " " b" "bu" "ut" "t "
- [46] " a" "au" "us" "st" "tr" "ri" "ia" "a " " n" "ne" "ev" "ve" "er" "r " " h"
- [61] "ha" "as" "s " " w" "wi" "is" "sh" "he" "ed" "d " " a" "an" "nd" "d " " d"
- [76] "do" "oe" "es" "s " " n" "no" "ot" "t " " w" "wi" "is" "sh" "h " " f" "fo"
- [91] "or" "r " " w" "wa" "ar" "r " " s" "sh" "he" "ei" "is"</code></pre>
+<pre><code>  [1] "t " " s" "sp" "pe" "ea" "ak" "k " " t" "to" "o " " m" "me" "e " " o" "of"
+ [16] "f " " a" "au" "us" "st" "tr" "ri" "ia" "a " " p" "pe" "er" "rh" "ha" "ap"
+ [31] "ps" "s " " i" "i " " d" "do" "on" "nt" "t " " u" "un" "nd" "de" "er" "rs"
+ [46] "st" "ta" "an" "nd" "dt" "th" "hi" "in" "ng" "gs" "s " " b" "bu" "ut" "t "
+ [61] " a" "au" "us" "st" "tr" "ri" "ia" "a " " n" "ne" "ev" "ve" "er" "r " " h"
+ [76] "ha" "as" "s " " w" "wi" "is" "sh" "he" "ed" "d " " a" "an" "nd" "d " " d"
+ [91] "do" "oe" "es" "s " " n" "no" "ot" "t " " w" "wi" "is"</code></pre>
 </div>
 </div>
 </section><section id="estimated-frequencies-from-war-and-peace" class="level3"><h3 class="anchored" data-anchor-id="estimated-frequencies-from-war-and-peace">Estimated frequencies from <em>War and Peace</em>
@@ -518,19 +520,19 @@ The Metropolis algorithm and Bayesian statistics
 <div class="cell-output cell-output-stdout">
 <pre><code>war_and_peace_2_characters
                         a            b            c            d            e 
-9.053610e-04 2.097140e-02 7.463716e-03 6.200291e-03 5.077064e-03 3.436817e-03 
+9.721426e-04 2.097050e-02 7.462527e-03 6.200124e-03 5.076927e-03 3.437383e-03 
            f            g            h            i            j            k 
-6.412562e-03 2.929341e-03 1.512555e-02 9.208617e-03 4.893754e-04 1.194642e-03 
+6.412389e-03 2.929921e-03 1.512514e-02 9.208369e-03 4.893622e-04 1.194610e-03 
            l            m            n            o            p            q 
-3.989051e-03 5.850455e-03 4.422150e-03 1.038582e-02 5.434799e-03 4.205930e-04 
+3.988615e-03 5.850626e-03 4.422031e-03 1.038521e-02 5.434652e-03 4.205816e-04 
            r            s            t            u            v            w 
-4.484022e-03 1.219292e-02 2.646478e-02 1.689283e-03 1.191351e-03 1.207313e-02 
+4.483901e-03 1.219259e-02 2.646406e-02 1.689896e-03 1.190990e-03 1.207412e-02 
            x            y            z           a            aa           ab 
-1.474379e-04 1.931503e-03 4.179602e-05 4.516603e-03 2.369538e-05 1.161074e-03 
+1.474339e-04 1.931121e-03 4.179489e-05 4.516481e-03 2.369474e-05 1.161042e-03 
           ac           ad           ae           af           ag           ah 
-2.347817e-03 3.736959e-03 2.501179e-05 5.660563e-04 1.129809e-03 1.260463e-04 
+2.347754e-03 3.736858e-03 2.501112e-05 5.663701e-04 1.129778e-03 1.260429e-04 
           ai           aj           ak           al 
-2.882938e-03 5.759294e-05 8.388823e-04 4.695634e-03 </code></pre>
+2.882860e-03 5.759138e-05 8.388596e-04 4.695508e-03 </code></pre>
 </div>
 </div>
 <p>Note that two-letter combinations that look like a single letter are actually a letter and a space, since we are including spaces in our frequencies to help the algorithm learn word boundaries.</p>
@@ -542,13 +544,13 @@ The Metropolis algorithm and Bayesian statistics
 <div class="cell-output cell-output-stdout">
 <pre><code>war_and_peace_2_characters
          e            t          he          th          d            a 
-0.033159052 0.026464778 0.024673473 0.024416444 0.022819309 0.020971399 
+0.033158815 0.026464063 0.024672478 0.024415785 0.022817048 0.020970504 
          s           t           in           h          an          er 
-0.018675251 0.017588225 0.015909144 0.015125551 0.014968898 0.014645720 
+0.018674747 0.017589067 0.015908715 0.015125143 0.014968165 0.014645324 
          n            s           w          re          nd           o 
-0.012217272 0.012192919 0.012073125 0.011726251 0.011409326 0.010385817 
+0.012216613 0.012192590 0.012074116 0.011726264 0.011408689 0.010385207 
          ed          r  
-0.009573263 0.009366257 </code></pre>
+0.009573004 0.009366663 </code></pre>
 </div>
 </div>
 <p>We can also see the probability of any combination we choose:</p>
@@ -557,7 +559,7 @@ The Metropolis algorithm and Bayesian statistics
 <span><span class="va">probability_table</span><span class="op">[</span><span class="st">"ou"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
-0.007754971 </code></pre>
+0.007754762 </code></pre>
 </div>
 </div>
 <p>However, there are some two-character combinations that do not occur in <em>War and Peace</em>. Instead of estimating the probability of these combinations to be zero, we instead approximate the probability by assuming each of them occurred once in the book. To implement this approximation, we use the below function, which returns the empirical probability of any two-character combination.</p>
@@ -578,17 +580,17 @@ The Metropolis algorithm and Bayesian statistics
 <span><span class="fu">get_prob_two_char</span><span class="op">(</span><span class="st">"ou"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
-0.007754971 </code></pre>
+0.007754762 </code></pre>
 </div>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span><span class="op">[</span><span class="st">"ou"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ou 
-0.007754971 </code></pre>
+0.007754762 </code></pre>
 </div>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Try a combination not in War and Peace</span></span>
 <span><span class="fu">get_prob_two_char</span><span class="op">(</span><span class="st">"qq"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.291025e-07</code></pre>
+<pre><code>[1] 3.290936e-07</code></pre>
 </div>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">probability_table</span><span class="op">[</span><span class="st">"qq"</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -609,7 +611,7 @@ The Metropolis algorithm and Bayesian statistics
 <span></span>
 <span><span class="va">score</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 8.63621e-29</code></pre>
+<pre><code>[1] 8.633045e-29</code></pre>
 </div>
 </div>
 <p>However, we see that the score is an extremely small number, about <span class="math inline">\(10^{-55}\)</span>. Therefore, for better numerical precision, we should work on the log scale, and then transform back when we need probabilities. Remember, on the log scale we express products as sums. Below is a function to implement this approach:</p>
@@ -632,11 +634,11 @@ The Metropolis algorithm and Bayesian statistics
 <div class="cell">
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">get_log_lik_text</span><span class="op">(</span><span class="st">"This is English text"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -130.5349</code></pre>
+<pre><code>[1] -130.5347</code></pre>
 </div>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">get_log_lik_text</span><span class="op">(</span><span class="st">"fghr gh wghdfrf etfs"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -139.0768</code></pre>
+<pre><code>[1] -139.0766</code></pre>
 </div>
 </div>
 <p>As expected the log-likelihood for the English text is higher than for the non-English text.</p>
@@ -799,18 +801,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -842,7 +833,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
   const viewSource = window.document.getElementById('quarto-view-source') ||
                      window.document.getElementById('quarto-code-tools-source');
   if (viewSource) {
@@ -901,7 +914,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1245,7 +1258,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>To cut to the chase, here's a video of the algorithm in action running on my laptop:</span>
 <span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a><span class="al">![](demo.mp4)</span>{fig-width=100%}</span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>{{&lt; video compressed_demo.mp4 &gt;}}</span>
 <span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>We see that within a few hundred iterations of the algorithm, the true text is revealed. This post will explain the theory of how this works and will describe the computational details using R. Many of the details were inspired by an example given by Persi Diaconis in his paper "The Markov Chain Monte Carlo Revolution"^<span class="co">[</span><span class="ot">&lt;https://math.uchicago.edu/~shmuel/Network-course-readings/MCMCRev.pdf&gt;</span><span class="co">]</span>.</span>
 <span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a></span>
@@ -1730,10 +1743,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb58-569"><a href="#cb58-569" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb58-570"><a href="#cb58-570" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb58-571"><a href="#cb58-571" aria-hidden="true" tabindex="-1"></a></span>
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/maxdrohde/blog_quarto/edit/main/posts/code-breaking-with-metropolis/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>videojs(video_shortcode_videojs_video1);</script>
 
 
-
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/maxdrohde/blog_quarto/edit/main/posts/code-breaking-with-metropolis/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+</body></html>

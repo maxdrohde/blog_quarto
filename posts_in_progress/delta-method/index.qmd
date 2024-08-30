@@ -1,0 +1,102 @@
+---
+title: What is the delta method, and how do I use it?
+description: The delta method is a topic that causes confusion for many statistics students. This post explains what the delta method is, how to use it, and provides some code examples with R.
+author: Max Rohde
+date: 08/16/2024
+image: preview.png
+format: live-html
+engine: knitr
+webr:
+  packages:
+    - purrr
+    - ggplot2
+    - patchwork
+---
+
+```{webr}
+#| echo: false
+#| edit: false
+
+library(ggplot2)
+library(patchwork)
+set.seed(777)
+```
+
+{{< include /_extensions/r-wasm/live/_knitr.qmd >}}
+
+# Part 1: The Central Limit Theorem
+
+Let's begin with a short review of the Central Limit Theorem (CLT).
+
+```{webr}
+#| edit: false
+benoulli_mean <-
+  function(n, p){
+    mean(rbinom(n = n, size = 1, prob = p))
+  }
+```
+
+```{ojs}
+//| echo: false
+viewof n = Inputs.range([15, 200], {value: 15, step: 5, label: "n"})
+```
+
+```{webr}
+#| edit: false
+#| input:
+#|   - n
+#| define:
+#|   - means 
+#|   - log_means
+
+means <- purrr::map_dbl(1:1e3, ~benoulli_mean(n, 0.7))
+log_means <- log(means)
+```
+
+```{webr}
+#| edit: false
+#| input:
+#|   - means
+#| define:
+#|   - df 
+
+df <- data.frame(x = means, logx = log(means))
+```
+
+Here we plot the sampling distrubution of $\hat{p}_{n}$
+
+```{ojs}
+//| echo: false
+
+// Import the Plot library
+import { Plot } from "@observablehq/plot";
+
+Plot.plot({
+  y: { grid: true },
+   x: { 
+    domain: [0, 1]  // Set the x-axis range
+  },
+  marks: [
+    Plot.rectY(df, Plot.binX({ y: "count" }, { x: "x" })),
+    Plot.ruleY([0])
+  ]
+})
+
+```
+
+And here we plot the sampling distrubution of $\log(\hat{p}_{n})$
+
+```{ojs}
+//| echo: false
+
+Plot.plot({
+  y: { grid: true },
+   x: { 
+    domain: [-1, 0]  // Set the x-axis range
+  },
+  marks: [
+    Plot.rectY(df, Plot.binX({ y: "count" }, { x: "logx" })),
+    Plot.ruleY([0])
+  ]
+})
+```

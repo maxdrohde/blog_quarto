@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.5.56">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Max Rohde">
 <meta name="dcterms.date" content="2022-03-31">
 <meta name="description" content="The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.">
-<title>Max Rohde - Using the tmerge() function to structure time-dependent covariates for survival analysis</title>
+<title>Using the tmerge() function to structure time-dependent covariates for survival analysis – Max Rohde</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -117,11 +117,11 @@ background: #f1f3f5;
 </style>
 <script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Max Rohde - Using the tmerge() function to structure time-dependent covariates for survival analysis">
+<meta property="og:title" content="Using the tmerge() function to structure time-dependent covariates for survival analysis – Max Rohde">
 <meta property="og:description" content="The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.">
 <meta property="og:image" content="preview.png">
 <meta property="og:site_name" content="Max Rohde">
-<meta name="twitter:title" content="Max Rohde - Using the tmerge() function to structure time-dependent covariates for survival analysis">
+<meta name="twitter:title" content="Using the tmerge() function to structure time-dependent covariates for survival analysis – Max Rohde">
 <meta name="twitter:description" content="The tmerge() function in the survival package is used to structure data to represent time-dependent variables in a survival analysis. This post shows a minimal example of how to use tmerge.">
 <meta name="twitter:image" content="preview.png">
 <meta name="twitter:creator" content="@max_d_rohde">
@@ -137,7 +137,7 @@ background: #f1f3f5;
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -164,7 +164,7 @@ background: #f1f3f5;
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full"><div class="quarto-title-banner page-columns page-full">
@@ -216,7 +216,7 @@ background: #f1f3f5;
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/maxdrohde/blog_quarto/edit/main/posts/tmerge/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/maxdrohde/blog_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content"><section id="load-packages" class="level2"><h2 class="anchored" data-anchor-id="load-packages">Load packages</h2>
@@ -233,8 +233,7 @@ background: #f1f3f5;
 <p>Take for example a subject who started with <code>exposure = 1</code>. Then at 4 years, their exposure status changed to <code>exposure = 0</code>. Then at 7 years, their exposure status changed to <code>exposure = 2</code>. Then the subject died at 10 years (i.e., <code>status = 1</code>). We would need three rows to represent this subject, since there are 3 distinct time periods: <code>0-4</code>, <code>4-7</code>, and <code>7-10</code>. The <code>survival</code> package uses the names <code>tstart</code> and <code>tstop</code> to denote the beginning and end of each time period. So when structuring data from time-dependent variables, the rows for this subject would look like this:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead><tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">tstart</th>
@@ -268,7 +267,6 @@ background: #f1f3f5;
 </table>
 </div>
 </div>
-</div>
 </section><section id="using-tmerge" class="level2"><h2 class="anchored" data-anchor-id="using-tmerge">Using <code>tmerge</code>
 </h2>
 <section id="creating-example-data" class="level3"><h3 class="anchored" data-anchor-id="creating-example-data">Creating example data</h3>
@@ -284,8 +282,7 @@ background: #f1f3f5;
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead><tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
@@ -315,7 +312,6 @@ background: #f1f3f5;
 </table>
 </div>
 </div>
-</div>
 <p>And here’s some example time-dependent data. Each subject has a record for their <code>exposure</code> status at <code>time = 0</code>, and another record whenever their exposure status changes. For example, in the data below, subject 1 has</p>
 <ul>
 <li>exposure status 0 from time 0 to 2</li>
@@ -331,8 +327,7 @@ background: #f1f3f5;
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead><tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">time</th>
@@ -373,7 +368,6 @@ background: #f1f3f5;
 </table>
 </div>
 </div>
-</div>
 <p>We will use the <code>tmerge</code> function to turn these data frames in a single data frame to use in a time-dependent survival analysis. The <code>tmerge</code> function is used multiple times in the process of formatting data for time-dependent covariates.</p>
 <p>First, we use <code>tmerge</code> with the independent variables. Note that we call <code>tmerge</code> with <code>df_time_ind</code> as both the <code>data1</code> and <code>data2</code> argument. We must also specify the <code>id</code> variable and the <code>event</code> variable using the syntax <code>event(survival_time_variable, event_indicator_variable)</code>. Using the name <code>event</code> on the left of the expression is optional.</p>
 <div class="cell">
@@ -387,8 +381,7 @@ background: #f1f3f5;
 <p>Now the <code>df_time_ind</code> data frame looks like this:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead><tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
@@ -426,7 +419,6 @@ background: #f1f3f5;
 </table>
 </div>
 </div>
-</div>
 <p>Notice that the <code>tstart</code>, <code>tstart</code>, and <code>event</code> variables have been added.</p>
 <p>Now to add the time-dependent variables, we call <code>tmerge</code> again, now with <code>df_time_ind</code> as the <code>data1</code> argument and <code>df_time_dep</code> as the <code>data2</code> argument. To specify the time-dependent exposure variable, we use the <code>tdc</code> function with the syntax <code>time_dependent_variable = tdc(time, time_dependent_variable)</code>.</p>
 <div class="cell">
@@ -440,8 +432,7 @@ background: #f1f3f5;
 <p>Below we have our completed dataset with properly structured time-dependent variables.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead><tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
@@ -508,7 +499,6 @@ background: #f1f3f5;
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 <p>Finally, fitting a model with the <code>survival</code> package uses the general syntax <code>Surv(tstart, tstop, event_indicator_variable)</code> as shown below, where we fit a Cox proportional hazard model.</p>
@@ -557,18 +547,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -600,7 +579,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
   const viewSource = window.document.getElementById('quarto-view-source') ||
                      window.document.getElementById('quarto-code-tools-source');
   if (viewSource) {
@@ -659,7 +660,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1131,7 +1132,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a></span>
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

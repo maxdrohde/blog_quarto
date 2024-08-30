@@ -1,0 +1,55 @@
+---
+title: "Untitled"
+format: html
+---
+
+<https://statsepi.substack.com/p/one-simple-trick-that-statistician>
+
+<https://doi.org/10.1136/bmj.d561>
+
+```{r}
+library(tidyverse)
+
+library(furrr)
+future::plan(multisession, workers=12)
+```
+
+```{r}
+one_sim <- function(new_mean){
+  a0 <- rnorm(50, mean = 1, sd = 2)
+  b0 <- rnorm(50, mean = 1, sd = 2)
+  
+  a1 <- rnorm(50, mean = new_mean, sd = 2)
+  b1 <- rnorm(50, mean = new_mean, sd = 2)
+  
+  method1 <- (t.test(a1, b1)$p.value < 0.05)
+  method2 <- (t.test(a0, a1)$p.value > 0.05) & (t.test(b0, b1)$p.value < 0.05)
+  
+  return(data.frame("m1" = method1, "m2" = method2))
+}
+
+run_sim <- function(new_mean){
+  res <- purrr::map(1:1e3,
+                    ~one_sim(new_mean),
+                    .progress = FALSE) |>
+    purrr::list_rbind()
+  
+  return(mean(res$m2))
+}
+```
+
+```{r}
+x <- seq(0, 5, by = 0.05)
+
+
+m <- future_map_dbl(x, ~run_sim(.x),
+                    .progress = TRUE,
+                    .options = furrr_options(seed=TRUE))
+```
+
+```{r}
+plot(x, m, type = "l")
+```
+
+
+

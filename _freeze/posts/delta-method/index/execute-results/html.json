@@ -1,0 +1,15 @@
+{
+  "hash": "d3f31867e6614eafbf30ffdbfb8fde4f",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: What is the delta method, and how do I use it?\ndescription: The delta method is a topic that causes confusion for many statistics students. This post explains what the delta method is, how to use it, and provides some code examples with R.\nauthor: Max Rohde\ndate: 08/16/2024\nimage: preview.png\nformat: live-html\nengine: knitr\nwebr:\n  packages:\n    - purrr\n    - ggplot2\n    - patchwork\n---\n\n::: {.cell edit='false'}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n\n\n# Part 1: The Central Limit Theorem\n\nLet's begin with a short review of the Central Limit Theorem (CLT).\n\n\n\n::: {.cell edit='false'}\n```{webr}\n#| edit: false\nbenoulli_mean <-\n  function(n, p){\n    mean(rbinom(n = n, size = 1, prob = p))\n  }\n```\n:::\n\n```{ojs}\n//| echo: false\nviewof n = Inputs.range([15, 200], {value: 15, step: 5, label: \"n\"})\n```\n\n::: {.cell edit='false' input='false' define='[\"means\",\"log_means\"]'}\n```{webr}\n#| edit: false\n#| input:\n#|   - n\n#| define:\n#|   - means\n#|   - log_means\n\nmeans <- purrr::map_dbl(1:1e3, ~benoulli_mean(n, 0.7))\nlog_means <- log(means)\n```\n:::\n\n::: {.cell edit='false' input='means' define='df'}\n```{webr}\n#| edit: false\n#| input:\n#|   - means\n#| define:\n#|   - df\n\ndf <- data.frame(x = means, logx = log(means))\n```\n:::\n\n\n\nHere we plot the sampling distrubution of $\\hat{p}_{n}$\n\n\n\n```{ojs}\n//| echo: false\n\n// Import the Plot library\nimport { Plot } from \"@observablehq/plot\";\n\nPlot.plot({\n  y: { grid: true },\n   x: { \n    domain: [0, 1]  // Set the x-axis range\n  },\n  marks: [\n    Plot.rectY(df, Plot.binX({ y: \"count\" }, { x: \"x\" })),\n    Plot.ruleY([0])\n  ]\n})\n\n```\n\n\n\nAnd here we plot the sampling distrubution of $\\log(\\hat{p}_{n})$\n\n\n\n```{ojs}\n//| echo: false\n\nPlot.plot({\n  y: { grid: true },\n   x: { \n    domain: [-1, 0]  // Set the x-axis range\n  },\n  marks: [\n    Plot.rectY(df, Plot.binX({ y: \"count\" }, { x: \"logx\" })),\n    Plot.ruleY([0])\n  ]\n})\n```",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
