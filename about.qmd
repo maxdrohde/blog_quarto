@@ -14,16 +14,14 @@ about:
       text: Google Scholar
     - text: Github
       href: https://github.com/maxdrohde
-    - text: Twitter
-      href: https://twitter.com/max_d_rohde
     - text: LinkedIn
-      href: https://www.linkedin.com/in/maximilian-rohde-694172121/
+      href: https://www.linkedin.com/in/maxdrohde
 ---
 
 :::{#hero-heading}
 
 ## About me
-Hello, I’m Max. I'm currently a PhD student at Vanderbilt University in the [Department of Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics). Currently I'm conducting research on Bayesian clinical trial designs for COVID-19 with [Dr. Frank Harrell](https://www.fharrell.com), and I'm a statistician on the [ACTIV-6 trial](https://activ6study.org).
+Hello, I’m Max. I'm currently a 5th year PhD student at Vanderbilt University in the [Department of Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics). My research is on [Bayesian clinical trial designs for ordinal longitudinal data](https://onlinelibrary.wiley.com/doi/10.1002/sim.10133) with [Dr. Frank Harrell](https://www.fharrell.com), and I'm a statistician on the [ACTIV-6 clinical trial](https://activ6study.org).
 
 ## Education
 
@@ -40,6 +38,10 @@ BA in Geology | 2013 - 2017
 :::
 
 ## Research / Work Experience
+
+- [FDA-OCE-ASA Oncology Educational Fellowship](https://community.amstat.org/fdaoceasaoncologyeducationalfellowship/home)
+
+- PhD Summer Intern at Pfizer: [Bayesian hierarchical models for analyzing adverse events](https://ascpt.onlinelibrary.wiley.com/doi/10.1002/cpt.3087) in gene therapy clinical trials.
 
 - ORISE Fellow at FDA Division of Antivirals: Natural-language processing tools for product label data and meta-analyses of clinical trials for [hepatitis C](https://doi.org/10.1016/j.cgh.2020.08.042) and [HIV](https://www.croiconference.org/abstract/investigation-of-a-potential-composite-endpoint-for-immunologic-nonresponder-trials/) treatments.
 
