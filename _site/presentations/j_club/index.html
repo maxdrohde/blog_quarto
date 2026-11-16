@@ -7,21 +7,27 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.33">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.11.9">
 
   <meta name="author" content="Max Rohde">
   <title>Max Rohde – Building a blog with Quarto</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -96,7 +102,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-a15d0d32d98702f5394b0bd2a0cf8620.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-742651554f3326f3825b0c4c50acbf36.css">
   <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -216,7 +222,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Max Rohde 
+Max Rohde
 </div>
 </div>
 </div>
@@ -247,49 +253,49 @@ Max Rohde
 </section>
 <section id="code-animations" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Code Animations</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb1-1" class="hljs-ln-code"><a></a>starwars <span class="sc">|&gt;</span></span>
-<span id="cb1-2" class="hljs-ln-code"><a></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb1-1" class="hljs-ln-code"><a aria-label="1"></a>starwars <span class="sc">|&gt;</span></span>
+<span id="cb1-2" class="hljs-ln-code"><a aria-label="2"></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="code-animations-1" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Code Animations</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb2-1" class="hljs-ln-code"><a></a>starwars <span class="sc">|&gt;</span></span>
-<span id="cb2-2" class="hljs-ln-code"><a></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span></span>
-<span id="cb2-3" class="hljs-ln-code"><a></a>  <span class="fu">summarise</span>(</span>
-<span id="cb2-4" class="hljs-ln-code"><a></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb2-5" class="hljs-ln-code"><a></a>    <span class="at">mass =</span> <span class="fu">mean</span>(mass, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-6" class="hljs-ln-code"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb2-7" class="hljs-ln-code"><a></a>  <span class="fu">filter</span>(</span>
-<span id="cb2-8" class="hljs-ln-code"><a></a>    n <span class="sc">&gt;</span> <span class="dv">1</span>,</span>
-<span id="cb2-9" class="hljs-ln-code"><a></a>    mass <span class="sc">&gt;</span> <span class="dv">50</span></span>
-<span id="cb2-10" class="hljs-ln-code"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb2-1" class="hljs-ln-code"><a aria-label="1"></a>starwars <span class="sc">|&gt;</span></span>
+<span id="cb2-2" class="hljs-ln-code"><a aria-label="2"></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span></span>
+<span id="cb2-3" class="hljs-ln-code"><a aria-label="3"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb2-4" class="hljs-ln-code"><a aria-label="4"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb2-5" class="hljs-ln-code"><a aria-label="5"></a>    <span class="at">mass =</span> <span class="fu">mean</span>(mass, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-6" class="hljs-ln-code"><a aria-label="6"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-7" class="hljs-ln-code"><a aria-label="7"></a>  <span class="fu">filter</span>(</span>
+<span id="cb2-8" class="hljs-ln-code"><a aria-label="8"></a>    n <span class="sc">&gt;</span> <span class="dv">1</span>,</span>
+<span id="cb2-9" class="hljs-ln-code"><a aria-label="9"></a>    mass <span class="sc">&gt;</span> <span class="dv">50</span></span>
+<span id="cb2-10" class="hljs-ln-code"><a aria-label="10"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="execute-python-code" class="slide level2">
 <h2>Execute Python Code</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
-<span id="cb3-2"><a></a><span class="im">from</span> vega_datasets <span class="im">import</span> data</span>
-<span id="cb3-3"><a></a></span>
-<span id="cb3-4"><a></a>source <span class="op">=</span> data.cars()</span>
-<span id="cb3-5"><a></a></span>
-<span id="cb3-6"><a></a>brush <span class="op">=</span> alt.selection(<span class="bu">type</span><span class="op">=</span><span class="st">'interval'</span>)</span>
-<span id="cb3-7"><a></a></span>
-<span id="cb3-8"><a></a>points <span class="op">=</span> alt.Chart(source).mark_point().encode(</span>
-<span id="cb3-9"><a></a>    x<span class="op">=</span><span class="st">'Horsepower:Q'</span>,</span>
-<span id="cb3-10"><a></a>    y<span class="op">=</span><span class="st">'Miles_per_Gallon:Q'</span>,</span>
-<span id="cb3-11"><a></a>    color<span class="op">=</span>alt.condition(brush, <span class="st">'Origin:N'</span>, alt.value(<span class="st">'lightgray'</span>))</span>
-<span id="cb3-12"><a></a>).add_selection(</span>
-<span id="cb3-13"><a></a>    brush</span>
-<span id="cb3-14"><a></a>)</span>
-<span id="cb3-15"><a></a></span>
-<span id="cb3-16"><a></a>bars <span class="op">=</span> alt.Chart(source).mark_bar().encode(</span>
-<span id="cb3-17"><a></a>    y<span class="op">=</span><span class="st">'Origin:N'</span>,</span>
-<span id="cb3-18"><a></a>    color<span class="op">=</span><span class="st">'Origin:N'</span>,</span>
-<span id="cb3-19"><a></a>    x<span class="op">=</span><span class="st">'count(Origin):Q'</span></span>
-<span id="cb3-20"><a></a>).transform_filter(</span>
-<span id="cb3-21"><a></a>    brush</span>
-<span id="cb3-22"><a></a>)</span>
-<span id="cb3-23"><a></a></span>
-<span id="cb3-24"><a></a>points <span class="op">|</span> bars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb3-2"><a aria-label="2"></a><span class="im">from</span> vega_datasets <span class="im">import</span> data</span>
+<span id="cb3-3"><a aria-label="3"></a></span>
+<span id="cb3-4"><a aria-label="4"></a>source <span class="op">=</span> data.cars()</span>
+<span id="cb3-5"><a aria-label="5"></a></span>
+<span id="cb3-6"><a aria-label="6"></a>brush <span class="op">=</span> alt.selection(<span class="bu">type</span><span class="op">=</span><span class="st">'interval'</span>)</span>
+<span id="cb3-7"><a aria-label="7"></a></span>
+<span id="cb3-8"><a aria-label="8"></a>points <span class="op">=</span> alt.Chart(source).mark_point().encode(</span>
+<span id="cb3-9"><a aria-label="9"></a>    x<span class="op">=</span><span class="st">'Horsepower:Q'</span>,</span>
+<span id="cb3-10"><a aria-label="10"></a>    y<span class="op">=</span><span class="st">'Miles_per_Gallon:Q'</span>,</span>
+<span id="cb3-11"><a aria-label="11"></a>    color<span class="op">=</span>alt.condition(brush, <span class="st">'Origin:N'</span>, alt.value(<span class="st">'lightgray'</span>))</span>
+<span id="cb3-12"><a aria-label="12"></a>).add_selection(</span>
+<span id="cb3-13"><a aria-label="13"></a>    brush</span>
+<span id="cb3-14"><a aria-label="14"></a>)</span>
+<span id="cb3-15"><a aria-label="15"></a></span>
+<span id="cb3-16"><a aria-label="16"></a>bars <span class="op">=</span> alt.Chart(source).mark_bar().encode(</span>
+<span id="cb3-17"><a aria-label="17"></a>    y<span class="op">=</span><span class="st">'Origin:N'</span>,</span>
+<span id="cb3-18"><a aria-label="18"></a>    color<span class="op">=</span><span class="st">'Origin:N'</span>,</span>
+<span id="cb3-19"><a aria-label="19"></a>    x<span class="op">=</span><span class="st">'count(Origin):Q'</span></span>
+<span id="cb3-20"><a aria-label="20"></a>).transform_filter(</span>
+<span id="cb3-21"><a aria-label="21"></a>    brush</span>
+<span id="cb3-22"><a aria-label="22"></a>)</span>
+<span id="cb3-23"><a aria-label="23"></a></span>
+<span id="cb3-24"><a aria-label="24"></a>points <span class="op">|</span> bars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -334,10 +340,10 @@ Max Rohde
 </div></section><section id="interactive-html" class="slide level2">
 <h2>Interactive HTML</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(leaflet)</span>
-<span id="cb4-2"><a></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span>  <span class="co"># Add default OpenStreetMap map tiles</span></span>
-<span id="cb4-4"><a></a>  <span class="fu">addMarkers</span>(<span class="at">lng=</span><span class="sc">-</span><span class="fl">86.808460</span>, <span class="at">lat=</span><span class="fl">36.145780</span>, <span class="at">popup=</span><span class="st">"You are here!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb4-2"><a aria-label="2"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a aria-label="3"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span>  <span class="co"># Add default OpenStreetMap map tiles</span></span>
+<span id="cb4-4"><a aria-label="4"></a>  <span class="fu">addMarkers</span>(<span class="at">lng=</span><span class="sc">-</span><span class="fl">86.808460</span>, <span class="at">lat=</span><span class="fl">36.145780</span>, <span class="at">popup=</span><span class="st">"You are here!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="htmlwidget-a9ad05eab219e21dfbfa" style="width:960px;height:480px;" class="leaflet html-widget"></div>
 <script type="application/json" data-for="htmlwidget-a9ad05eab219e21dfbfa">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[36.14578,-86.80846,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"You are here!",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[36.14578,36.14578],"lng":[-86.80846,-86.80846]}},"evals":[],"jsHooks":[]}</script>
@@ -351,7 +357,7 @@ Max Rohde
 <div class="tab-content">
 <div id="tabset-1-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">hist</span>(mtcars<span class="sc">$</span>hp, <span class="at">breaks =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">hist</span>(mtcars<span class="sc">$</span>hp, <span class="at">breaks =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -363,7 +369,7 @@ Max Rohde
 </div>
 <div id="tabset-1-2">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">hist</span>(mtcars<span class="sc">$</span>mpg, <span class="at">breaks =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a><span class="fu">hist</span>(mtcars<span class="sc">$</span>mpg, <span class="at">breaks =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -375,7 +381,7 @@ Max Rohde
 </div>
 <div id="tabset-1-3">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">hist</span>(mtcars<span class="sc">$</span>wt, <span class="at">breaks =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a><span class="fu">hist</span>(mtcars<span class="sc">$</span>wt, <span class="at">breaks =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -403,29 +409,29 @@ Max Rohde
 <img data-src="2.png" class="r-stretch"></section>
 <section id="yaml" class="slide level2">
 <h2>YAML</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb8-1"><a></a><span class="pp">---</span></span>
-<span id="cb8-2"><a></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Building a blog with Quarto"</span></span>
-<span id="cb8-3"><a></a><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> </span><span class="st">"Journal Club 10/19/2022"</span></span>
-<span id="cb8-4"><a></a><span class="fu">author</span><span class="kw">:</span><span class="at"> </span><span class="st">"Max Rohde"</span></span>
-<span id="cb8-5"><a></a><span class="fu">knitr</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb8-6"><a></a></span>
-<span id="cb8-7"><a></a><span class="fu">format</span><span class="kw">:</span></span>
-<span id="cb8-8"><a></a><span class="at">  </span><span class="fu">revealjs</span><span class="kw">:</span></span>
-<span id="cb8-9"><a></a><span class="at">    </span><span class="fu">slide-number</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb8-10"><a></a><span class="at">    </span><span class="fu">preview-links</span><span class="kw">:</span><span class="at"> auto</span></span>
-<span id="cb8-11"><a></a><span class="at">    </span><span class="fu">theme</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">default</span><span class="kw">,</span><span class="at"> custom.scss</span><span class="kw">]</span></span>
-<span id="cb8-12"><a></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb8-1"><a aria-label="1"></a><span class="pp">---</span></span>
+<span id="cb8-2"><a aria-label="2"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Building a blog with Quarto"</span></span>
+<span id="cb8-3"><a aria-label="3"></a><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> </span><span class="st">"Journal Club 10/19/2022"</span></span>
+<span id="cb8-4"><a aria-label="4"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> </span><span class="st">"Max Rohde"</span></span>
+<span id="cb8-5"><a aria-label="5"></a><span class="fu">knitr</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb8-6"><a aria-label="6"></a></span>
+<span id="cb8-7"><a aria-label="7"></a><span class="fu">format</span><span class="kw">:</span></span>
+<span id="cb8-8"><a aria-label="8"></a><span class="at">  </span><span class="fu">revealjs</span><span class="kw">:</span></span>
+<span id="cb8-9"><a aria-label="9"></a><span class="at">    </span><span class="fu">slide-number</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb8-10"><a aria-label="10"></a><span class="at">    </span><span class="fu">preview-links</span><span class="kw">:</span><span class="at"> auto</span></span>
+<span id="cb8-11"><a aria-label="11"></a><span class="at">    </span><span class="fu">theme</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">default</span><span class="kw">,</span><span class="at"> custom.scss</span><span class="kw">]</span></span>
+<span id="cb8-12"><a aria-label="12"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="yaml-in-code-chunks" class="slide level2">
 <h2>YAML in code chunks</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a></a><span class="in">```{r}</span></span>
-<span id="cb9-2"><a></a><span class="co">#| eval: false</span></span>
-<span id="cb9-3"><a></a><span class="co">#| echo: false</span></span>
-<span id="cb9-4"><a></a><span class="co">#| cache: true</span></span>
-<span id="cb9-5"><a></a><span class="co">#| fig-width: 7</span></span>
-<span id="cb9-6"><a></a></span>
-<span id="cb9-7"><a></a><span class="fu">plot</span>(mtcars)</span>
-<span id="cb9-8"><a></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a aria-label="1"></a><span class="in">```{r}</span></span>
+<span id="cb9-2"><a aria-label="2"></a><span class="co">#| eval: false</span></span>
+<span id="cb9-3"><a aria-label="3"></a><span class="co">#| echo: false</span></span>
+<span id="cb9-4"><a aria-label="4"></a><span class="co">#| cache: true</span></span>
+<span id="cb9-5"><a aria-label="5"></a><span class="co">#| fig-width: 7</span></span>
+<span id="cb9-6"><a aria-label="6"></a></span>
+<span id="cb9-7"><a aria-label="7"></a><span class="fu">plot</span>(mtcars)</span>
+<span id="cb9-8"><a aria-label="8"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section id="lets-make-a-blog" class="title-slide slide level1 center">
 <h1>Let’s make a blog!</h1>
@@ -467,7 +473,7 @@ Max Rohde
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"\u003ci class=\"fas fa-gear\">\u003c/i>","content":"\u003cul class=\"slide-menu-items\">\n\u003cli class=\"slide-tool-item active\" data-item=\"0\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\">\u003ckbd>f\u003c/kbd> Fullscreen\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"1\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\">\u003ckbd>s\u003c/kbd> Speaker View\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"2\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\">\u003ckbd>o\u003c/kbd> Slide Overview\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"3\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\">\u003ckbd>e\u003c/kbd> PDF Export Mode\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"4\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\">\u003ckbd>r\u003c/kbd> Scroll View Mode\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"5\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\">\u003ckbd>?\u003c/kbd> Keyboard Help\u003c/a>\u003c/li>\n\u003c/ul>"}],"openButton":true,"openButtonLabel":"Slide menu"},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -621,7 +627,7 @@ Max Rohde
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -737,13 +743,14 @@ Max Rohde
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
@@ -763,7 +770,8 @@ Max Rohde
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }
           // Inspect non-navigation links and adorn them if external
-         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          window.quartoDecorateExternalLinks = function (root) {
+         var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
           for (var i=0; i<links.length; i++) {
             const link = links[i];
             if (!isInternal(link.href)) {
@@ -772,8 +780,69 @@ Max Rohde
               if (link.dataset.originalHref !== undefined) {
                 link.href = link.dataset.originalHref;
               }
+              if (!link.classList.contains('no-external-icon')) {
+              }
             }
           }
+          };
+          window.quartoDecorateExternalLinks(window.document);
+        // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+        // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+        const hideOnEscAndFocusOut = {
+          name: 'hideOnEscAndFocusOut',
+          defaultValue: true,
+          fn(instance) {
+            const dismiss = () => {
+              // A show scheduled by the trigger delay would otherwise reopen it
+              instance.clearDelayTimeouts();
+              instance.hide();
+            };
+            const onKeyDown = (event) => {
+              if (event.key !== 'Escape') {
+                return;
+              }
+              // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+              // except an open reveal.js slide menu, which Esc should close too.
+              // The menu handles keys only when its keyboard option is on.
+              const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+                window.Reveal.getConfig().menu?.keyboard !== false;
+              if (!menuHandlesEsc) {
+                event.stopPropagation();
+              }
+              if (instance.popper.contains(window.document.activeElement)) {
+                // Disabled while refocusing so the focus trigger does not reopen it
+                instance.disable();
+                instance.reference.focus();
+                instance.enable();
+              }
+              dismiss();
+            };
+            const onFocusOut = (event) => {
+              const target = event.relatedTarget;
+              if (target && !instance.reference.contains(target) &&
+                  !instance.popper.contains(target)) {
+                dismiss();
+              }
+            };
+            // On the trigger too: a click trigger (code-annotations: select) has no
+            // blur handling. Attached for the instance's lifetime so leaving the
+            // trigger also cancels a show still pending on the trigger delay.
+            instance.reference.addEventListener('focusout', onFocusOut);
+            return {
+              onShow() {
+                window.document.addEventListener('keydown', onKeyDown, true);
+                instance.popper.addEventListener('focusout', onFocusOut);
+              },
+              onHide() {
+                window.document.removeEventListener('keydown', onKeyDown, true);
+                instance.popper.removeEventListener('focusout', onFocusOut);
+              },
+              onDestroy() {
+                instance.reference.removeEventListener('focusout', onFocusOut);
+              },
+            };
+          },
+        };
         function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
           const config = {
             allowHTML: true,
@@ -787,6 +856,7 @@ Max Rohde
             interactiveBorder: 10,
             theme: 'light-border',
             placement: 'bottom-start',
+            plugins: [hideOnEscAndFocusOut],
           };
           if (contentFn) {
             config.content = contentFn;

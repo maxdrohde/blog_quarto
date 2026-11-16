@@ -42,3 +42,5 @@ vignettes/*.pdf
 .DS_Store
 
 archived
+
+**/*.quarto_ipynb
