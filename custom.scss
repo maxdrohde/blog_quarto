@@ -1,9 +1,9 @@
 /* css styles */
 /*-- scss:defaults --*/
-$web-font-path: "https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap";
-@if $web-font-path {
-	@import url($web-font-path);
-}
+// The web fonts are loaded from _fonts.html in the page head (see
+// include-in-header in _quarto.yml), so the theme's render-blocking @import
+// is switched off here.
+$web-font-path: false;
 
 $headings-font-family: Source Sans Pro;
 $font-family-sans-serif: Source Sans Pro;

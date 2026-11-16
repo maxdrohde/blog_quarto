@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-8eeff4314212aae935530f0ced771a06.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9b435ca0fc452ecc8c563e4b5e955fe2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-950fcf42fc3a81639f48f9c9e75b98c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -124,6 +124,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 background: #f1f3f5;
       }
 </style>
+<!-- Web fonts, loaded from the page head so they download in parallel with the
+     main stylesheet (see include-in-header in _quarto.yml and custom.scss). --><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&amp;family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&amp;display=swap">
 <script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Using gganimate to create cartographic animations – Max Rohde">
@@ -2924,11 +2928,8 @@ background: #f1f3f5;
 <span>                         font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://gganimate.com/reference/transition_states.html">transition_states</a></span><span class="op">(</span><span class="va">year_established</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><div class="cell-output-display page-columns page-full">
-<div class="page-columns page-full">
-<figure class="figure page-columns page-full"><p class="page-columns page-full"><img src="index_files/figure-html/unnamed-chunk-15-1.gif" class="img-fluid figure-img column-page-right"></p>
-</figure>
-</div>
+</details><div class="cell-output-display column-page-right">
+<video class="img-fluid" autoplay="" loop="" muted="" playsinline=""><source src="index_files/figure-html/unnamed-chunk-15-1.mp4" type="video/mp4"></video>
 </div>
 </div>
 <p>It’s animated now, but there are two problems.</p>
@@ -2961,11 +2962,8 @@ background: #f1f3f5;
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://gganimate.com/reference/transition_states.html">transition_states</a></span><span class="op">(</span><span class="va">year_established</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://gganimate.com/reference/shadow_mark.html">shadow_mark</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"black"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><div class="cell-output-display page-columns page-full">
-<div class="page-columns page-full">
-<figure class="figure page-columns page-full"><p class="page-columns page-full"><img src="index_files/figure-html/unnamed-chunk-17-1.gif" class="img-fluid figure-img column-page-right"></p>
-</figure>
-</div>
+</details><div class="cell-output-display column-page-right">
+<video class="img-fluid" autoplay="" loop="" muted="" playsinline=""><source src="index_files/figure-html/unnamed-chunk-17-1.mp4" type="video/mp4"></video>
 </div>
 </div>
 <p>Looks good! But wait a second… the animation only goes to 1950. Wasn’t it supposed to go to 2015? This is a little quirk of <code>gganimate</code>. By default, the animation is capped at 100 frames. For the <code><a href="https://gganimate.com/reference/transition_states.html">transition_states()</a></code> animation, by default a single frame is allocated for each state, and another frame is allocated for transitions between states. So 100 frames can represent 50 years of data. The animation is cut short because we have more than 50 years of data.</p>
@@ -2991,11 +2989,8 @@ background: #f1f3f5;
 <span>  <span class="va">parks_anim</span>,</span>
 <span>  nframes<span class="op">=</span><span class="fl">300</span>, <span class="co"># number of frames to compute</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><div class="cell-output-display page-columns page-full">
-<div class="page-columns page-full">
-<figure class="figure page-columns page-full"><p class="page-columns page-full"><img src="index_files/figure-html/unnamed-chunk-18-1.gif" class="img-fluid figure-img column-page-right"></p>
-</figure>
-</div>
+</details><div class="cell-output-display column-page-right">
+<video class="img-fluid" autoplay="" loop="" muted="" playsinline=""><source src="index_files/figure-html/unnamed-chunk-18-1.mp4" type="video/mp4"></video>
 </div>
 </div>
 <p>My preferred method of rendering the animation is to use <code>ffmpeg</code>, instead of the default GIF renderer, because it creates videos (.mp4) rather than GIFs. You will need to <a href="https://ffmpeg.org">install ffpmeg</a> on your computer separately. Using ffmpeg also allows for finer control over the frame rate of the animation and creates smaller files. I’ll show how to use it below.</p>

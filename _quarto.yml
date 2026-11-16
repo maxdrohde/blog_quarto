@@ -42,6 +42,7 @@ format:
     monofont: Fira Mono
     fontsize: 16px
     css: styles.css
+    include-in-header: _fonts.html
     code-block-bg: "#f1f3f5"
     code-block-border-left: "#31BAE9"
     fig-format: retina
